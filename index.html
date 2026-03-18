@@ -286,6 +286,66 @@
   .demand-item .d-type { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
   .demand-item .d-detail { font-size: 10px; color: var(--text2); }
 
+  /* ===== Platform Tab ===== */
+  .plat-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .plat-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; text-align: center; }
+  .plat-stat .n { font-size: 20px; font-weight: 700; line-height: 1.2; }
+  .plat-stat .l { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+  .plat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .plat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; transition: border-color 0.2s;
+  }
+  .plat-card:hover { border-color: var(--accent); }
+  .plat-card.st-registered { border-left: 3px solid var(--green); }
+  .plat-card.st-renew { border-left: 3px solid var(--orange); animation: pulse-border 2s infinite; }
+  .plat-card.st-unregistered { border-left: 3px solid var(--text2); }
+  @keyframes pulse-border { 0%,100%{ border-left-color: var(--orange); } 50%{ border-left-color: var(--yellow); } }
+
+  .plat-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .plat-name { font-size: 14px; font-weight: 700; }
+  .plat-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .plat-badge.pb-registered { background: #1a3a1a; color: var(--green); }
+  .plat-badge.pb-renew { background: #3a2a10; color: var(--orange); }
+  .plat-badge.pb-unregistered { background: var(--surface2); color: var(--text2); }
+  .plat-badge.pb-expired { background: #3a1020; color: var(--red); }
+  .plat-cost { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 9px; background: #1a1a2a; color: var(--accent); margin-left: auto; }
+
+  .plat-meta { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 11px; margin-bottom: 10px; }
+  .plat-meta .pm-label { color: var(--text2); }
+  .plat-meta .pm-val { color: var(--text); }
+  .plat-meta a { color: var(--accent); text-decoration: none; }
+  .plat-meta a:hover { text-decoration: underline; }
+
+  .plat-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .plat-btn {
+    padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border); background: var(--surface2); color: var(--text2);
+  }
+  .plat-btn:hover { border-color: var(--accent); color: var(--text); }
+  .plat-btn.primary { border-color: var(--green); color: var(--green); }
+  .plat-btn.primary:hover { background: var(--green); color: var(--bg); }
+  .plat-btn.warn { border-color: var(--orange); color: var(--orange); }
+  .plat-btn.warn:hover { background: var(--orange); color: var(--bg); }
+
+  .plat-inquiry-section { margin-top: 20px; }
+  .plat-inquiry-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .plat-inq-empty { color: var(--text2); font-size: 13px; padding: 20px; text-align: center; }
+  .plat-inq-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 6px; display: grid; grid-template-columns: 120px 100px 1fr auto; gap: 10px; align-items: center;
+  }
+  .plat-inq-item .inq-date { font-size: 11px; color: var(--text2); }
+  .plat-inq-item .inq-from { font-size: 12px; font-weight: 600; color: var(--accent); }
+  .plat-inq-item .inq-msg { font-size: 12px; }
+  .plat-inq-item .inq-actions { display: flex; gap: 4px; }
+
+  /* Platform modal */
+  .plat-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 480px; width: 92%; }
+  .plat-modal h2 { font-size: 15px; margin-bottom: 16px; }
+  .plat-modal .add-field { margin-bottom: 12px; }
+
   /* ===== Update Log Tab ===== */
   .log-toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
   .log-toolbar .btn-log-add {
@@ -367,6 +427,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="tracker">업체 리스트<span class="tc" id="tc-tracker">45</span></button>
     <button class="tab" data-tab="summary">통화 현황<span class="tc" id="tc-summary">0</span></button>
+    <button class="tab" data-tab="platform">거래 플랫폼<span class="tc" id="tc-platform">6</span></button>
     <button class="tab" data-tab="info">매물 정보</button>
     <button class="tab" data-tab="log">업데이트 내역<span class="tc" id="tc-log">0</span></button>
   </div>
@@ -430,6 +491,16 @@
     <div class="summary-section" id="sum-scheduled"></div>
     <div class="summary-section" id="sum-missed"></div>
     <div class="summary-section" id="sum-price"></div>
+  </div>
+
+  <!-- 거래 플랫폼 탭 -->
+  <div class="tab-panel" id="panel-platform">
+    <div class="plat-stats" id="plat-stats"></div>
+    <div class="plat-grid" id="plat-grid"></div>
+    <div class="plat-inquiry-section">
+      <h3>&#x1F4E9; 문의 내역 <button class="plat-btn primary" id="btn-inq-add" style="font-size:11px;padding:3px 10px;">+ 문의 추가</button></h3>
+      <div id="plat-inq-list"></div>
+    </div>
   </div>
 
   <!-- 매물 정보 탭 -->
@@ -677,6 +748,72 @@
   </div>
 </div>
 
+<!-- Platform status modal -->
+<div class="modal-overlay" id="plat-modal">
+  <div class="plat-modal">
+    <h2 id="plat-modal-title">플랫폼 상태 변경</h2>
+    <div class="add-field">
+      <label>등록 상태</label>
+      <select id="plat-status">
+        <option value="unregistered">미등록</option>
+        <option value="registered">등록완료</option>
+        <option value="renew">갱신필요</option>
+        <option value="expired">만료</option>
+      </select>
+    </div>
+    <div class="add-field">
+      <label>등록일</label>
+      <input type="date" id="plat-regdate">
+    </div>
+    <div class="add-field">
+      <label>갱신 주기 (일)</label>
+      <input type="number" id="plat-cycle" placeholder="7" value="7">
+    </div>
+    <div class="add-field">
+      <label>게시글 URL</label>
+      <input type="text" id="plat-url" placeholder="https://...">
+    </div>
+    <div class="add-field">
+      <label>메모</label>
+      <textarea id="plat-memo" style="resize:vertical;min-height:48px;width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;"></textarea>
+    </div>
+    <div class="add-actions">
+      <button class="btn-cancel" id="plat-cancel">취소</button>
+      <button class="btn-confirm" id="plat-save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inquiry add modal -->
+<div class="modal-overlay" id="inq-modal">
+  <div class="plat-modal">
+    <h2 id="inq-modal-title">문의 추가</h2>
+    <div class="add-field">
+      <label>플랫폼</label>
+      <select id="inq-platform"></select>
+    </div>
+    <div class="add-row">
+      <div class="add-field">
+        <label>문의자/업체명</label>
+        <input type="text" id="inq-from" placeholder="예: 대구 OO조경">
+      </div>
+      <div class="add-field">
+        <label>연락처</label>
+        <input type="text" id="inq-contact" placeholder="010-xxxx-xxxx">
+      </div>
+    </div>
+    <div class="add-field">
+      <label>문의 내용</label>
+      <textarea id="inq-msg" style="resize:vertical;min-height:48px;width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;" placeholder="예: 100그루 가능한지 문의"></textarea>
+    </div>
+    <div class="add-actions">
+      <button class="btn-cancel" id="inq-cancel">취소</button>
+      <button class="btn-confirm" id="inq-add-to-list" style="background:var(--surface2);color:var(--teal);border:1px solid var(--teal)">업체 리스트에 추가</button>
+      <button class="btn-confirm" id="inq-save">저장</button>
+    </div>
+  </div>
+</div>
+
 <!-- SMS modal -->
 <div class="modal-overlay" id="sms-modal">
   <div class="sms-modal">
@@ -885,12 +1022,7 @@ const DATA=[
   {id:3,p:1,g:"협회/공공",name:"조경수협회 서울지회",phone:"02-448-3958",phone2:"010-2434-2981",region:"서울",detail:"수도권 건설사 매칭",source:"AI조사"},
   {id:4,p:1,g:"협회/공공",name:"산림조합 대구경북본부",phone:"053-215-3048",fax:"053-957-7994",homepage:"https://www.nfcf.or.kr",region:"대구",detail:"경북 산림조합 네트워크 | 시세 감정",source:"AI조사"},
   {id:5,p:1,g:"협회/공공",name:"산림조합중앙회 본부",phone:"1544-4200",phone2:"02-3434-7114",homepage:"https://www.nfcf.or.kr",region:"서울",detail:"직거래장터 등록 | 구미시산림조합",source:"AI조사"},
-  {id:6,p:2,g:"거래 플랫폼",name:"트리디비 (TreeDB)",phone:"02-571-7581",homepage:"https://www.treedb.co.kr",region:"서울",detail:"국내 최대 | 2만명+",source:"AI조사"},
-  {id:7,p:2,g:"거래 플랫폼",name:"나무시장 (kotr)",phone:"-",homepage:"http://www.kotr.co.kr",detail:"무료 | 반송 다수",source:"AI조사"},
-  {id:8,p:2,g:"거래 플랫폼",name:"나무몰 (namoomall)",phone:"-",homepage:"https://www.namoomall.com",detail:"무료 | 경북 활발",source:"AI조사"},
-  {id:9,p:2,g:"거래 플랫폼",name:"라펜트 조경소재",phone:"02-336-3124",fax:"02-336-3125",homepage:"https://www.lafent.com",region:"서울 마포구",detail:"조경 전문가 포털",source:"AI조사"},
-  {id:10,p:2,g:"거래 플랫폼",name:"마켓트리",phone:"031-923-4419",detail:"규격별 세분화 | 원스톱 견적",source:"AI조사"},
-  {id:11,p:2,g:"거래 플랫폼",name:"나무다움 (앱)",phone:"-",detail:"원스토어 설치 | 무료 등록",source:"AI조사"},
+  // 거래 플랫폼 id 6~11 → PLATFORMS 배열로 분리
   {id:12,p:3,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",region:"강원 원주",detail:"전국 매입/매도 전문",source:"AI조사"},
   {id:13,p:3,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",homepage:"http://www.suppro.com",region:"서울 서초구",detail:"국내 최대 유통",source:"AI조사"},
   {id:14,p:3,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",region:"충남 당진시",detail:"모범농장 | 반송 특화",source:"AI조사"},
@@ -1001,6 +1133,208 @@ const MO=[{v:"",l:"--월--"},{v:"3",l:"3월"},{v:"4",l:"4월"},{v:"5",l:"5월"},
 const PA=[{v:"",l:"--순--"},{v:"early",l:"초순"},{v:"mid",l:"중순"},{v:"late",l:"하순"}];
 const PRI_BG={"p1":"var(--red)","p2":"var(--orange)","p3":"#e67700","p4":"var(--accent)","p5":"#845ef7","p6":"var(--text2)","p7":"var(--text2)"};
 
+// ========== Platforms (인바운드) ==========
+const PLATFORMS=[
+  {id:"p1",name:"트리디비 (TreeDB)",phone:"02-571-7581",homepage:"https://www.treedb.co.kr",detail:"국내 최대 | 2만명+",cost:"유료 옵션"},
+  {id:"p2",name:"나무시장 (kotr)",phone:"-",homepage:"http://www.kotr.co.kr",detail:"반송 다수",cost:"무료"},
+  {id:"p3",name:"나무몰 (namoomall)",phone:"-",homepage:"https://www.namoomall.com",detail:"경북 활발",cost:"무료"},
+  {id:"p4",name:"라펜트 조경소재",phone:"02-336-3124",homepage:"https://www.lafent.com",detail:"조경 전문가 포털",cost:"유료 옵션"},
+  {id:"p5",name:"마켓트리",phone:"031-923-4419",homepage:"",detail:"규격별 세분화 | 원스톱 견적",cost:"무료"},
+  {id:"p6",name:"나무다움 (앱)",phone:"-",homepage:"",detail:"원스토어 설치",cost:"무료"}
+];
+let platState={};// {p1:{status,regDate,renewCycle,lastRenew,url,memo,inquiryCount}}
+let platInquiries=[];// [{id,ts,platformId,from,contact,msg,addedToList}]
+
+function getPlatState(id){if(!platState[id])platState[id]={status:"unregistered",regDate:"",renewCycle:7,lastRenew:"",url:"",memo:"",inquiryCount:0};return platState[id];}
+
+function checkRenewal(){
+  const now=Date.now();
+  PLATFORMS.forEach(p=>{
+    const s=getPlatState(p.id);
+    if(s.status==="registered"&&s.regDate){
+      const base=s.lastRenew||s.regDate;
+      const diff=Math.floor((now-new Date(base).getTime())/(1000*60*60*24));
+      if(diff>=s.renewCycle)s.status="renew";
+    }
+  });
+}
+
+function renderPlatforms(){
+  checkRenewal();
+  const reg=PLATFORMS.filter(p=>getPlatState(p.id).status==="registered").length;
+  const renew=PLATFORMS.filter(p=>getPlatState(p.id).status==="renew").length;
+  const unreg=PLATFORMS.filter(p=>getPlatState(p.id).status==="unregistered"||getPlatState(p.id).status==="expired").length;
+  const totalInq=platInquiries.length;
+  document.getElementById("plat-stats").innerHTML=`
+    <div class="plat-stat"><div class="n" style="color:var(--green)">${reg}</div><div class="l">등록완료</div></div>
+    <div class="plat-stat"><div class="n" style="color:var(--orange)">${renew}</div><div class="l">갱신필요</div></div>
+    <div class="plat-stat"><div class="n" style="color:var(--text2)">${unreg}</div><div class="l">미등록</div></div>
+    <div class="plat-stat"><div class="n" style="color:var(--accent)">${totalInq}</div><div class="l">총 문의</div></div>`;
+  document.getElementById("tc-platform").textContent=PLATFORMS.length;
+
+  let h="";
+  PLATFORMS.forEach(p=>{
+    const s=getPlatState(p.id);
+    const stClass=s.status==="registered"?"st-registered":s.status==="renew"?"st-renew":"st-unregistered";
+    const bdgClass=s.status==="registered"?"pb-registered":s.status==="renew"?"pb-renew":s.status==="expired"?"pb-expired":"pb-unregistered";
+    const bdgText=s.status==="registered"?"등록완료":s.status==="renew"?"갱신필요":s.status==="expired"?"만료":"미등록";
+    const inqCount=platInquiries.filter(i=>i.platformId===p.id).length;
+
+    let daysInfo="";
+    if(s.status==="registered"||s.status==="renew"){
+      const base=s.lastRenew||s.regDate;
+      if(base){const diff=Math.floor((Date.now()-new Date(base).getTime())/(1000*60*60*24));
+        daysInfo=s.status==="renew"?`<span style="color:var(--orange)">${diff}일 경과 (갱신 필요)</span>`:`${diff}일 전 갱신`;}
+    }
+
+    h+=`<div class="plat-card ${stClass}" data-pid="${p.id}">
+      <div class="plat-top">
+        <div class="plat-name">${p.name}</div>
+        <span class="plat-badge ${bdgClass}">${bdgText}</span>
+        <span class="plat-cost">${p.cost}</span>
+      </div>
+      <div class="plat-meta">
+        <span class="pm-label">특징</span><span class="pm-val">${p.detail}</span>
+        ${p.homepage?`<span class="pm-label">사이트</span><span class="pm-val"><a href="${p.homepage}" target="_blank">${p.homepage.replace(/https?:\/\/(www\.)?/,"")}</a></span>`:""}
+        ${p.phone&&p.phone!=="-"?`<span class="pm-label">전화</span><span class="pm-val">${p.phone}</span>`:""}
+        ${s.regDate?`<span class="pm-label">등록일</span><span class="pm-val">${s.regDate}</span>`:""}
+        ${daysInfo?`<span class="pm-label">갱신</span><span class="pm-val">${daysInfo}</span>`:""}
+        ${s.url?`<span class="pm-label">게시글</span><span class="pm-val"><a href="${s.url}" target="_blank">링크 열기</a></span>`:""}
+        <span class="pm-label">문의</span><span class="pm-val" style="font-weight:600;color:var(--accent)">${inqCount}건</span>
+        ${s.memo?`<span class="pm-label">메모</span><span class="pm-val" style="color:var(--text2)">${s.memo}</span>`:""}
+      </div>
+      <div class="plat-actions">
+        ${s.status==="unregistered"||s.status==="expired"?`<button class="plat-btn primary" onclick="openPlatModal('${p.id}')">등록하기</button>`:""}
+        ${s.status==="renew"?`<button class="plat-btn warn" onclick="renewPlat('${p.id}')">갱신 완료</button>`:""}
+        ${s.status==="registered"?`<button class="plat-btn" onclick="renewPlat('${p.id}')">끌올 완료</button>`:""}
+        <button class="plat-btn" onclick="openPlatModal('${p.id}')">설정</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById("plat-grid").innerHTML=h;
+
+  // Inquiry list
+  const inqEl=document.getElementById("plat-inq-list");
+  if(!platInquiries.length){inqEl.innerHTML='<div class="plat-inq-empty">아직 문의가 없습니다. 플랫폼 등록 후 문의가 오면 기록하세요.</div>';return;}
+  let ih="";
+  platInquiries.sort((a,b)=>new Date(b.ts)-new Date(a.ts)).forEach(inq=>{
+    const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||inq.platformId;
+    const dt=new Date(inq.ts).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+    ih+=`<div class="plat-inq-item">
+      <div class="inq-date">${dt}<br><span style="font-size:10px;color:var(--accent)">${pName}</span></div>
+      <div class="inq-from">${inq.from||"미상"}${inq.contact?`<br><span style="font-size:10px;color:var(--text2)">${inq.contact}</span>`:""}</div>
+      <div class="inq-msg">${inq.msg||""}</div>
+      <div class="inq-actions">
+        ${!inq.addedToList?`<button class="plat-btn" style="font-size:10px" onclick="inqToList('${inq.id}')">업체추가</button>`:`<span style="font-size:10px;color:var(--green)">추가됨</span>`}
+        <button class="plat-btn" style="font-size:10px;color:var(--red)" onclick="deleteInq('${inq.id}')">삭제</button>
+      </div>
+    </div>`;
+  });
+  inqEl.innerHTML=ih;
+}
+
+let _platEditId=null;
+function openPlatModal(pid){
+  _platEditId=pid;
+  const p=PLATFORMS.find(x=>x.id===pid);
+  const s=getPlatState(pid);
+  document.getElementById("plat-modal-title").textContent=p.name+" 설정";
+  document.getElementById("plat-status").value=s.status;
+  document.getElementById("plat-regdate").value=s.regDate||"";
+  document.getElementById("plat-cycle").value=s.renewCycle||7;
+  document.getElementById("plat-url").value=s.url||"";
+  document.getElementById("plat-memo").value=s.memo||"";
+  document.getElementById("plat-modal").classList.add("show");
+}
+document.getElementById("plat-cancel").addEventListener("click",()=>{document.getElementById("plat-modal").classList.remove("show");});
+document.getElementById("plat-modal").addEventListener("click",e=>{if(e.target.id==="plat-modal")e.target.classList.remove("show");});
+document.getElementById("plat-save").addEventListener("click",()=>{
+  if(!_platEditId)return;
+  const s=getPlatState(_platEditId);
+  const prevStatus=s.status;
+  s.status=document.getElementById("plat-status").value;
+  s.regDate=document.getElementById("plat-regdate").value;
+  s.renewCycle=Number(document.getElementById("plat-cycle").value)||7;
+  s.url=document.getElementById("plat-url").value.trim();
+  s.memo=document.getElementById("plat-memo").value.trim();
+  if(s.status==="registered"&&prevStatus!=="registered")s.lastRenew=new Date().toISOString().slice(0,10);
+  document.getElementById("plat-modal").classList.remove("show");
+  const pName=PLATFORMS.find(x=>x.id===_platEditId)?.name||"";
+  if(prevStatus!==s.status)addLog({type:"list_edit",desc:`플랫폼 상태 변경: ${pName} → ${s.status==="registered"?"등록완료":s.status==="renew"?"갱신필요":"미등록"}`,by:"Justin"});
+  renderPlatforms();syncToCloud();
+});
+
+function renewPlat(pid){
+  const s=getPlatState(pid);
+  s.status="registered";
+  s.lastRenew=new Date().toISOString().slice(0,10);
+  const pName=PLATFORMS.find(x=>x.id===pid)?.name||"";
+  addLog({type:"list_edit",desc:`플랫폼 갱신(끌올): ${pName}`,by:"Justin"});
+  renderPlatforms();syncToCloud();
+}
+
+// Inquiry
+document.getElementById("btn-inq-add").addEventListener("click",()=>{
+  const sel=document.getElementById("inq-platform");
+  sel.innerHTML=PLATFORMS.map(p=>`<option value="${p.id}">${p.name}</option>`).join("");
+  document.getElementById("inq-from").value="";
+  document.getElementById("inq-contact").value="";
+  document.getElementById("inq-msg").value="";
+  document.getElementById("inq-modal").classList.add("show");
+});
+document.getElementById("inq-cancel").addEventListener("click",()=>{document.getElementById("inq-modal").classList.remove("show");});
+document.getElementById("inq-modal").addEventListener("click",e=>{if(e.target.id==="inq-modal")e.target.classList.remove("show");});
+document.getElementById("inq-save").addEventListener("click",()=>{
+  const msg=document.getElementById("inq-msg").value.trim();
+  if(!msg){document.getElementById("inq-msg").focus();return;}
+  const inq={
+    id:String(Date.now()+Math.random()),
+    ts:new Date().toISOString(),
+    platformId:document.getElementById("inq-platform").value,
+    from:document.getElementById("inq-from").value.trim(),
+    contact:document.getElementById("inq-contact").value.trim(),
+    msg,addedToList:false
+  };
+  platInquiries.push(inq);
+  const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||"";
+  addLog({type:"note",desc:`플랫폼 문의: ${pName} — ${inq.from||"미상"}`,detail:msg,by:"Justin"});
+  document.getElementById("inq-modal").classList.remove("show");
+  renderPlatforms();syncToCloud();
+});
+document.getElementById("inq-add-to-list").addEventListener("click",()=>{
+  const from=document.getElementById("inq-from").value.trim()||"플랫폼 문의";
+  const contact=document.getElementById("inq-contact").value.trim();
+  const msg=document.getElementById("inq-msg").value.trim();
+  const pName=PLATFORMS.find(p=>p.id===document.getElementById("inq-platform").value)?.name||"";
+  // Save inquiry first
+  if(msg){
+    const inq={id:String(Date.now()+Math.random()),ts:new Date().toISOString(),platformId:document.getElementById("inq-platform").value,from,contact,msg,addedToList:true};
+    platInquiries.push(inq);
+  }
+  // Add to DATA as new company
+  const newId=getNextId();
+  DATA.push({id:newId,p:3,g:"플랫폼 문의",name:from,phone:contact||"-",detail:`${pName} 문의 | ${msg}`,source:"플랫폼",custom:true});
+  addLog({type:"list_add",desc:`플랫폼 문의 → 업체 추가: ${from}`,detail:`${pName} 경유`,by:"Justin"});
+  document.getElementById("inq-modal").classList.remove("show");
+  renderPlatforms();renderTracker();syncToCloud();
+});
+
+function inqToList(inqId){
+  const inq=platInquiries.find(i=>i.id===inqId);
+  if(!inq)return;
+  const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||"";
+  const newId=getNextId();
+  DATA.push({id:newId,p:3,g:"플랫폼 문의",name:inq.from||"플랫폼 문의",phone:inq.contact||"-",detail:`${pName} 문의 | ${inq.msg}`,source:"플랫폼",custom:true});
+  inq.addedToList=true;
+  addLog({type:"list_add",desc:`플랫폼 문의 → 업체 추가: ${inq.from||"미상"}`,detail:`${pName} 경유`,by:"Justin"});
+  renderPlatforms();renderTracker();syncToCloud();
+}
+function deleteInq(inqId){
+  if(!confirm("이 문의를 삭제하시겠습니까?"))return;
+  platInquiries=platInquiries.filter(i=>i.id!==inqId);
+  renderPlatforms();syncToCloud();
+}
+
 // ========== Supabase Config ==========
 const SB_URL="https://vtecqmqcepulxmigxumo.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0ZWNxbXFjZXB1bHhtaWd4dW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTQxNTAsImV4cCI6MjA4NzIzMDE1MH0.kOJpkKC6hb2Te70Gdj_RzsAyAFcFzWGG01QiWVyW2ME";
@@ -1020,6 +1354,8 @@ function syncToCloud(){
           hidden_ids:[...hiddenIds],
           sms_text:document.getElementById("sms-text")?.value||"",
           update_log:updateLog,
+          platform_state:platState,
+          platform_inquiries:platInquiries,
           updated_at:new Date().toISOString(),
           updated_by:"local"
         })
@@ -1042,6 +1378,8 @@ async function loadFromCloud(){
       }
       if(row.hidden_ids&&row.hidden_ids.length>0) hiddenIds=new Set(row.hidden_ids);
       if(row.update_log&&row.update_log.length>0) updateLog=row.update_log;
+      if(row.platform_state&&Object.keys(row.platform_state).length>0) platState=row.platform_state;
+      if(row.platform_inquiries&&row.platform_inquiries.length>0) platInquiries=row.platform_inquiries;
       if(row.sms_text) document.getElementById("sms-text").value=row.sms_text;
       return true;
     }
@@ -1412,6 +1750,7 @@ document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{
   t.classList.add("active");document.getElementById("panel-"+t.dataset.tab).classList.add("active");
   document.getElementById("tracker-controls").style.display=t.dataset.tab==="tracker"?"block":"none";
   if(t.dataset.tab==="summary")renderSummary();
+  if(t.dataset.tab==="platform")renderPlatforms();
   if(t.dataset.tab==="log")renderLog();
 });});
 document.querySelectorAll(".fb").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".fb").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderTracker();});});
@@ -1476,7 +1815,7 @@ document.getElementById("btn-reset").addEventListener("click",async()=>{if(confi
   for(let i=DATA.length-1;i>=0;i--){if(DATA[i].custom)DATA.splice(i,1);}
   localStorage.removeItem("bansong-phone-tracker-v4");
   // reset cloud
-  try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",update_log:[],updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
+  try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",update_log:[],platform_state:{},platform_inquiries:[],updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
   document.getElementById("sms-text").value=SMS_DEFAULT;
   renderTracker();
 }});
