@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>반송 350그루 판매 - 업체 전화 추적</title>
+<title>반송 350그루-Outbound Dashboard</title>
 <style>
   :root {
     --bg: #0f1117; --surface: #1a1d27; --surface2: #242836;
@@ -112,9 +112,17 @@
   .sa .ct.red { color: var(--red); }
 
   .info .nm { font-size: 13px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .info .ph2 { font-size: 14px; font-weight: 700; color: var(--accent); }
-  .info .ph2 a { color: var(--accent); text-decoration: none; }
-  .info .ph2 .sub { font-size: 11px; color: var(--teal); font-weight: 400; }
+  .info .ph-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+  .info .ph-row a { color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 600; }
+  .info .ph-row a:hover { text-decoration: underline; }
+  .info .ph-row .ph-sep { color: var(--border); font-size: 10px; }
+  .info .ph-row .fax { font-size: 11px; color: var(--text2); }
+  .info .ph-row .hp-link { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; background: var(--surface2); color: var(--teal); font-size: 13px; text-decoration: none; border: 1px solid var(--border); transition: all 0.15s; flex-shrink: 0; }
+  .info .ph-row .hp-link:hover { background: var(--teal); color: var(--bg); border-color: var(--teal); }
+  .info .meta-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .info .region { font-size: 11px; color: var(--text2); }
+  .info .eval-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; background: #1a2a1a; color: var(--green); }
+  .info .source-badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9px; background: #1a1a2a; color: var(--accent); }
   .info .dt { font-size: 11px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sb { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 4px; vertical-align: middle; }
   .sb.s-none{background:var(--surface2);color:var(--text2)}.sb.s-missed{background:#5c2020;color:var(--red)}.sb.s-scheduled{background:#2d2044;color:var(--purple)}.sb.s-done{background:#1a3a1a;color:var(--green)}
@@ -277,13 +285,81 @@
   .demand-item { background: var(--surface2); border-radius: 6px; padding: 8px 12px; }
   .demand-item .d-type { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
   .demand-item .d-detail { font-size: 10px; color: var(--text2); }
+
+  /* ===== Update Log Tab ===== */
+  .log-toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .log-toolbar .btn-log-add {
+    padding: 6px 14px; border-radius: 6px; border: 1px solid var(--teal);
+    background: transparent; color: var(--teal); font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .log-toolbar .btn-log-add:hover { background: var(--teal); color: var(--bg); }
+  .log-filter { padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 11px; cursor: pointer; }
+  .log-filter:hover { border-color: var(--accent); color: var(--text); }
+  .log-filter.active { background: var(--accent2); color: #fff; border-color: var(--accent); }
+
+  .log-day { margin-bottom: 20px; }
+  .log-day-header {
+    display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+    background: var(--surface2); border-radius: 8px; margin-bottom: 8px; position: sticky; top: 0; z-index: 2;
+  }
+  .log-day-header .log-date { font-size: 14px; font-weight: 700; }
+  .log-day-header .log-brief { font-size: 11px; color: var(--text2); margin-left: auto; }
+  .log-day-header .log-brief span { margin-left: 8px; }
+  .log-day-header .log-brief .b-call { color: var(--green); }
+  .log-day-header .log-brief .b-update { color: var(--accent); }
+  .log-day-header .log-brief .b-add { color: var(--teal); }
+
+  .log-entry {
+    display: grid; grid-template-columns: 60px 1fr; gap: 0 12px;
+    padding: 10px 16px; border-left: 2px solid var(--border); margin-left: 28px; position: relative;
+  }
+  .log-entry::before {
+    content: ""; position: absolute; left: -6px; top: 14px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--border);
+  }
+  .log-entry.t-call::before { background: var(--green); }
+  .log-entry.t-list_add::before { background: var(--teal); }
+  .log-entry.t-list_edit::before { background: var(--accent); }
+  .log-entry.t-bulk::before { background: var(--orange); }
+  .log-entry.t-note::before { background: var(--purple); }
+
+  .log-time { font-size: 11px; color: var(--text2); padding-top: 2px; }
+  .log-content { display: flex; flex-direction: column; gap: 3px; }
+  .log-desc { font-size: 13px; font-weight: 500; }
+  .log-detail { font-size: 11px; color: var(--text2); }
+  .log-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 2px; }
+  .log-tag {
+    display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 9px; font-weight: 600;
+  }
+  .log-tag.lt-call { background: #1a3a1a; color: var(--green); }
+  .log-tag.lt-list_add { background: #1a2a2a; color: var(--teal); }
+  .log-tag.lt-list_edit { background: #1a1a2a; color: var(--accent); }
+  .log-tag.lt-bulk { background: #2a2010; color: var(--orange); }
+  .log-tag.lt-note { background: #2a2040; color: var(--purple); }
+  .log-tag.lt-region { background: var(--surface2); color: var(--text2); }
+  .log-tag.lt-count { background: var(--surface2); color: var(--text); }
+  .log-tag.lt-by { background: #1a2020; color: var(--teal); }
+
+  .log-empty { color: var(--text2); font-size: 13px; padding: 40px 20px; text-align: center; }
+
+  /* Log add modal */
+  .log-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 480px; width: 92%; }
+  .log-modal h2 { font-size: 15px; margin-bottom: 16px; }
+  .log-form { display: flex; flex-direction: column; gap: 12px; }
+  .log-form .add-field label { font-size: 12px; color: var(--text2); font-weight: 600; }
+  .log-form .add-field input, .log-form .add-field select, .log-form .add-field textarea {
+    padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-size: 13px; font-family: inherit; width: 100%;
+  }
+  .log-form .add-field input:focus, .log-form .add-field select:focus, .log-form .add-field textarea:focus { outline: none; border-color: var(--accent); }
+  .log-form .add-field textarea { resize: vertical; min-height: 48px; }
 </style>
 </head>
 <body>
 
 <div class="top-fixed">
   <div class="header">
-    <h1>반송 350그루 판매 - 전화 추적</h1>
+    <h1>반송 350그루-Outbound Dashboard</h1>
     <div class="subtitle">경북 구미시 옥성면 산촌리 74번지 | H2.0~2.5m 15년생</div>
     <div class="save-ind" id="save-ind">자동 저장됨</div>
     <button class="btn-add" id="btn-add">+ 업체 추가</button>
@@ -292,6 +368,7 @@
     <button class="tab active" data-tab="tracker">업체 리스트<span class="tc" id="tc-tracker">45</span></button>
     <button class="tab" data-tab="summary">통화 현황<span class="tc" id="tc-summary">0</span></button>
     <button class="tab" data-tab="info">매물 정보</button>
+    <button class="tab" data-tab="log">업데이트 내역<span class="tc" id="tc-log">0</span></button>
   </div>
   <div id="tracker-controls">
     <div class="stats-bar">
@@ -531,6 +608,72 @@
 
     </div>
   </div>
+
+  <!-- 업데이트 내역 탭 -->
+  <div class="tab-panel" id="panel-log">
+    <div class="log-toolbar">
+      <button class="btn-log-add" id="btn-log-add">+ 메모 추가</button>
+      <div style="flex:1"></div>
+      <button class="log-filter active" data-lf="all">전체</button>
+      <button class="log-filter" data-lf="bulk">일괄등록</button>
+      <button class="log-filter" data-lf="list_add">추가</button>
+      <button class="log-filter" data-lf="list_edit">수정</button>
+      <button class="log-filter" data-lf="call">통화</button>
+      <button class="log-filter" data-lf="note">메모</button>
+    </div>
+    <div id="log-list"></div>
+  </div>
+</div>
+
+<!-- Log add modal -->
+<div class="modal-overlay" id="log-modal">
+  <div class="log-modal">
+    <h2 id="log-modal-title">업데이트 메모 추가</h2>
+    <div class="log-form">
+      <div class="add-field">
+        <label>타입</label>
+        <select id="log-type">
+          <option value="note">메모/브리핑</option>
+          <option value="bulk">일괄 업데이트</option>
+          <option value="list_add">업체 추가</option>
+          <option value="list_edit">정보 보완</option>
+          <option value="call">통화 완료</option>
+        </select>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>지역 (선택)</label>
+          <input type="text" id="log-region" placeholder="예: 대구 경북">
+        </div>
+        <div class="add-field">
+          <label>건수 (선택)</label>
+          <input type="number" id="log-count" placeholder="예: 39">
+        </div>
+      </div>
+      <div class="add-field">
+        <label>설명 *</label>
+        <input type="text" id="log-desc" placeholder="예: KOSCA 대구경북 30억+ 조경회사 리스트 업데이트">
+      </div>
+      <div class="add-field">
+        <label>상세 내용 (선택)</label>
+        <textarea id="log-detail" placeholder="세부 정보 보완 필요, 전화번호/팩스 미수집 등"></textarea>
+      </div>
+      <div class="add-field">
+        <label>작성자</label>
+        <select id="log-by">
+          <option value="AI">AI (Claude)</option>
+          <option value="Justin">Justin</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <div class="add-actions">
+        <button class="btn-cancel" id="log-delete" style="display:none;color:var(--red);border-color:var(--red)">삭제</button>
+        <div style="flex:1"></div>
+        <button class="btn-cancel" id="log-cancel">취소</button>
+        <button class="btn-confirm" id="log-confirm">추가</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- SMS modal -->
@@ -589,6 +732,27 @@
       </div>
       <div class="add-row">
         <div class="add-field">
+          <label>팩스번호</label>
+          <input type="text" id="add-fax" placeholder="예: 054-472-0085">
+        </div>
+        <div class="add-field">
+          <label>홈페이지</label>
+          <input type="text" id="add-homepage" placeholder="예: https://example.com">
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>지역 (구까지)</label>
+          <input type="text" id="add-region" placeholder="예: 경북 구미시">
+        </div>
+        <div class="add-field">
+          <label>시공능력평가액 (천원)</label>
+          <input type="number" id="add-eval" placeholder="예: 6529437">
+          <div class="hint">대한전문건설협회 기준, 없으면 비워두세요</div>
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
           <label>분류</label>
           <select id="add-priority">
             <option value="1">1순위 - 협회/공공</option>
@@ -602,13 +766,19 @@
           </select>
         </div>
         <div class="add-field">
-          <label>출처/경위</label>
-          <input type="text" id="add-source" placeholder="예: 지인 소개, 인터넷 검색">
+          <label>출처</label>
+          <select id="add-source">
+            <option value="">직접 추가</option>
+            <option value="AI조사">AI조사 (6개 AI)</option>
+            <option value="KOSCA">KOSCA (전문건설협회)</option>
+            <option value="지인소개">지인 소개</option>
+            <option value="인터넷">인터넷 검색</option>
+          </select>
         </div>
       </div>
       <div class="add-field">
         <label>상세 정보</label>
-        <textarea id="add-detail" placeholder="지역, 전문 분야, 특이사항 등"></textarea>
+        <textarea id="add-detail" placeholder="전문 분야, 특이사항 등"></textarea>
       </div>
       <div class="add-actions">
         <button class="btn-cancel" id="add-cancel">취소</button>
@@ -640,6 +810,26 @@
       </div>
       <div class="add-row">
         <div class="add-field">
+          <label>팩스번호</label>
+          <input type="text" id="edit-fax">
+        </div>
+        <div class="add-field">
+          <label>홈페이지</label>
+          <input type="text" id="edit-homepage">
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>지역 (구까지)</label>
+          <input type="text" id="edit-region">
+        </div>
+        <div class="add-field">
+          <label>시공능력평가액 (천원)</label>
+          <input type="number" id="edit-eval">
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
           <label>분류</label>
           <select id="edit-priority">
             <option value="1">1순위 - 협회/공공</option>
@@ -653,9 +843,19 @@
           </select>
         </div>
         <div class="add-field">
-          <label>상세 정보</label>
-          <input type="text" id="edit-detail">
+          <label>출처</label>
+          <select id="edit-source">
+            <option value="">직접 추가</option>
+            <option value="AI조사">AI조사 (6개 AI)</option>
+            <option value="KOSCA">KOSCA (전문건설협회)</option>
+            <option value="지인소개">지인 소개</option>
+            <option value="인터넷">인터넷 검색</option>
+          </select>
         </div>
+      </div>
+      <div class="add-field">
+        <label>상세 정보</label>
+        <input type="text" id="edit-detail">
       </div>
       <div class="edit-modal-actions">
         <button class="btn-delete" id="edit-delete">삭제</button>
@@ -679,51 +879,118 @@
 
 <script>
 const DATA=[
-  {id:1,p:1,g:"협회/공공",name:"(사)한국조경수협회 본회",phone:"042-822-5793~4",detail:"대전 | 전국 1,000여 회원 | 매입의뢰 게시판"},
-  {id:2,p:1,g:"협회/공공",name:"조경수협회 경북(대구) 지회",phone:"053-751-0042",phone2:"010-3536-3863 (박중현)",detail:"대구 수성구 | 구미 최근접 지회"},
-  {id:3,p:1,g:"협회/공공",name:"조경수협회 서울지회",phone:"02-448-3958",phone2:"010-2434-2981",detail:"수도권 건설사 매칭"},
-  {id:4,p:1,g:"협회/공공",name:"산림조합 대구경북본부",phone:"053-215-3048",detail:"경북 산림조합 네트워크 | 시세 감정"},
-  {id:5,p:1,g:"협회/공공",name:"산림조합중앙회 본부",phone:"1544-4200",phone2:"02-3434-7114",detail:"직거래장터 등록 | 구미시산림조합"},
-  {id:6,p:2,g:"거래 플랫폼",name:"트리디비 (TreeDB)",phone:"02-571-7581",detail:"국내 최대 | 2만명+ | treedb.co.kr"},
-  {id:7,p:2,g:"거래 플랫폼",name:"나무시장 (kotr)",phone:"-",detail:"kotr.co.kr | 무료 | 반송 다수"},
-  {id:8,p:2,g:"거래 플랫폼",name:"나무몰 (namoomall)",phone:"-",detail:"namoomall.com | 무료 | 경북 활발"},
-  {id:9,p:2,g:"거래 플랫폼",name:"라펜트 조경소재",phone:"02-336-3124",detail:"lafent.com | 조경 전문가 포털"},
-  {id:10,p:2,g:"거래 플랫폼",name:"마켓트리",phone:"031-923-4419",detail:"규격별 세분화 | 원스톱 견적"},
-  {id:11,p:2,g:"거래 플랫폼",name:"나무다움 (앱)",phone:"-",detail:"원스토어 설치 | 무료 등록"},
-  {id:12,p:3,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",detail:"강원 원주 | 전국 매입/매도 전문"},
-  {id:13,p:3,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",detail:"서울 서초 | 국내 최대 유통"},
-  {id:14,p:3,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",detail:"충남 당진 | 모범농장 | 반송 특화"},
-  {id:15,p:3,g:"유통상/중개",name:"청람조경농장",phone:"010-8299-8401",detail:"충남 태안 | 소나무/반송 전문"},
-  {id:16,p:3,g:"유통상/중개",name:"향기 가득한 농원",phone:"010-3272-6269",detail:"충북 진천 | 반송 보유 | 김재훈"},
-  {id:17,p:3,g:"유통상/중개",name:"대림조경",phone:"010-5332-0117",detail:"충남 | 22년 경력 | 소나무 도매"},
-  {id:18,p:3,g:"유통상/중개",name:"완주조경수유통",phone:"063-246-1566",phone2:"010-7487-1567",detail:"전북 완주 | 호남/전국 유통"},
-  {id:19,p:3,g:"유통상/중개",name:"호남조경수유통",phone:"-",detail:"광주 서구 | namu8282.com"},
-  {id:20,p:3,g:"유통상/중개",name:"차니농원",phone:"010-2625-4976",detail:"대형 특수목 전문"},
-  {id:21,p:4,g:"경북/대구",name:"(주)상록조경",phone:"054-472-0084",detail:"구미 해평면 | 조경공사 전문"},
-  {id:22,p:4,g:"경북/대구",name:"유원조경개발",phone:"054-443-6641",detail:"구미 신평동 | 조경식재 전문건설"},
-  {id:23,p:4,g:"경북/대구",name:"농소조경",phone:"010-3528-1560",detail:"구미 | 조경공사/잔디"},
-  {id:24,p:4,g:"경북/대구",name:"군위 거목조경",phone:"010-8662-1099",detail:"대구/경북 군위 | 구미 인근"},
-  {id:25,p:4,g:"경북/대구",name:"이효영 (개인)",phone:"010-3526-2137",detail:"대구 달서구 | 경북지회 회원"},
-  {id:26,p:4,g:"경북/대구",name:"최용규 (개인)",phone:"010-2331-5533",detail:"경북 고령 | 경북 서부권"},
-  {id:27,p:5,g:"대형 시공",name:"숨터조경건설",phone:"031-965-3119",detail:"서울/경기 | 소나무 전지 다수"},
-  {id:28,p:5,g:"대형 시공",name:"소나무조경",phone:"010-5290-2504",detail:"경기 김포 | 소나무 대량 매입"},
-  {id:29,p:5,g:"대형 시공",name:"(주)다원조경",phone:"032-623-6262",detail:"인천 | 시공능력 2위"},
-  {id:30,p:5,g:"대형 시공",name:"(주)한설그린",phone:"02-3411-0898",detail:"서울 강남 | 시공능력 4위"},
-  {id:31,p:5,g:"대형 시공",name:"(주)장원조경",phone:"02-578-4590",detail:"시공능력 6위"},
-  {id:32,p:5,g:"대형 시공",name:"(주)동영조경",phone:"02-322-9926",detail:"시공능력 7위"},
-  {id:33,p:5,g:"대형 시공",name:"(주)원앤티에스",phone:"02-338-2882",detail:"시공능력 8위 | 대우건설 협력사"},
-  {id:34,p:5,g:"대형 시공",name:"(주)안산조경건설",phone:"02-782-3286",detail:"시공능력 9위"},
-  {id:35,p:6,g:"대형 건설사",name:"현대건설",phone:"1577-7755",detail:"조경팀 연결"},
-  {id:36,p:6,g:"대형 건설사",name:"삼성물산 건설",phone:"02-2145-5114",detail:"온라인 상담실"},
-  {id:37,p:6,g:"대형 건설사",name:"GS건설",phone:"02-2154-1114",detail:"조경 담당"},
-  {id:38,p:6,g:"대형 건설사",name:"대우건설",phone:"02-2288-3114",detail:"조경 담당"},
-  {id:39,p:6,g:"대형 건설사",name:"HDC현대산업개발",phone:"02-3287-3001",detail:"조경 담당"},
-  {id:40,p:6,g:"대형 건설사",name:"롯데건설",phone:"1688-5500",detail:"롯데캐슬 경유"},
-  {id:41,p:6,g:"대형 건설사",name:"SK에코플랜트",phone:"02-3700-7114",detail:"구매 담당"},
-  {id:42,p:6,g:"대형 건설사",name:"포스코이앤씨",phone:"054-223-6114",detail:"포항 본사 | 경북 인접"},
-  {id:43,p:7,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀"},
-  {id:44,p:7,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경"},
-  {id:45,p:7,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",detail:"행정 절차 (완료)"},
+  {id:1,p:1,g:"협회/공공",name:"(사)한국조경수협회 본회",phone:"042-822-5793~4",fax:"042-822-5797",homepage:"https://www.klta.or.kr",region:"대전",detail:"전국 1,000여 회원 | 매입의뢰 게시판",source:"AI조사"},
+  {id:2,p:1,g:"협회/공공",name:"조경수협회 경북(대구) 지회",phone:"053-751-0042",phone2:"010-3536-3863 (박중현)",region:"대구 수성구",detail:"구미 최근접 지회",source:"AI조사"},
+  {id:3,p:1,g:"협회/공공",name:"조경수협회 서울지회",phone:"02-448-3958",phone2:"010-2434-2981",region:"서울",detail:"수도권 건설사 매칭",source:"AI조사"},
+  {id:4,p:1,g:"협회/공공",name:"산림조합 대구경북본부",phone:"053-215-3048",fax:"053-957-7994",homepage:"https://www.nfcf.or.kr",region:"대구",detail:"경북 산림조합 네트워크 | 시세 감정",source:"AI조사"},
+  {id:5,p:1,g:"협회/공공",name:"산림조합중앙회 본부",phone:"1544-4200",phone2:"02-3434-7114",homepage:"https://www.nfcf.or.kr",region:"서울",detail:"직거래장터 등록 | 구미시산림조합",source:"AI조사"},
+  {id:6,p:2,g:"거래 플랫폼",name:"트리디비 (TreeDB)",phone:"02-571-7581",homepage:"https://www.treedb.co.kr",region:"서울",detail:"국내 최대 | 2만명+",source:"AI조사"},
+  {id:7,p:2,g:"거래 플랫폼",name:"나무시장 (kotr)",phone:"-",homepage:"http://www.kotr.co.kr",detail:"무료 | 반송 다수",source:"AI조사"},
+  {id:8,p:2,g:"거래 플랫폼",name:"나무몰 (namoomall)",phone:"-",homepage:"https://www.namoomall.com",detail:"무료 | 경북 활발",source:"AI조사"},
+  {id:9,p:2,g:"거래 플랫폼",name:"라펜트 조경소재",phone:"02-336-3124",fax:"02-336-3125",homepage:"https://www.lafent.com",region:"서울 마포구",detail:"조경 전문가 포털",source:"AI조사"},
+  {id:10,p:2,g:"거래 플랫폼",name:"마켓트리",phone:"031-923-4419",detail:"규격별 세분화 | 원스톱 견적",source:"AI조사"},
+  {id:11,p:2,g:"거래 플랫폼",name:"나무다움 (앱)",phone:"-",detail:"원스토어 설치 | 무료 등록",source:"AI조사"},
+  {id:12,p:3,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",region:"강원 원주",detail:"전국 매입/매도 전문",source:"AI조사"},
+  {id:13,p:3,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",homepage:"http://www.suppro.com",region:"서울 서초구",detail:"국내 최대 유통",source:"AI조사"},
+  {id:14,p:3,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",region:"충남 당진시",detail:"모범농장 | 반송 특화",source:"AI조사"},
+  {id:15,p:3,g:"유통상/중개",name:"청람조경농장",phone:"010-8299-8401",region:"충남 태안군",detail:"소나무/반송 전문",source:"AI조사"},
+  {id:16,p:3,g:"유통상/중개",name:"향기 가득한 농원",phone:"010-3272-6269",region:"충북 진천군",detail:"반송 보유 | 김재훈",source:"AI조사"},
+  {id:17,p:3,g:"유통상/중개",name:"대림조경",phone:"010-5332-0117",region:"충남",detail:"22년 경력 | 소나무 도매",source:"AI조사"},
+  {id:18,p:3,g:"유통상/중개",name:"완주조경수유통",phone:"063-246-1566",phone2:"010-7487-1567",homepage:"http://www.wanjutree.com",region:"전북 완주",detail:"호남/전국 유통",source:"AI조사"},
+  {id:19,p:3,g:"유통상/중개",name:"호남조경수유통",phone:"-",homepage:"https://www.namu8282.com",region:"광주 서구",detail:"",source:"AI조사"},
+  {id:20,p:3,g:"유통상/중개",name:"차니농원",phone:"010-2625-4976",detail:"대형 특수목 전문",source:"AI조사"},
+  {id:21,p:4,g:"경북/대구",name:"(주)상록조경",phone:"054-472-0084",region:"경북 구미시",detail:"해평면 | 조경공사 전문",source:"AI조사"},
+  {id:22,p:4,g:"경북/대구",name:"유원조경개발",phone:"054-443-6641",region:"경북 구미시",detail:"신평동 | 조경식재 전문건설",source:"AI조사"},
+  {id:23,p:4,g:"경북/대구",name:"농소조경",phone:"010-3528-1560",region:"경북 구미시",detail:"조경공사/잔디",source:"AI조사"},
+  {id:24,p:4,g:"경북/대구",name:"군위 거목조경",phone:"010-8662-1099",region:"대구 군위군",detail:"구미 인근",source:"AI조사"},
+  {id:25,p:4,g:"경북/대구",name:"이효영 (개인)",phone:"010-3526-2137",region:"대구 달서구",detail:"경북지회 회원",source:"AI조사"},
+  {id:26,p:4,g:"경북/대구",name:"최용규 (개인)",phone:"010-2331-5533",region:"경북 고령군",detail:"경북 서부권",source:"AI조사"},
+  {id:27,p:5,g:"대형 시공",name:"숨터조경건설",phone:"031-965-3119",region:"서울/경기",detail:"소나무 전지 다수",source:"AI조사"},
+  {id:28,p:5,g:"대형 시공",name:"소나무조경",phone:"010-5290-2504",region:"경기 김포시",detail:"소나무 대량 매입",source:"AI조사"},
+  {id:29,p:5,g:"대형 시공",name:"(주)다원조경",phone:"032-623-6262",region:"인천",detail:"시공능력 2위",source:"AI조사"},
+  {id:30,p:5,g:"대형 시공",name:"(주)한설그린",phone:"02-3411-0898",region:"서울 강남구",detail:"시공능력 4위",source:"AI조사"},
+  {id:31,p:5,g:"대형 시공",name:"(주)장원조경",phone:"02-578-4590",region:"서울",detail:"시공능력 6위",source:"AI조사"},
+  {id:32,p:5,g:"대형 시공",name:"(주)동영조경",phone:"02-322-9926",region:"서울",detail:"시공능력 7위",source:"AI조사"},
+  {id:33,p:5,g:"대형 시공",name:"(주)원앤티에스",phone:"02-338-2882",region:"서울",detail:"시공능력 8위 | 대우건설 협력사",source:"AI조사"},
+  {id:34,p:5,g:"대형 시공",name:"(주)안산조경건설",phone:"02-782-3286",region:"서울",detail:"시공능력 9위",source:"AI조사"},
+  {id:35,p:6,g:"대형 건설사",name:"현대건설",phone:"1577-7755",detail:"조경팀 연결",source:"AI조사"},
+  {id:36,p:6,g:"대형 건설사",name:"삼성물산 건설",phone:"02-2145-5114",detail:"온라인 상담실",source:"AI조사"},
+  {id:37,p:6,g:"대형 건설사",name:"GS건설",phone:"02-2154-1114",detail:"조경 담당",source:"AI조사"},
+  {id:38,p:6,g:"대형 건설사",name:"대우건설",phone:"02-2288-3114",detail:"조경 담당",source:"AI조사"},
+  {id:39,p:6,g:"대형 건설사",name:"HDC현대산업개발",phone:"02-3287-3001",detail:"조경 담당",source:"AI조사"},
+  {id:40,p:6,g:"대형 건설사",name:"롯데건설",phone:"1688-5500",detail:"롯데캐슬 경유",source:"AI조사"},
+  {id:41,p:6,g:"대형 건설사",name:"SK에코플랜트",phone:"02-3700-7114",detail:"구매 담당",source:"AI조사"},
+  {id:42,p:6,g:"대형 건설사",name:"포스코이앤씨",phone:"054-223-6114",region:"경북 포항시",detail:"경북 인접",source:"AI조사"},
+  {id:43,p:7,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀",source:"AI조사"},
+  {id:44,p:7,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경",source:"AI조사"},
+  {id:45,p:7,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",region:"경북 구미시",detail:"행정 절차 (완료)",source:"AI조사"},
+  // ===== KOSCA 대구경북 30억+ 조경회사 (39건, 2026-03-18) =====
+  {id:46,p:4,g:"경북/대구",name:"경북조경(주)",phone:"-",region:"경북 상주시",evalAmount:353779,detail:"대표 서동령",source:"KOSCA"},
+  {id:47,p:4,g:"경북/대구",name:"고령군산림조합",phone:"-",region:"경북 고령군",evalAmount:304072,detail:"대표 임대성",source:"KOSCA"},
+  {id:48,p:4,g:"경북/대구",name:"구미시산림조합",phone:"-",region:"경북 구미시",evalAmount:461890,detail:"대표 김병철",source:"KOSCA"},
+  {id:49,p:4,g:"경북/대구",name:"(주)나무",phone:"-",region:"경북 경주시",evalAmount:300041,detail:"대표 박승우",source:"KOSCA"},
+  {id:50,p:4,g:"경북/대구",name:"남곡건설(주)",phone:"-",region:"경북 김천시",evalAmount:401394,detail:"대표 백락광",source:"KOSCA"},
+  {id:51,p:4,g:"경북/대구",name:"(주)녹색조경",phone:"-",region:"경북 문경시",evalAmount:314573,detail:"대표 박가은",source:"KOSCA"},
+  {id:52,p:4,g:"경북/대구",name:"(주)다모아조경",phone:"-",region:"경북 문경시",evalAmount:315748,detail:"대표 권정은",source:"KOSCA"},
+  {id:53,p:4,g:"경북/대구",name:"대림조경(주)",phone:"-",region:"경북 안동시",evalAmount:582836,detail:"대표 김진숙",source:"KOSCA"},
+  {id:54,p:4,g:"경북/대구",name:"대림종합개발(주)",phone:"-",region:"경북 안동시",evalAmount:302708,detail:"대표 김재모",source:"KOSCA"},
+  {id:55,p:4,g:"경북/대구",name:"(주)대성",phone:"-",region:"경북 상주시",evalAmount:314754,detail:"대표 박진",source:"KOSCA"},
+  {id:56,p:4,g:"경북/대구",name:"(주)대평개발",phone:"-",region:"경북 문경시",evalAmount:437611,detail:"대표 김성식",source:"KOSCA"},
+  {id:57,p:4,g:"경북/대구",name:"(주)도고조경개발",phone:"-",region:"경북 칠곡군",evalAmount:344051,detail:"대표 이희성",source:"KOSCA"},
+  {id:58,p:4,g:"경북/대구",name:"(주)디자인랜드",phone:"-",region:"경북 구미시",evalAmount:346544,detail:"대표 이윤정",source:"KOSCA"},
+  {id:59,p:4,g:"경북/대구",name:"무송종합조경(주)",phone:"-",region:"경북 경주시",evalAmount:498942,detail:"대표 전지안",source:"KOSCA"},
+  {id:60,p:4,g:"경북/대구",name:"문경시산림조합",phone:"-",region:"경북 문경시",evalAmount:457534,detail:"대표 최종성",source:"KOSCA"},
+  {id:61,p:4,g:"경북/대구",name:"상주시산림조합",phone:"-",region:"경북 상주시",evalAmount:367974,detail:"대표 송재엽",source:"KOSCA"},
+  {id:62,p:4,g:"경북/대구",name:"(주)서부조경개발",phone:"-",region:"경북 안동시",evalAmount:766824,detail:"대표 김영식",source:"KOSCA"},
+  {id:63,p:4,g:"경북/대구",name:"(주)서진산업개발",phone:"-",region:"경북 구미시",evalAmount:301299,detail:"대표 김학태",source:"KOSCA"},
+  {id:64,p:4,g:"경북/대구",name:"(주)성림조경",phone:"-",region:"경북 경주시",evalAmount:541691,detail:"대표 미확인",source:"KOSCA"},
+  {id:65,p:4,g:"경북/대구",name:"성주군산림조합",phone:"-",region:"경북 성주군",evalAmount:349262,detail:"대표 미확인",source:"KOSCA"},
+  {id:66,p:4,g:"경북/대구",name:"(주)에이치디건설",phone:"-",region:"경북 칠곡군",evalAmount:367581,detail:"대표 남영윤",source:"KOSCA"},
+  {id:67,p:4,g:"경북/대구",name:"(주)여백조경건설",phone:"-",region:"경북 구미시",evalAmount:327722,detail:"대표 김득현",source:"KOSCA"},
+  {id:68,p:4,g:"경북/대구",name:"영덕군산림조합",phone:"-",region:"경북 영덕군",evalAmount:479688,detail:"대표 양성학",source:"KOSCA"},
+  {id:69,p:4,g:"경북/대구",name:"영주시산림조합",phone:"-",region:"경북 영주시",evalAmount:499499,detail:"대표 윤상순",source:"KOSCA"},
+  {id:70,p:4,g:"경북/대구",name:"온누리조경건설(주)",phone:"-",region:"경북 울진군",evalAmount:355129,detail:"대표 장애순",source:"KOSCA"},
+  {id:71,p:4,g:"경북/대구",name:"(주)우리조경",phone:"-",region:"경북 포항시",evalAmount:404798,detail:"대표 유민진",source:"KOSCA"},
+  {id:72,p:4,g:"경북/대구",name:"유니온산업(주)",phone:"-",region:"경북 구미시",evalAmount:678977,detail:"대표 박종후",source:"KOSCA"},
+  {id:73,p:4,g:"경북/대구",name:"(주)임성",phone:"-",region:"경북 경주시",evalAmount:395226,detail:"대표 박흔구",source:"KOSCA"},
+  {id:74,p:4,g:"경북/대구",name:"(주)정원애",phone:"-",region:"경북 상주시",evalAmount:304298,detail:"대표 미확인",source:"KOSCA"},
+  {id:75,p:4,g:"경북/대구",name:"(주)제이스필드",phone:"-",region:"경북 구미시",evalAmount:387976,detail:"대표 미확인",source:"KOSCA"},
+  {id:76,p:4,g:"경북/대구",name:"청도군산림조합",phone:"-",region:"경북 청도군",evalAmount:652944,detail:"대표 박순열",source:"KOSCA"},
+  {id:77,p:4,g:"경북/대구",name:"(주)청마루",phone:"-",region:"경북 영천시",evalAmount:448629,detail:"대표 임대규",source:"KOSCA"},
+  {id:78,p:4,g:"경북/대구",name:"(주)청송조경건설",phone:"-",region:"경북 청송군",evalAmount:352908,detail:"대표 김미숙",source:"KOSCA"},
+  {id:79,p:4,g:"경북/대구",name:"클라임코리아(주)",phone:"-",region:"경북 문경시",evalAmount:711264,detail:"대표 홍주표",source:"KOSCA"},
+  {id:80,p:4,g:"경북/대구",name:"(주)태산조경",phone:"-",region:"경북 포항시",evalAmount:350331,detail:"대표 황태섭",source:"KOSCA"},
+  {id:81,p:4,g:"경북/대구",name:"(주)팔공조경산업",phone:"-",region:"경북 칠곡군",evalAmount:416837,detail:"대표 신삼희",source:"KOSCA"},
+  {id:82,p:4,g:"경북/대구",name:"(주)푸른이엔티",phone:"-",region:"경북 영주시",evalAmount:740571,detail:"대표 이승민",source:"KOSCA"},
+  {id:83,p:4,g:"경북/대구",name:"(주)풍진조경",phone:"-",region:"경북 경주시",evalAmount:312711,detail:"대표 최정윤",source:"KOSCA"},
+  {id:84,p:4,g:"경북/대구",name:"협동조경(주)",phone:"-",region:"경북 칠곡군",evalAmount:367920,detail:"대표 미확인",source:"KOSCA"},
+  // ===== KOSCA 대구 30억+ 조경회사 (26건, 2026-03-18) =====
+  {id:85,p:4,g:"경북/대구",name:"(주)거산개발",phone:"-",region:"대구 달서구",evalAmount:649339,detail:"",source:"KOSCA"},
+  {id:86,p:4,g:"경북/대구",name:"(주)거양",phone:"-",region:"대구 북구",evalAmount:441384,detail:"",source:"KOSCA"},
+  {id:87,p:4,g:"경북/대구",name:"(주)공간창조",phone:"-",region:"대구 북구",evalAmount:347161,detail:"",source:"KOSCA"},
+  {id:88,p:4,g:"경북/대구",name:"(주)금산조경개발",phone:"-",region:"대구 달서구",evalAmount:980294,detail:"",source:"KOSCA"},
+  {id:89,p:4,g:"경북/대구",name:"(주)금오조경개발",phone:"-",region:"대구 달성군",evalAmount:412125,detail:"",source:"KOSCA"},
+  {id:90,p:4,g:"경북/대구",name:"대구달성산림조합",phone:"-",region:"대구 달성군",evalAmount:361092,detail:"",source:"KOSCA"},
+  {id:91,p:4,g:"경북/대구",name:"(주)더에이치이엔씨",phone:"-",region:"대구 수성구",evalAmount:354223,detail:"",source:"KOSCA"},
+  {id:92,p:4,g:"경북/대구",name:"도시조경건설(주)",phone:"-",region:"대구 수성구",evalAmount:303449,detail:"",source:"KOSCA"},
+  {id:93,p:4,g:"경북/대구",name:"(주)동림종합조경",phone:"-",region:"대구 서구",evalAmount:419144,detail:"",source:"KOSCA"},
+  {id:94,p:4,g:"경북/대구",name:"(주)동원조경개발",phone:"-",region:"대구 수성구",evalAmount:387341,detail:"",source:"KOSCA"},
+  {id:95,p:4,g:"경북/대구",name:"두산조경(주)",phone:"-",region:"대구 군위군",evalAmount:739606,detail:"",source:"KOSCA"},
+  {id:96,p:4,g:"경북/대구",name:"(주)백운조경",phone:"-",region:"대구 달성군",evalAmount:325396,detail:"",source:"KOSCA"},
+  {id:97,p:4,g:"경북/대구",name:"(주)벽선",phone:"-",region:"대구 중구",evalAmount:460370,detail:"",source:"KOSCA"},
+  {id:98,p:4,g:"경북/대구",name:"(주)삼영실업조경",phone:"-",region:"대구 달성군",evalAmount:432459,detail:"",source:"KOSCA"},
+  {id:99,p:4,g:"경북/대구",name:"(주)성진조경",phone:"-",region:"대구 수성구",evalAmount:507181,detail:"",source:"KOSCA"},
+  {id:100,p:4,g:"경북/대구",name:"(주)성화공영",phone:"-",region:"대구 달성군",evalAmount:396812,detail:"",source:"KOSCA"},
+  {id:101,p:4,g:"경북/대구",name:"(주)송호조경",phone:"-",region:"대구 수성구",evalAmount:722092,detail:"",source:"KOSCA"},
+  {id:102,p:4,g:"경북/대구",name:"시티그린",phone:"-",region:"대구 동구",evalAmount:408595,detail:"",source:"KOSCA"},
+  {id:103,p:4,g:"경북/대구",name:"(주)에이스조경개발",phone:"-",region:"대구 달서구",evalAmount:334937,detail:"",source:"KOSCA"},
+  {id:104,p:4,g:"경북/대구",name:"(주)율하조경건설",phone:"-",region:"대구 달성군",evalAmount:317299,detail:"",source:"KOSCA"},
+  {id:105,p:4,g:"경북/대구",name:"(주)주산조경",phone:"-",region:"대구 달서구",evalAmount:954674,detail:"",source:"KOSCA"},
+  {id:106,p:4,g:"경북/대구",name:"지앤지그래스(주)",phone:"-",region:"대구 중구",evalAmount:542599,detail:"",source:"KOSCA"},
+  {id:107,p:4,g:"경북/대구",name:"초원영광건설(주)",phone:"-",region:"대구 달서구",evalAmount:330594,detail:"",source:"KOSCA"},
+  {id:108,p:4,g:"경북/대구",name:"(주)토마토이앤씨",phone:"-",region:"대구 북구",evalAmount:683894,detail:"",source:"KOSCA"},
+  {id:109,p:4,g:"경북/대구",name:"(주)하림조경",phone:"-",region:"대구 수성구",evalAmount:459786,detail:"",source:"KOSCA"},
+  {id:110,p:4,g:"경북/대구",name:"(주)호영산업개발",phone:"-",region:"대구 달성군",evalAmount:364028,detail:"",source:"KOSCA"},
 ];
 
 const PRI={1:{l:"1순위",c:"p1",d:"협회/공공"},2:{l:"2순위",c:"p2",d:"거래 플랫폼"},3:{l:"3순위",c:"p3",d:"유통상/중개"},4:{l:"4순위",c:"p4",d:"경북/대구"},5:{l:"5순위",c:"p5",d:"대형 시공"},6:{l:"6순위",c:"p6",d:"대형 건설사"},7:{l:"7순위",c:"p7",d:"골프장/공공"},8:{l:"추가",c:"p5",d:"직접 추가"}};
@@ -751,6 +1018,7 @@ function syncToCloud(){
           custom_entries:DATA.filter(d=>d.custom),
           hidden_ids:[...hiddenIds],
           sms_text:document.getElementById("sms-text")?.value||"",
+          update_log:updateLog,
           updated_at:new Date().toISOString(),
           updated_by:"local"
         })
@@ -772,6 +1040,7 @@ async function loadFromCloud(){
         row.custom_entries.forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});
       }
       if(row.hidden_ids&&row.hidden_ids.length>0) hiddenIds=new Set(row.hidden_ids);
+      if(row.update_log&&row.update_log.length>0) updateLog=row.update_log;
       if(row.sms_text) document.getElementById("sms-text").value=row.sms_text;
       return true;
     }
@@ -868,8 +1137,6 @@ function makeCard(item){
   }
   let cls="card";if(s.status==="done")cls+=" status-done";if(s.prospect==="high")cls+=" prospect-high";if(s.prospect==="mid")cls+=" prospect-mid";
   card.className=cls;
-  let ph=item.phone!=="-"?`<a href="tel:${item.phone.replace(/[^0-9+~]/g,'')}">${item.phone}</a>`:"(온라인)";
-  if(item.phone2)ph+=` <span class="sub">${item.phone2}</span>`;
   const si=STAT[s.status]||STAT[""],pri=PRI[item.p];
   let mOpts=MO.map(m=>`<option value="${m.v}" ${s.periodMonth===m.v?"selected":""}>${m.l}</option>`).join("");
   let pOpts=PA.map(p=>`<option value="${p.v}" ${s.periodPart===p.v?"selected":""}>${p.l}</option>`).join("");
@@ -889,8 +1156,17 @@ function makeCard(item){
     </div>
     <div class="info">
       <div class="nm">${priBadge}${item.name}<span class="sb ${si.b}">${si.l}</span>${customBadge}<button class="edit-btn" data-id="${item.id}" title="수정">&#9998;</button></div>
-      <div class="ph2">${ph}</div>
-      <div class="dt" title="${item.detail}">${item.detail}</div>
+      <div class="ph-row">
+        ${item.phone&&item.phone!=="-"?`<a href="tel:${item.phone.replace(/[^0-9+~]/g,'')}">${item.phone}</a>`:'<span style="color:var(--text2);font-size:11px">(온라인)</span>'}
+        ${item.phone2?`<span class="ph-sep">|</span><a href="tel:${item.phone2.replace(/[^0-9+]/g,'')}" style="font-size:11px;font-weight:400;color:var(--teal)">${item.phone2}</a>`:''}
+        ${item.fax?`<span class="ph-sep">|</span><span class="fax">F.${item.fax}</span>`:''}
+        ${item.homepage?`<a class="hp-link" href="${item.homepage}" target="_blank" title="${item.homepage}">&#x1F310;</a>`:''}
+      </div>
+      <div class="meta-row">
+        ${item.region?`<span class="region">${item.region}</span>`:item.detail?`<span class="region">${item.detail}</span>`:''}
+        ${item.evalAmount?`<span class="eval-badge">${(item.evalAmount/10000).toFixed(0)}억</span>`:''}
+        ${item.source?`<span class="source-badge">${item.source}</span>`:''}
+      </div>
     </div>
     <div class="ps"><select data-id="${item.id}" class="pros-sel">
       <option value="" ${s.prospect===""?"selected":""}>미평가</option>
@@ -940,7 +1216,9 @@ function updateStats(){
 }
 
 function bindEv(){
-  document.querySelectorAll(".status-sel").forEach(el=>{el.addEventListener("change",e=>{const s=G(e.target.dataset.id);s.status=e.target.value;s.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();renderTracker();});});
+  document.querySelectorAll(".status-sel").forEach(el=>{el.addEventListener("change",e=>{const id=e.target.dataset.id;const s=G(id);const prev=s.status;s.status=e.target.value;s.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();
+    if(e.target.value==="done"&&prev!=="done"){const item=DATA.find(d=>String(d.id)===String(id));if(item)addLog({type:"call",desc:`통화 완료: ${item.name}`,detail:item.phone||"",region:item.region||"",by:"Justin"});}
+    renderTracker();});});
   document.querySelectorAll(".cb-input").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).callback=e.target.value;saveState();});});
   document.querySelectorAll(".pros-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).prospect=e.target.value;saveState();renderTracker();});});
   const debounce=(el,cls,key)=>{document.querySelectorAll(cls).forEach(el=>{let t;el.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id)[key]=e.target.value;saveState();updateStats();},300);});});};
@@ -973,7 +1251,12 @@ function openEditModal(id){
   document.getElementById("edit-name").value=item.name;
   document.getElementById("edit-phone").value=item.phone==="-"?"":item.phone;
   document.getElementById("edit-phone2").value=item.phone2||"";
+  document.getElementById("edit-fax").value=item.fax||"";
+  document.getElementById("edit-homepage").value=item.homepage||"";
+  document.getElementById("edit-region").value=item.region||"";
+  document.getElementById("edit-eval").value=item.evalAmount||"";
   document.getElementById("edit-priority").value=item.p;
+  document.getElementById("edit-source").value=item.source||"";
   document.getElementById("edit-detail").value=item.detail||"";
   document.getElementById("edit-title").textContent=`${item.name} - 수정`;
   document.getElementById("edit-modal").classList.add("show");
@@ -1010,6 +1293,117 @@ function rst2(eid,title,status,color){
   el.innerHTML=h+"</table>";
 }
 
+// ========== Update Log ==========
+let updateLog=[];
+const LOG_TYPES={bulk:{l:"일괄등록",c:"lt-bulk"},list_add:{l:"추가",c:"lt-list_add"},list_edit:{l:"수정",c:"lt-list_edit"},call:{l:"통화",c:"lt-call"},note:{l:"메모",c:"lt-note"}};
+let logFilter="all";
+
+function addLog(entry){
+  updateLog.push({id:Date.now()+Math.random(),ts:new Date().toISOString(),...entry});
+  renderLog();syncToCloud();
+}
+
+function renderLog(){
+  const el=document.getElementById("log-list");
+  const filtered=logFilter==="all"?updateLog:updateLog.filter(e=>e.type===logFilter);
+  document.getElementById("tc-log").textContent=updateLog.length;
+  if(!filtered.length){el.innerHTML='<div class="log-empty">업데이트 내역이 없습니다.<br>업체 추가/수정, 통화 완료 시 자동으로 기록됩니다.</div>';return;}
+  // group by date
+  const days={};
+  filtered.sort((a,b)=>new Date(b.ts)-new Date(a.ts)).forEach(e=>{
+    const d=new Date(e.ts).toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric",weekday:"short"});
+    if(!days[d])days[d]=[];days[d].push(e);
+  });
+  let h="";
+  for(const [day,entries] of Object.entries(days)){
+    const calls=entries.filter(e=>e.type==="call").length;
+    const updates=entries.filter(e=>e.type==="list_edit"||e.type==="list_add"||e.type==="bulk").length;
+    const notes=entries.filter(e=>e.type==="note").length;
+    h+=`<div class="log-day"><div class="log-day-header"><div class="log-date">${day}</div><div class="log-brief">`;
+    if(calls)h+=`<span class="b-call">통화 ${calls}건</span>`;
+    if(updates)h+=`<span class="b-update">업데이트 ${updates}건</span>`;
+    if(notes)h+=`<span>메모 ${notes}건</span>`;
+    h+=`</div></div>`;
+    entries.forEach(e=>{
+      const time=new Date(e.ts).toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+      const lt=LOG_TYPES[e.type]||{l:"기타",c:""};
+      h+=`<div class="log-entry t-${e.type}" data-logid="${e.id}" style="cursor:pointer" title="클릭하여 수정"><div class="log-time">${time}</div><div class="log-content"><div class="log-desc">${e.desc||""}</div>`;
+      if(e.detail)h+=`<div class="log-detail">${e.detail}</div>`;
+      h+=`<div class="log-tags"><span class="log-tag ${lt.c}">${lt.l}</span>`;
+      if(e.region)h+=`<span class="log-tag lt-region">${e.region}</span>`;
+      if(e.count)h+=`<span class="log-tag lt-count">${e.count}건</span>`;
+      if(e.by)h+=`<span class="log-tag lt-by">${e.by}</span>`;
+      h+=`</div></div></div>`;
+    });
+    h+=`</div>`;
+  }
+  el.innerHTML=h;
+}
+
+// Log modal — add & edit mode
+let _editLogId=null;
+function openLogModal(entry){
+  const isEdit=!!entry;
+  _editLogId=isEdit?entry.id:null;
+  document.getElementById("log-modal-title").textContent=isEdit?"업데이트 내역 수정":"업데이트 메모 추가";
+  document.getElementById("log-confirm").textContent=isEdit?"저장":"추가";
+  document.getElementById("log-delete").style.display=isEdit?"inline-block":"none";
+  document.getElementById("log-type").value=isEdit?entry.type:"note";
+  document.getElementById("log-region").value=isEdit?(entry.region||""):"";
+  document.getElementById("log-count").value=isEdit?(entry.count||""):"";
+  document.getElementById("log-desc").value=isEdit?(entry.desc||""):"";
+  document.getElementById("log-detail").value=isEdit?(entry.detail||""):"";
+  document.getElementById("log-by").value=isEdit?(entry.by||"AI"):"AI";
+  document.getElementById("log-modal").classList.add("show");
+  document.getElementById("log-desc").focus();
+}
+document.getElementById("btn-log-add").addEventListener("click",()=>openLogModal(null));
+document.getElementById("log-cancel").addEventListener("click",()=>{document.getElementById("log-modal").classList.remove("show");_editLogId=null;});
+document.getElementById("log-modal").addEventListener("click",e=>{if(e.target.id==="log-modal"){e.target.classList.remove("show");_editLogId=null;}});
+document.getElementById("log-delete").addEventListener("click",()=>{
+  if(!_editLogId)return;
+  if(!confirm("이 업데이트 내역을 삭제하시겠습니까?"))return;
+  updateLog=updateLog.filter(l=>l.id!==_editLogId);
+  _editLogId=null;
+  document.getElementById("log-modal").classList.remove("show");
+  renderLog();syncToCloud();
+});
+document.getElementById("log-confirm").addEventListener("click",()=>{
+  const desc=document.getElementById("log-desc").value.trim();
+  if(!desc){document.getElementById("log-desc").focus();return;}
+  const data={
+    type:document.getElementById("log-type").value,
+    region:document.getElementById("log-region").value.trim()||"",
+    count:Number(document.getElementById("log-count").value)||0,
+    desc,
+    detail:document.getElementById("log-detail").value.trim()||"",
+    by:document.getElementById("log-by").value
+  };
+  if(_editLogId){
+    const idx=updateLog.findIndex(l=>l.id===_editLogId);
+    if(idx>=0)Object.assign(updateLog[idx],data);
+    _editLogId=null;
+  }else{
+    addLog(data);return;
+  }
+  document.getElementById("log-modal").classList.remove("show");
+  renderLog();syncToCloud();
+});
+// Click log entry to edit
+document.getElementById("log-list").addEventListener("click",e=>{
+  const entry=e.target.closest(".log-entry");
+  if(!entry)return;
+  const id=Number(entry.dataset.logid);
+  const log=updateLog.find(l=>l.id===id);
+  if(log)openLogModal(log);
+});
+
+// Log filters
+document.querySelectorAll(".log-filter").forEach(b=>{b.addEventListener("click",()=>{
+  document.querySelectorAll(".log-filter").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");logFilter=b.dataset.lf;renderLog();
+});});
+
 // Events
 document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
@@ -1017,6 +1411,7 @@ document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{
   t.classList.add("active");document.getElementById("panel-"+t.dataset.tab).classList.add("active");
   document.getElementById("tracker-controls").style.display=t.dataset.tab==="tracker"?"block":"none";
   if(t.dataset.tab==="summary")renderSummary();
+  if(t.dataset.tab==="log")renderLog();
 });});
 document.querySelectorAll(".fb").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".fb").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderTracker();});});
 document.querySelectorAll(".sort-btn").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".sort-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentSort=b.dataset.sort;renderTracker();});});
@@ -1080,7 +1475,7 @@ document.getElementById("btn-reset").addEventListener("click",async()=>{if(confi
   for(let i=DATA.length-1;i>=0;i--){if(DATA[i].custom)DATA.splice(i,1);}
   localStorage.removeItem("bansong-phone-tracker-v4");
   // reset cloud
-  try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
+  try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",update_log:[],updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
   document.getElementById("sms-text").value=SMS_DEFAULT;
   renderTracker();
 }});
@@ -1102,8 +1497,12 @@ document.getElementById("add-confirm").addEventListener("click",()=>{
   if(!name){alert("업체명을 입력하세요.");return;}
   if(!phone){alert("전화번호를 입력하세요.");return;}
   const phone2=document.getElementById("add-phone2").value.trim();
+  const fax=document.getElementById("add-fax").value.trim();
+  const homepage=document.getElementById("add-homepage").value.trim();
+  const region=document.getElementById("add-region").value.trim();
+  const evalVal=document.getElementById("add-eval").value;
   const priority=Number(document.getElementById("add-priority").value);
-  const source=document.getElementById("add-source").value.trim();
+  const source=document.getElementById("add-source").value;
   const detail=document.getElementById("add-detail").value.trim();
   const priInfo=PRI[priority];
 
@@ -1113,19 +1512,29 @@ document.getElementById("add-confirm").addEventListener("click",()=>{
     g: priInfo.d,
     name: name,
     phone: phone,
-    detail: (detail||source) ? [detail,source?`(${source})`:""].filter(Boolean).join(" ") : "직접 추가",
+    detail: detail || "",
     custom: true,
   };
   if(phone2) newItem.phone2=phone2;
+  if(fax) newItem.fax=fax;
+  if(homepage) newItem.homepage=homepage;
+  if(region) newItem.region=region;
+  if(evalVal) newItem.evalAmount=Number(evalVal);
+  if(source) newItem.source=source;
 
   DATA.push(newItem);
   saveCustomEntries();
+  addLog({type:"list_add",desc:`업체 추가: ${name}`,detail:region?`지역: ${region}`:"",region:region||"",by:"Justin"});
   renderTracker();
 
   // Reset form
   document.getElementById("add-name").value="";
   document.getElementById("add-phone").value="";
   document.getElementById("add-phone2").value="";
+  document.getElementById("add-fax").value="";
+  document.getElementById("add-homepage").value="";
+  document.getElementById("add-region").value="";
+  document.getElementById("add-eval").value="";
   document.getElementById("add-source").value="";
   document.getElementById("add-detail").value="";
   document.getElementById("add-priority").value="3";
@@ -1151,6 +1560,12 @@ document.getElementById("edit-save").addEventListener("click",()=>{
   item.name=name;
   item.phone=phone;
   item.phone2=document.getElementById("edit-phone2").value.trim()||undefined;
+  item.fax=document.getElementById("edit-fax").value.trim()||undefined;
+  item.homepage=document.getElementById("edit-homepage").value.trim()||undefined;
+  item.region=document.getElementById("edit-region").value.trim()||undefined;
+  const evalVal=document.getElementById("edit-eval").value;
+  item.evalAmount=evalVal?Number(evalVal):undefined;
+  item.source=document.getElementById("edit-source").value||undefined;
   item.p=Number(document.getElementById("edit-priority").value);
   item.g=PRI[item.p].d;
   item.detail=document.getElementById("edit-detail").value.trim();
@@ -1164,6 +1579,7 @@ document.getElementById("edit-save").addEventListener("click",()=>{
     saveCustomEntries();
   }
 
+  addLog({type:"list_edit",desc:`정보 수정: ${name}`,region:item.region||"",by:"Justin"});
   document.getElementById("edit-modal").classList.remove("show");
   renderTracker();
   const ind=document.getElementById("save-ind");
@@ -1212,7 +1628,14 @@ document.getElementById("edit-delete").addEventListener("click",()=>{
     }
   }
 
+  // Auto-add bulk log for KOSCA 대구 26건 (one-time)
+  if(!updateLog.find(l=>l.desc&&l.desc.includes('대구 30억+ 조경회사 26건'))){
+    updateLog.push({id:Date.now()+Math.random(),ts:new Date().toISOString(),type:"bulk",region:"대구",count:26,desc:"KOSCA 대구 30억+ 조경회사 26건 리스트 업데이트",detail:"시공능력평가액 30억 이상, 조경식재·시설물 업종",by:"AI"});
+    syncToCloud();
+  }
+
   renderTracker();
+  renderLog();
   // Show connection status
   const i=document.getElementById("save-ind");
   if(cloudOk&&cloudHasData){ i.textContent="클라우드 연결됨"; i.style.color="var(--green)"; }
