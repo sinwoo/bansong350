@@ -1195,20 +1195,32 @@ document.getElementById("edit-delete").addEventListener("click",()=>{
 // Boot: cloud first, localStorage fallback
 (async function boot(){
   const cloudOk=await loadFromCloud();
-  if(!cloudOk){
-    // fallback to localStorage
+  const cloudHasData=Object.keys(state).length>0;
+
+  if(!cloudHasData){
+    // Cloud is empty or failed — load from localStorage
     loadState();
-    // try migrate old custom entries from localStorage
+    // migrate old custom entries
     try{const cs=localStorage.getItem("bansong-custom-entries");if(cs){JSON.parse(cs).forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});}}catch{}
     try{const hs=localStorage.getItem("bansong-hidden-entries");if(hs)hiddenIds=new Set(JSON.parse(hs));}catch{}
+    try{const sm=localStorage.getItem("bansong-sms-text");if(sm)document.getElementById("sms-text").value=sm;}catch{}
+
+    // If we have local data and cloud is connected, push it up
+    if(cloudOk&&Object.keys(state).length>0){
+      syncToCloud();
+      console.log("Local data migrated to cloud");
+    }
   }
+
   renderTracker();
   // Show connection status
   const i=document.getElementById("save-ind");
-  i.textContent=cloudOk?"클라우드 연결됨":"오프라인 (로컬)";
-  i.style.color=cloudOk?"var(--green)":"var(--orange)";
+  if(cloudOk&&cloudHasData){ i.textContent="클라우드 연결됨"; i.style.color="var(--green)"; }
+  else if(cloudOk&&!cloudHasData&&Object.keys(state).length>0){ i.textContent="로컬→클라우드 마이그레이션 완료"; i.style.color="var(--teal)"; }
+  else if(cloudOk){ i.textContent="클라우드 연결됨 (신규)"; i.style.color="var(--green)"; }
+  else{ i.textContent="오프라인 (로컬)"; i.style.color="var(--orange)"; }
   i.classList.add("show");
-  clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),2000);
+  clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),3000);
 })();
 </script>
 </body>
