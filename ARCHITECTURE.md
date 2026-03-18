@@ -9,8 +9,8 @@
 
 ```
 bansong350/
-├── ARCHITECTURE.md                                    # 이 파일
-├── dashboard.html                                     # 판매 현황 대시보드
+├── ARCHITECTURE.md                                    # 이 파일 (일원화 문서)
+├── index.html                                         # 판매 현황 대시보드 (GitHub Pages 서빙)
 ├── 반송 소나무 350그루 판매 프로젝트 - 현황 정리.md       # 매물 기본 정보 + 시세
 ├── 반송 350그루 판매 - 업체 연락처 종합 리스트.md          # 46개 업체 (7순위)
 │
@@ -31,24 +31,59 @@ bansong350/
     └── context-health-log.md                          # 가드레일 점검
 ```
 
+## 배포 규칙
+
+> **⚠️ 필수**: 사용자가 "배포해줘"라고 명시적으로 요청하기 전까지는 코드 수정만 수행한다.
+> `git add` / `git commit` / `git push`는 사용자의 배포 지시가 있을 때만 실행.
+
+- **배포 방법**: `git push origin main` → GitHub Pages 자동 배포
+- **URL**: `https://sinwoo.github.io/bansong350/`
+- **서빙 파일**: `index.html` (단일 파일, index.html 삭제됨)
+
+---
+
 ## 핵심 데이터 흐름
 
 ```
 [매물 정보] → [업체 연락] → [견적 수집] → [비교/협상] → [계약/인도]
     ↑              ↑             ↓              ↓
-현황 정리.md   연락처 리스트.md  dashboard.html  Decision.md
+현황 정리.md   연락처 리스트.md  index.html  Decision.md
 ```
 
 ## 단일 진실 공급원 (SSOT)
 
 | 정보 | SSOT 파일 |
 |------|----------|
-| 매물 규격/시세 | 반송 소나무 350그루 판매 프로젝트 - 현황 정리.md |
-| 업체 연락처 | 반송 350그루 판매 - 업체 연락처 종합 리스트.md |
-| 진행 상태 | dashboard.html + docs/Features.json |
+| 매물 규격/시세 | _dev/10_docs/반송 소나무 350그루 판매 프로젝트 - 현황 정리.md |
+| 업체 연락처 | _dev/10_docs/반송 350그루 판매 - 업체 연락처 종합 리스트.md |
+| 진행 상태 | index.html + docs/Features.json |
 | 의사결정 | docs/Decision.md |
 | 작업 기억 | _dev/activeContext.md |
-| 업체 수집 이력 | dashboard.html 내 `updateLog` (Supabase `update_log` 컬럼 동기화) |
+| 업체 수집 이력 | index.html 내 `updateLog` (Supabase `update_log` 컬럼 동기화) |
+
+## 대시보드 탭 구조
+
+| 탭 | 용도 | 데이터 |
+|----|------|--------|
+| 업체 리스트 | 아웃바운드 전화 추적 | `DATA` 배열 (p:1~6) |
+| 통화 현황 | 완료/예약/부재중 요약 | `state` (tracker_data) |
+| 거래 플랫폼 | 인바운드 매물등록 관리 | `PLATFORMS` + `platState` + `platInquiries` |
+| 매물 정보 | 나무 규격/가격 참고자료 | 정적 HTML |
+| 업데이트 내역 | 작업 타임라인 로그 | `updateLog` |
+
+## 업체 순위 체계 (v2, 2026-03-18)
+
+| 순위 | 그룹 | 비고 |
+|------|------|------|
+| 1순위 | 협회/공공 | 조경수협회, 산림조합 |
+| 2순위 | 유통상/중개 | 조경수거래소, 농원 등 |
+| 3순위 | 경북/대구 | KOSCA 포함, 지역 조경업체 |
+| 4순위 | 대형 시공 | 전국 대형 조경 시공사 |
+| 5순위 | 대형 건설사 | 현대건설, 삼성물산 등 |
+| 6순위 | 골프장/공공 | 골프장, LH, 구미시청 |
+| 추가 | 직접 추가 | 사용자 수동 등록 |
+
+> **변경 이력**: 기존 2순위(거래 플랫폼)을 별도 탭으로 분리, 나머지 순위 1씩 상향 (v2)
 
 ---
 
@@ -86,7 +121,7 @@ bansong350/
 
 ### 데이터 변환 규칙
 
-| 항목 | KOSCA 원본 | dashboard.html 저장 |
+| 항목 | KOSCA 원본 | index.html 저장 |
 |------|-----------|-------------------|
 | 시공능력평가액 | 천원 단위 (예: `6,493,394`) | **만원 단위** = 천원 ÷ 10 (예: `649339`) |
 | 표시 (억) | - | `evalAmount / 10000` → `65억` |
@@ -94,12 +129,12 @@ bansong350/
 | phone | 목록에 없음 | `"-"` (상세 페이지에서 별도 수집) |
 | detail | 대표자명 (목록) | `"대표 홍길동"` 또는 `""` (목록 수집 시 생략 가능) |
 
-### dashboard.html DATA 배열 형식
+### index.html DATA 배열 형식
 
 ```javascript
 {
   id: Number,        // 기존 마지막 id + 1부터 순차
-  p: 4,              // 우선순위 4 = 경북/대구
+  p: 3,              // 우선순위 3 = 경북/대구 (v2 기준)
   g: "경북/대구",     // 그룹명
   name: "업체명",
   phone: "-",        // 상세 수집 전까지 "-"
@@ -122,7 +157,7 @@ bansong350/
 
 ### 수집 완료 후 필수 작업
 
-1. `dashboard.html`의 `DATA` 배열에 항목 추가 (주석으로 출처/날짜/건수 표기)
+1. `index.html`의 `DATA` 배열에 항목 추가 (주석으로 출처/날짜/건수 표기)
 2. `updateLog`에 bulk 타입 로그 자동 추가 (boot 함수에 one-time 체크)
 3. Supabase `bansong_state.update_log` 동기화 확인
 

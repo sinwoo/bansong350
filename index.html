@@ -10,7 +10,7 @@
     --accent: #6c8cff; --accent2: #4a6adf;
     --red: #ff6b6b; --orange: #ffa94d; --yellow: #ffd43b;
     --green: #51cf66; --teal: #38d9a9; --purple: #b197fc;
-    --grid: 130px 1.3fr 95px 100px 145px 140px 1fr;
+    --grid: 30px 130px 95px 1.3fr 100px 110px 140px 1fr;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; overflow: hidden; }
@@ -135,11 +135,10 @@
   .qp .sf { font-size: 11px; color: var(--text2); white-space: nowrap; }
 
   /* Period */
-  .pd { display: flex; gap: 4px; }
+  .pd { display: flex; flex-direction: column; gap: 4px; }
   .pd select { padding: 6px 4px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; }
   .pd select option { background: var(--surface2); }
-  .pd .month-sel { width: 64px; }
-  .pd .part-sel { width: 64px; }
+  .pd .month-sel { width: 100%; }
 
   /* Follow-up checks */
   .fu { display: flex; flex-direction: column; gap: 4px; }
@@ -159,11 +158,55 @@
   /* Summary */
   .summary-section { margin-bottom: 24px; }
   .summary-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-  .summary-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .summary-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
   .summary-table th { text-align: left; padding: 8px 12px; background: var(--surface2); color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .summary-table th:first-child { border-radius: 5px 0 0 0; }
+  .summary-table th:last-child { border-radius: 0 5px 0 0; }
   .summary-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
   .summary-table tr:hover { background: var(--surface2); }
   .summary-empty { color: var(--text2); font-size: 13px; padding: 20px; text-align: center; }
+  .pros-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .pros-tag.pt-high { background: #1a3a1a; color: var(--green); }
+  .pros-tag.pt-mid { background: #3a3a10; color: var(--yellow); }
+  .pros-tag.pt-low { background: #3a2a10; color: var(--orange); }
+  .pros-tag.pt-none { background: #3a1020; color: var(--red); }
+  .pros-tag.pt-unknown { background: var(--surface2); color: var(--text2); }
+
+  /* Call counter */
+  .call-counter { display: flex; align-items: center; gap: 2px; margin-top: 4px; }
+  .call-counter .cc-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+  .call-counter .cc-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .call-counter .cc-val { width: 28px; text-align: center; font-size: 11px; font-weight: 600; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 2px 0; }
+
+  /* Star (주요) */
+  .star-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 0; line-height: 1; color: var(--text2); transition: color 0.15s; }
+  .star-btn:hover { color: var(--yellow); }
+  .star-btn.on { color: var(--yellow); }
+
+  /* Notes history */
+  .notes-area { margin-top: 6px; }
+  .notes-toggle { background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--text2); font-size: 11px; cursor: pointer; padding: 2px 8px; }
+  .notes-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .notes-list { margin-top: 4px; font-size: 11px; }
+  .notes-list .note-item { padding: 3px 0; border-bottom: 1px solid var(--border); color: var(--text2); display: flex; gap: 6px; }
+  .notes-list .note-item .note-ts { color: var(--accent); white-space: nowrap; flex-shrink: 0; font-size: 10px; }
+  .notes-list .note-item .note-text { flex: 1; }
+  .notes-input-row { display: flex; gap: 4px; margin-top: 4px; }
+  .notes-input-row input { flex: 1; padding: 4px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 11px; font-family: inherit; }
+  .notes-input-row input:focus { outline: none; border-color: var(--accent); }
+  .notes-input-row button { padding: 4px 10px; border-radius: 4px; border: 1px solid var(--teal); background: transparent; color: var(--teal); font-size: 10px; cursor: pointer; white-space: nowrap; }
+  .notes-input-row button:hover { background: var(--teal); color: var(--bg); }
+
+  /* Key client tab */
+  .key-section { margin-bottom: 24px; }
+  .key-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); color: var(--yellow); }
+  .key-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; }
+  .key-card .kc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .key-card .kc-name { font-size: 13px; font-weight: 600; }
+  .key-card .kc-meta { font-size: 11px; color: var(--text2); }
+  .key-card .kc-stats { display: flex; gap: 12px; font-size: 11px; color: var(--text2); margin-bottom: 6px; flex-wrap: wrap; }
+  .key-card .kc-stats span { display: flex; align-items: center; gap: 3px; }
+  .key-empty { text-align: center; color: var(--text2); padding: 30px; font-size: 13px; }
   .price-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
   .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; text-align: center; min-width: 140px; }
   .price-card .val { font-size: 22px; font-weight: 700; color: var(--green); }
@@ -292,54 +335,64 @@
   .plat-stat .n { font-size: 20px; font-weight: 700; line-height: 1.2; }
   .plat-stat .l { font-size: 10px; color: var(--text2); margin-top: 2px; }
 
-  .plat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .plat-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    padding: 16px 18px; transition: border-color 0.2s;
-  }
-  .plat-card:hover { border-color: var(--accent); }
-  .plat-card.st-registered { border-left: 3px solid var(--green); }
-  .plat-card.st-renew { border-left: 3px solid var(--orange); animation: pulse-border 2s infinite; }
-  .plat-card.st-unregistered { border-left: 3px solid var(--text2); }
-  @keyframes pulse-border { 0%,100%{ border-left-color: var(--orange); } 50%{ border-left-color: var(--yellow); } }
-
-  .plat-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .plat-name { font-size: 14px; font-weight: 700; }
+  .plat-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; margin-bottom: 24px; }
+  .plat-table th { text-align: left; padding: 8px 10px; background: var(--surface2); color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); font-size: 11px; white-space: nowrap; }
+  .plat-table th:first-child { border-radius: 5px 0 0 0; }
+  .plat-table th:last-child { border-radius: 0 5px 0 0; }
+  .plat-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .plat-table tr { cursor: pointer; transition: background 0.15s; }
+  .plat-table tbody tr:hover { background: var(--surface2); }
+  .plat-table tr.st-renew { border-left: 3px solid var(--orange); }
   .plat-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
   .plat-badge.pb-registered { background: #1a3a1a; color: var(--green); }
   .plat-badge.pb-renew { background: #3a2a10; color: var(--orange); }
   .plat-badge.pb-unregistered { background: var(--surface2); color: var(--text2); }
   .plat-badge.pb-expired { background: #3a1020; color: var(--red); }
-  .plat-cost { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 9px; background: #1a1a2a; color: var(--accent); margin-left: auto; }
+  .plat-cost { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9px; background: #1a1a2a; color: var(--accent); }
+  .plat-table a { color: var(--accent); text-decoration: none; }
+  .plat-table a:hover { text-decoration: underline; }
 
-  .plat-meta { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 11px; margin-bottom: 10px; }
-  .plat-meta .pm-label { color: var(--text2); }
-  .plat-meta .pm-val { color: var(--text); }
-  .plat-meta a { color: var(--accent); text-decoration: none; }
-  .plat-meta a:hover { text-decoration: underline; }
+  .plat-section-title { font-size: 14px; font-weight: 700; margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
 
-  .plat-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .plat-btn {
-    padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
-    cursor: pointer; border: 1px solid var(--border); background: var(--surface2); color: var(--text2);
+  .inq-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
+  .inq-table th { text-align: left; padding: 8px 6px; background: var(--surface2); color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); font-size: 11px; white-space: nowrap; }
+  .inq-table th:first-child { border-radius: 5px 0 0 0; }
+  .inq-table th:last-child { border-radius: 0 5px 0 0; }
+  .inq-table td { padding: 6px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .inq-table tbody tr:hover { background: var(--surface2); }
+  /* 공통 문의 편집 행 스타일 — 추가행 + 데이터행 공유 */
+  .inq-edit-row td { padding: 4px 3px; vertical-align: middle; }
+  .inq-edit-row.inq-new-row td { background: var(--surface); border-bottom: 2px solid var(--accent); }
+  .inq-edit-row input, .inq-edit-row select {
+    padding: 5px 4px; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-size: 11px; width: 100%; font-family: inherit;
   }
-  .plat-btn:hover { border-color: var(--accent); color: var(--text); }
-  .plat-btn.primary { border-color: var(--green); color: var(--green); }
-  .plat-btn.primary:hover { background: var(--green); color: var(--bg); }
-  .plat-btn.warn { border-color: var(--orange); color: var(--orange); }
-  .plat-btn.warn:hover { background: var(--orange); color: var(--bg); }
-
-  .plat-inquiry-section { margin-top: 20px; }
-  .plat-inquiry-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .plat-inq-empty { color: var(--text2); font-size: 13px; padding: 20px; text-align: center; }
-  .plat-inq-item {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-    padding: 10px 14px; margin-bottom: 6px; display: grid; grid-template-columns: 120px 100px 1fr auto; gap: 10px; align-items: center;
+  .inq-edit-row input:focus, .inq-edit-row select:focus { outline: none; border-color: var(--accent); }
+  .inq-btn-save {
+    padding: 5px 12px; border-radius: 5px; border: 1px solid var(--green);
+    background: transparent; color: var(--green); font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap;
   }
-  .plat-inq-item .inq-date { font-size: 11px; color: var(--text2); }
-  .plat-inq-item .inq-from { font-size: 12px; font-weight: 600; color: var(--accent); }
-  .plat-inq-item .inq-msg { font-size: 12px; }
-  .plat-inq-item .inq-actions { display: flex; gap: 4px; }
+  .inq-btn-save:hover { background: var(--green); color: var(--bg); }
+  .inq-btn-add {
+    padding: 5px 12px; border-radius: 5px; border: 1px solid var(--teal);
+    background: transparent; color: var(--teal); font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .inq-btn-add:hover { background: var(--teal); color: var(--bg); }
+  .inq-btn-del { background: none; border: none; color: var(--red); cursor: pointer; font-size: 11px; padding: 2px 6px; }
+  .inq-btn-del:hover { text-decoration: underline; }
+
+  /* 노트 수정/삭제 */
+  .note-actions { display: inline-flex; gap: 4px; margin-left: 6px; opacity: 0; transition: opacity 0.15s; }
+  .note-item:hover .note-actions { opacity: 1; }
+  .note-act-btn { background: none; border: none; cursor: pointer; font-size: 10px; padding: 0 3px; color: var(--text2); }
+  .note-act-btn:hover { opacity: 1; }
+  .note-act-btn.edit:hover { color: var(--accent); }
+  .note-act-btn.del:hover { color: var(--red); }
+  .note-edit-input { padding: 3px 5px; border-radius: 3px; border: 1px solid var(--accent); background: var(--surface2); color: var(--text); font-size: 11px; width: 60%; }
+  .note-edit-actions { display: inline-flex; gap: 4px; margin-left: 4px; }
+  .note-edit-actions button { padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 10px; cursor: pointer; }
+  .note-edit-actions .confirm { border-color: var(--green); color: var(--green); }
+  .note-edit-actions .cancel { border-color: var(--text2); color: var(--text2); }
 
   /* Platform modal */
   .plat-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 480px; width: 92%; }
@@ -428,6 +481,7 @@
     <button class="tab active" data-tab="tracker">업체 리스트<span class="tc" id="tc-tracker">45</span></button>
     <button class="tab" data-tab="summary">통화 현황<span class="tc" id="tc-summary">0</span></button>
     <button class="tab" data-tab="platform">거래 플랫폼<span class="tc" id="tc-platform">6</span></button>
+    <button class="tab" data-tab="keyclient">주요 고객<span class="tc" id="tc-keyclient">0</span></button>
     <button class="tab" data-tab="info">매물 정보</button>
     <button class="tab" data-tab="log">업데이트 내역<span class="tc" id="tc-log">0</span></button>
   </div>
@@ -472,9 +526,10 @@
       <strong>"경북 구미시 옥성면에 수령 17년 정식재배 반송 350그루 있습니다. 근원직경 R20cm, W2.0m, H2.0~2.5m 규격이고, 수형 좋은 것 절반, 일반 절반입니다. 밭 재배라 행정 제약 없고, 트럭 직접 진입 가능합니다. 일괄 또는 분할 매도 모두 협의 가능합니다. 사진 보내드릴까요?"</strong>
     </div>
     <div class="col-header">
+      <div>&#9733;</div>
       <div>통화 상태</div>
-      <div>업체 정보</div>
       <div>가능성</div>
+      <div>업체 정보</div>
       <div>수량/가격</div>
       <div>예상 시기</div>
       <div>담당자/후속</div>
@@ -496,11 +551,19 @@
   <!-- 거래 플랫폼 탭 -->
   <div class="tab-panel" id="panel-platform">
     <div class="plat-stats" id="plat-stats"></div>
-    <div class="plat-grid" id="plat-grid"></div>
-    <div class="plat-inquiry-section">
-      <h3>&#x1F4E9; 문의 내역 <button class="plat-btn primary" id="btn-inq-add" style="font-size:11px;padding:3px 10px;">+ 문의 추가</button></h3>
-      <div id="plat-inq-list"></div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+      <input id="plat-add-name" placeholder="새 플랫폼 이름 입력..." style="flex:1;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px">
+      <button id="plat-add-btn" style="padding:7px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#000;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ 플랫폼 추가</button>
     </div>
+    <div id="plat-table-wrap"></div>
+    <div class="plat-section-title">&#x1F4E9; 문의 내역</div>
+    <div id="plat-inq-wrap"></div>
+  </div>
+
+  <!-- 주요 고객 탭 -->
+  <div class="tab-panel" id="panel-keyclient">
+    <div class="key-section" id="key-tracker-section"><h3>&#9733; 주요 업체</h3><div id="key-tracker-list"></div></div>
+    <div class="key-section" id="key-inq-section"><h3>&#9733; 주요 문의</h3><div id="key-inq-list"></div></div>
   </div>
 
   <!-- 매물 정보 탭 -->
@@ -784,36 +847,6 @@
   </div>
 </div>
 
-<!-- Inquiry add modal -->
-<div class="modal-overlay" id="inq-modal">
-  <div class="plat-modal">
-    <h2 id="inq-modal-title">문의 추가</h2>
-    <div class="add-field">
-      <label>플랫폼</label>
-      <select id="inq-platform"></select>
-    </div>
-    <div class="add-row">
-      <div class="add-field">
-        <label>문의자/업체명</label>
-        <input type="text" id="inq-from" placeholder="예: 대구 OO조경">
-      </div>
-      <div class="add-field">
-        <label>연락처</label>
-        <input type="text" id="inq-contact" placeholder="010-xxxx-xxxx">
-      </div>
-    </div>
-    <div class="add-field">
-      <label>문의 내용</label>
-      <textarea id="inq-msg" style="resize:vertical;min-height:48px;width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;" placeholder="예: 100그루 가능한지 문의"></textarea>
-    </div>
-    <div class="add-actions">
-      <button class="btn-cancel" id="inq-cancel">취소</button>
-      <button class="btn-confirm" id="inq-add-to-list" style="background:var(--surface2);color:var(--teal);border:1px solid var(--teal)">업체 리스트에 추가</button>
-      <button class="btn-confirm" id="inq-save">저장</button>
-    </div>
-  </div>
-</div>
-
 <!-- SMS modal -->
 <div class="modal-overlay" id="sms-modal">
   <div class="sms-modal">
@@ -894,13 +927,12 @@
           <label>분류</label>
           <select id="add-priority">
             <option value="1">1순위 - 협회/공공</option>
-            <option value="2">2순위 - 거래 플랫폼</option>
-            <option value="3" selected>3순위 - 유통상/중개</option>
-            <option value="4">4순위 - 경북/대구</option>
-            <option value="5">5순위 - 대형 시공</option>
-            <option value="6">6순위 - 대형 건설사</option>
-            <option value="7">7순위 - 골프장/공공</option>
-            <option value="8">직접 추가</option>
+            <option value="2" selected>2순위 - 유통상/중개</option>
+            <option value="3">3순위 - 경북/대구</option>
+            <option value="4">4순위 - 대형 시공</option>
+            <option value="5">5순위 - 대형 건설사</option>
+            <option value="6">6순위 - 골프장/공공</option>
+            <option value="7">직접 추가</option>
           </select>
         </div>
         <div class="add-field">
@@ -971,13 +1003,12 @@
           <label>분류</label>
           <select id="edit-priority">
             <option value="1">1순위 - 협회/공공</option>
-            <option value="2">2순위 - 거래 플랫폼</option>
-            <option value="3">3순위 - 유통상/중개</option>
-            <option value="4">4순위 - 경북/대구</option>
-            <option value="5">5순위 - 대형 시공</option>
-            <option value="6">6순위 - 대형 건설사</option>
-            <option value="7">7순위 - 골프장/공공</option>
-            <option value="8">직접 추가</option>
+            <option value="2">2순위 - 유통상/중개</option>
+            <option value="3">3순위 - 경북/대구</option>
+            <option value="4">4순위 - 대형 시공</option>
+            <option value="5">5순위 - 대형 건설사</option>
+            <option value="6">6순위 - 골프장/공공</option>
+            <option value="7">직접 추가</option>
           </select>
         </div>
         <div class="add-field">
@@ -1023,114 +1054,115 @@ const DATA=[
   {id:4,p:1,g:"협회/공공",name:"산림조합 대구경북본부",phone:"053-215-3048",fax:"053-957-7994",homepage:"https://www.nfcf.or.kr",region:"대구",detail:"경북 산림조합 네트워크 | 시세 감정",source:"AI조사"},
   {id:5,p:1,g:"협회/공공",name:"산림조합중앙회 본부",phone:"1544-4200",phone2:"02-3434-7114",homepage:"https://www.nfcf.or.kr",region:"서울",detail:"직거래장터 등록 | 구미시산림조합",source:"AI조사"},
   // 거래 플랫폼 id 6~11 → PLATFORMS 배열로 분리
-  {id:12,p:3,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",region:"강원 원주",detail:"전국 매입/매도 전문",source:"AI조사"},
-  {id:13,p:3,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",homepage:"http://www.suppro.com",region:"서울 서초구",detail:"국내 최대 유통",source:"AI조사"},
-  {id:14,p:3,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",region:"충남 당진시",detail:"모범농장 | 반송 특화",source:"AI조사"},
-  {id:15,p:3,g:"유통상/중개",name:"청람조경농장",phone:"010-8299-8401",region:"충남 태안군",detail:"소나무/반송 전문",source:"AI조사"},
-  {id:16,p:3,g:"유통상/중개",name:"향기 가득한 농원",phone:"010-3272-6269",region:"충북 진천군",detail:"반송 보유 | 김재훈",source:"AI조사"},
-  {id:17,p:3,g:"유통상/중개",name:"대림조경",phone:"010-5332-0117",region:"충남",detail:"22년 경력 | 소나무 도매",source:"AI조사"},
-  {id:18,p:3,g:"유통상/중개",name:"완주조경수유통",phone:"063-246-1566",phone2:"010-7487-1567",homepage:"http://www.wanjutree.com",region:"전북 완주",detail:"호남/전국 유통",source:"AI조사"},
-  {id:19,p:3,g:"유통상/중개",name:"호남조경수유통",phone:"-",homepage:"https://www.namu8282.com",region:"광주 서구",detail:"",source:"AI조사"},
-  {id:20,p:3,g:"유통상/중개",name:"차니농원",phone:"010-2625-4976",detail:"대형 특수목 전문",source:"AI조사"},
-  {id:21,p:4,g:"경북/대구",name:"(주)상록조경",phone:"054-472-0084",region:"경북 구미시",detail:"해평면 | 조경공사 전문",source:"AI조사"},
-  {id:22,p:4,g:"경북/대구",name:"유원조경개발",phone:"054-443-6641",region:"경북 구미시",detail:"신평동 | 조경식재 전문건설",source:"AI조사"},
-  {id:23,p:4,g:"경북/대구",name:"농소조경",phone:"010-3528-1560",region:"경북 구미시",detail:"조경공사/잔디",source:"AI조사"},
-  {id:24,p:4,g:"경북/대구",name:"군위 거목조경",phone:"010-8662-1099",region:"대구 군위군",detail:"구미 인근",source:"AI조사"},
-  {id:25,p:4,g:"경북/대구",name:"이효영 (개인)",phone:"010-3526-2137",region:"대구 달서구",detail:"경북지회 회원",source:"AI조사"},
-  {id:26,p:4,g:"경북/대구",name:"최용규 (개인)",phone:"010-2331-5533",region:"경북 고령군",detail:"경북 서부권",source:"AI조사"},
-  {id:27,p:5,g:"대형 시공",name:"숨터조경건설",phone:"031-965-3119",region:"서울/경기",detail:"소나무 전지 다수",source:"AI조사"},
-  {id:28,p:5,g:"대형 시공",name:"소나무조경",phone:"010-5290-2504",region:"경기 김포시",detail:"소나무 대량 매입",source:"AI조사"},
-  {id:29,p:5,g:"대형 시공",name:"(주)다원조경",phone:"032-623-6262",region:"인천",detail:"시공능력 2위",source:"AI조사"},
-  {id:30,p:5,g:"대형 시공",name:"(주)한설그린",phone:"02-3411-0898",region:"서울 강남구",detail:"시공능력 4위",source:"AI조사"},
-  {id:31,p:5,g:"대형 시공",name:"(주)장원조경",phone:"02-578-4590",region:"서울",detail:"시공능력 6위",source:"AI조사"},
-  {id:32,p:5,g:"대형 시공",name:"(주)동영조경",phone:"02-322-9926",region:"서울",detail:"시공능력 7위",source:"AI조사"},
-  {id:33,p:5,g:"대형 시공",name:"(주)원앤티에스",phone:"02-338-2882",region:"서울",detail:"시공능력 8위 | 대우건설 협력사",source:"AI조사"},
-  {id:34,p:5,g:"대형 시공",name:"(주)안산조경건설",phone:"02-782-3286",region:"서울",detail:"시공능력 9위",source:"AI조사"},
-  {id:35,p:6,g:"대형 건설사",name:"현대건설",phone:"1577-7755",detail:"조경팀 연결",source:"AI조사"},
-  {id:36,p:6,g:"대형 건설사",name:"삼성물산 건설",phone:"02-2145-5114",detail:"온라인 상담실",source:"AI조사"},
-  {id:37,p:6,g:"대형 건설사",name:"GS건설",phone:"02-2154-1114",detail:"조경 담당",source:"AI조사"},
-  {id:38,p:6,g:"대형 건설사",name:"대우건설",phone:"02-2288-3114",detail:"조경 담당",source:"AI조사"},
-  {id:39,p:6,g:"대형 건설사",name:"HDC현대산업개발",phone:"02-3287-3001",detail:"조경 담당",source:"AI조사"},
-  {id:40,p:6,g:"대형 건설사",name:"롯데건설",phone:"1688-5500",detail:"롯데캐슬 경유",source:"AI조사"},
-  {id:41,p:6,g:"대형 건설사",name:"SK에코플랜트",phone:"02-3700-7114",detail:"구매 담당",source:"AI조사"},
-  {id:42,p:6,g:"대형 건설사",name:"포스코이앤씨",phone:"054-223-6114",region:"경북 포항시",detail:"경북 인접",source:"AI조사"},
-  {id:43,p:7,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀",source:"AI조사"},
-  {id:44,p:7,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경",source:"AI조사"},
-  {id:45,p:7,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",region:"경북 구미시",detail:"행정 절차 (완료)",source:"AI조사"},
+  {id:12,p:2,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",region:"강원 원주",detail:"전국 매입/매도 전문",source:"AI조사"},
+  {id:13,p:2,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",homepage:"http://www.suppro.com",region:"서울 서초구",detail:"국내 최대 유통",source:"AI조사"},
+  {id:14,p:2,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",region:"충남 당진시",detail:"모범농장 | 반송 특화",source:"AI조사"},
+  {id:15,p:2,g:"유통상/중개",name:"청람조경농장",phone:"010-8299-8401",region:"충남 태안군",detail:"소나무/반송 전문",source:"AI조사"},
+  {id:16,p:2,g:"유통상/중개",name:"향기 가득한 농원",phone:"010-3272-6269",region:"충북 진천군",detail:"반송 보유 | 김재훈",source:"AI조사"},
+  {id:17,p:2,g:"유통상/중개",name:"대림조경",phone:"010-5332-0117",region:"충남",detail:"22년 경력 | 소나무 도매",source:"AI조사"},
+  {id:18,p:2,g:"유통상/중개",name:"완주조경수유통",phone:"063-246-1566",phone2:"010-7487-1567",homepage:"http://www.wanjutree.com",region:"전북 완주",detail:"호남/전국 유통",source:"AI조사"},
+  {id:19,p:2,g:"유통상/중개",name:"호남조경수유통",phone:"-",homepage:"https://www.namu8282.com",region:"광주 서구",detail:"",source:"AI조사"},
+  {id:20,p:2,g:"유통상/중개",name:"차니농원",phone:"010-2625-4976",detail:"대형 특수목 전문",source:"AI조사"},
+  {id:21,p:3,g:"경북/대구",name:"(주)상록조경",phone:"054-472-0084",region:"경북 구미시",detail:"해평면 | 조경공사 전문",source:"AI조사"},
+  {id:22,p:3,g:"경북/대구",name:"유원조경개발",phone:"054-443-6641",region:"경북 구미시",detail:"신평동 | 조경식재 전문건설",source:"AI조사"},
+  {id:23,p:3,g:"경북/대구",name:"농소조경",phone:"010-3528-1560",region:"경북 구미시",detail:"조경공사/잔디",source:"AI조사"},
+  {id:24,p:3,g:"경북/대구",name:"군위 거목조경",phone:"010-8662-1099",region:"대구 군위군",detail:"구미 인근",source:"AI조사"},
+  {id:25,p:3,g:"경북/대구",name:"이효영 (개인)",phone:"010-3526-2137",region:"대구 달서구",detail:"경북지회 회원",source:"AI조사"},
+  {id:26,p:3,g:"경북/대구",name:"최용규 (개인)",phone:"010-2331-5533",region:"경북 고령군",detail:"경북 서부권",source:"AI조사"},
+  {id:27,p:4,g:"대형 시공",name:"숨터조경건설",phone:"031-965-3119",region:"서울/경기",detail:"소나무 전지 다수",source:"AI조사"},
+  {id:28,p:4,g:"대형 시공",name:"소나무조경",phone:"010-5290-2504",region:"경기 김포시",detail:"소나무 대량 매입",source:"AI조사"},
+  {id:29,p:4,g:"대형 시공",name:"(주)다원조경",phone:"032-623-6262",region:"인천",detail:"시공능력 2위",source:"AI조사"},
+  {id:30,p:4,g:"대형 시공",name:"(주)한설그린",phone:"02-3411-0898",region:"서울 강남구",detail:"시공능력 4위",source:"AI조사"},
+  {id:31,p:4,g:"대형 시공",name:"(주)장원조경",phone:"02-578-4590",region:"서울",detail:"시공능력 6위",source:"AI조사"},
+  {id:32,p:4,g:"대형 시공",name:"(주)동영조경",phone:"02-322-9926",region:"서울",detail:"시공능력 7위",source:"AI조사"},
+  {id:33,p:4,g:"대형 시공",name:"(주)원앤티에스",phone:"02-338-2882",region:"서울",detail:"시공능력 8위 | 대우건설 협력사",source:"AI조사"},
+  {id:34,p:4,g:"대형 시공",name:"(주)안산조경건설",phone:"02-782-3286",region:"서울",detail:"시공능력 9위",source:"AI조사"},
+  {id:35,p:5,g:"대형 건설사",name:"현대건설",phone:"1577-7755",detail:"조경팀 연결",source:"AI조사"},
+  {id:36,p:5,g:"대형 건설사",name:"삼성물산 건설",phone:"02-2145-5114",detail:"온라인 상담실",source:"AI조사"},
+  {id:37,p:5,g:"대형 건설사",name:"GS건설",phone:"02-2154-1114",detail:"조경 담당",source:"AI조사"},
+  {id:38,p:5,g:"대형 건설사",name:"대우건설",phone:"02-2288-3114",detail:"조경 담당",source:"AI조사"},
+  {id:39,p:5,g:"대형 건설사",name:"HDC현대산업개발",phone:"02-3287-3001",detail:"조경 담당",source:"AI조사"},
+  {id:40,p:5,g:"대형 건설사",name:"롯데건설",phone:"1688-5500",detail:"롯데캐슬 경유",source:"AI조사"},
+  {id:41,p:5,g:"대형 건설사",name:"SK에코플랜트",phone:"02-3700-7114",detail:"구매 담당",source:"AI조사"},
+  {id:42,p:5,g:"대형 건설사",name:"포스코이앤씨",phone:"054-223-6114",region:"경북 포항시",detail:"경북 인접",source:"AI조사"},
+  {id:43,p:6,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀",source:"AI조사"},
+  {id:44,p:6,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경",source:"AI조사"},
+  {id:45,p:6,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",region:"경북 구미시",detail:"행정 절차 (완료)",source:"AI조사"},
   // ===== KOSCA 대구경북 30억+ 조경회사 (39건, 2026-03-18) =====
-  {id:46,p:4,g:"경북/대구",name:"경북조경(주)",phone:"-",region:"경북 상주시",evalAmount:353779,detail:"대표 서동령",source:"KOSCA"},
-  {id:47,p:4,g:"경북/대구",name:"고령군산림조합",phone:"-",region:"경북 고령군",evalAmount:304072,detail:"대표 임대성",source:"KOSCA"},
-  {id:48,p:4,g:"경북/대구",name:"구미시산림조합",phone:"-",region:"경북 구미시",evalAmount:461890,detail:"대표 김병철",source:"KOSCA"},
-  {id:49,p:4,g:"경북/대구",name:"(주)나무",phone:"-",region:"경북 경주시",evalAmount:300041,detail:"대표 박승우",source:"KOSCA"},
-  {id:50,p:4,g:"경북/대구",name:"남곡건설(주)",phone:"-",region:"경북 김천시",evalAmount:401394,detail:"대표 백락광",source:"KOSCA"},
-  {id:51,p:4,g:"경북/대구",name:"(주)녹색조경",phone:"-",region:"경북 문경시",evalAmount:314573,detail:"대표 박가은",source:"KOSCA"},
-  {id:52,p:4,g:"경북/대구",name:"(주)다모아조경",phone:"-",region:"경북 문경시",evalAmount:315748,detail:"대표 권정은",source:"KOSCA"},
-  {id:53,p:4,g:"경북/대구",name:"대림조경(주)",phone:"-",region:"경북 안동시",evalAmount:582836,detail:"대표 김진숙",source:"KOSCA"},
-  {id:54,p:4,g:"경북/대구",name:"대림종합개발(주)",phone:"-",region:"경북 안동시",evalAmount:302708,detail:"대표 김재모",source:"KOSCA"},
-  {id:55,p:4,g:"경북/대구",name:"(주)대성",phone:"-",region:"경북 상주시",evalAmount:314754,detail:"대표 박진",source:"KOSCA"},
-  {id:56,p:4,g:"경북/대구",name:"(주)대평개발",phone:"-",region:"경북 문경시",evalAmount:437611,detail:"대표 김성식",source:"KOSCA"},
-  {id:57,p:4,g:"경북/대구",name:"(주)도고조경개발",phone:"-",region:"경북 칠곡군",evalAmount:344051,detail:"대표 이희성",source:"KOSCA"},
-  {id:58,p:4,g:"경북/대구",name:"(주)디자인랜드",phone:"-",region:"경북 구미시",evalAmount:346544,detail:"대표 이윤정",source:"KOSCA"},
-  {id:59,p:4,g:"경북/대구",name:"무송종합조경(주)",phone:"-",region:"경북 경주시",evalAmount:498942,detail:"대표 전지안",source:"KOSCA"},
-  {id:60,p:4,g:"경북/대구",name:"문경시산림조합",phone:"-",region:"경북 문경시",evalAmount:457534,detail:"대표 최종성",source:"KOSCA"},
-  {id:61,p:4,g:"경북/대구",name:"상주시산림조합",phone:"-",region:"경북 상주시",evalAmount:367974,detail:"대표 송재엽",source:"KOSCA"},
-  {id:62,p:4,g:"경북/대구",name:"(주)서부조경개발",phone:"-",region:"경북 안동시",evalAmount:766824,detail:"대표 김영식",source:"KOSCA"},
-  {id:63,p:4,g:"경북/대구",name:"(주)서진산업개발",phone:"-",region:"경북 구미시",evalAmount:301299,detail:"대표 김학태",source:"KOSCA"},
-  {id:64,p:4,g:"경북/대구",name:"(주)성림조경",phone:"-",region:"경북 경주시",evalAmount:541691,detail:"대표 미확인",source:"KOSCA"},
-  {id:65,p:4,g:"경북/대구",name:"성주군산림조합",phone:"-",region:"경북 성주군",evalAmount:349262,detail:"대표 미확인",source:"KOSCA"},
-  {id:66,p:4,g:"경북/대구",name:"(주)에이치디건설",phone:"-",region:"경북 칠곡군",evalAmount:367581,detail:"대표 남영윤",source:"KOSCA"},
-  {id:67,p:4,g:"경북/대구",name:"(주)여백조경건설",phone:"-",region:"경북 구미시",evalAmount:327722,detail:"대표 김득현",source:"KOSCA"},
-  {id:68,p:4,g:"경북/대구",name:"영덕군산림조합",phone:"-",region:"경북 영덕군",evalAmount:479688,detail:"대표 양성학",source:"KOSCA"},
-  {id:69,p:4,g:"경북/대구",name:"영주시산림조합",phone:"-",region:"경북 영주시",evalAmount:499499,detail:"대표 윤상순",source:"KOSCA"},
-  {id:70,p:4,g:"경북/대구",name:"온누리조경건설(주)",phone:"-",region:"경북 울진군",evalAmount:355129,detail:"대표 장애순",source:"KOSCA"},
-  {id:71,p:4,g:"경북/대구",name:"(주)우리조경",phone:"-",region:"경북 포항시",evalAmount:404798,detail:"대표 유민진",source:"KOSCA"},
-  {id:72,p:4,g:"경북/대구",name:"유니온산업(주)",phone:"-",region:"경북 구미시",evalAmount:678977,detail:"대표 박종후",source:"KOSCA"},
-  {id:73,p:4,g:"경북/대구",name:"(주)임성",phone:"-",region:"경북 경주시",evalAmount:395226,detail:"대표 박흔구",source:"KOSCA"},
-  {id:74,p:4,g:"경북/대구",name:"(주)정원애",phone:"-",region:"경북 상주시",evalAmount:304298,detail:"대표 미확인",source:"KOSCA"},
-  {id:75,p:4,g:"경북/대구",name:"(주)제이스필드",phone:"-",region:"경북 구미시",evalAmount:387976,detail:"대표 미확인",source:"KOSCA"},
-  {id:76,p:4,g:"경북/대구",name:"청도군산림조합",phone:"-",region:"경북 청도군",evalAmount:652944,detail:"대표 박순열",source:"KOSCA"},
-  {id:77,p:4,g:"경북/대구",name:"(주)청마루",phone:"-",region:"경북 영천시",evalAmount:448629,detail:"대표 임대규",source:"KOSCA"},
-  {id:78,p:4,g:"경북/대구",name:"(주)청송조경건설",phone:"-",region:"경북 청송군",evalAmount:352908,detail:"대표 김미숙",source:"KOSCA"},
-  {id:79,p:4,g:"경북/대구",name:"클라임코리아(주)",phone:"-",region:"경북 문경시",evalAmount:711264,detail:"대표 홍주표",source:"KOSCA"},
-  {id:80,p:4,g:"경북/대구",name:"(주)태산조경",phone:"-",region:"경북 포항시",evalAmount:350331,detail:"대표 황태섭",source:"KOSCA"},
-  {id:81,p:4,g:"경북/대구",name:"(주)팔공조경산업",phone:"-",region:"경북 칠곡군",evalAmount:416837,detail:"대표 신삼희",source:"KOSCA"},
-  {id:82,p:4,g:"경북/대구",name:"(주)푸른이엔티",phone:"-",region:"경북 영주시",evalAmount:740571,detail:"대표 이승민",source:"KOSCA"},
-  {id:83,p:4,g:"경북/대구",name:"(주)풍진조경",phone:"-",region:"경북 경주시",evalAmount:312711,detail:"대표 최정윤",source:"KOSCA"},
-  {id:84,p:4,g:"경북/대구",name:"협동조경(주)",phone:"-",region:"경북 칠곡군",evalAmount:367920,detail:"대표 미확인",source:"KOSCA"},
+  {id:46,p:3,g:"경북/대구",name:"경북조경(주)",phone:"-",region:"경북 상주시",evalAmount:353779,detail:"대표 서동령",source:"KOSCA"},
+  {id:47,p:3,g:"경북/대구",name:"고령군산림조합",phone:"-",region:"경북 고령군",evalAmount:304072,detail:"대표 임대성",source:"KOSCA"},
+  {id:48,p:3,g:"경북/대구",name:"구미시산림조합",phone:"-",region:"경북 구미시",evalAmount:461890,detail:"대표 김병철",source:"KOSCA"},
+  {id:49,p:3,g:"경북/대구",name:"(주)나무",phone:"-",region:"경북 경주시",evalAmount:300041,detail:"대표 박승우",source:"KOSCA"},
+  {id:50,p:3,g:"경북/대구",name:"남곡건설(주)",phone:"-",region:"경북 김천시",evalAmount:401394,detail:"대표 백락광",source:"KOSCA"},
+  {id:51,p:3,g:"경북/대구",name:"(주)녹색조경",phone:"-",region:"경북 문경시",evalAmount:314573,detail:"대표 박가은",source:"KOSCA"},
+  {id:52,p:3,g:"경북/대구",name:"(주)다모아조경",phone:"-",region:"경북 문경시",evalAmount:315748,detail:"대표 권정은",source:"KOSCA"},
+  {id:53,p:3,g:"경북/대구",name:"대림조경(주)",phone:"-",region:"경북 안동시",evalAmount:582836,detail:"대표 김진숙",source:"KOSCA"},
+  {id:54,p:3,g:"경북/대구",name:"대림종합개발(주)",phone:"-",region:"경북 안동시",evalAmount:302708,detail:"대표 김재모",source:"KOSCA"},
+  {id:55,p:3,g:"경북/대구",name:"(주)대성",phone:"-",region:"경북 상주시",evalAmount:314754,detail:"대표 박진",source:"KOSCA"},
+  {id:56,p:3,g:"경북/대구",name:"(주)대평개발",phone:"-",region:"경북 문경시",evalAmount:437611,detail:"대표 김성식",source:"KOSCA"},
+  {id:57,p:3,g:"경북/대구",name:"(주)도고조경개발",phone:"-",region:"경북 칠곡군",evalAmount:344051,detail:"대표 이희성",source:"KOSCA"},
+  {id:58,p:3,g:"경북/대구",name:"(주)디자인랜드",phone:"-",region:"경북 구미시",evalAmount:346544,detail:"대표 이윤정",source:"KOSCA"},
+  {id:59,p:3,g:"경북/대구",name:"무송종합조경(주)",phone:"-",region:"경북 경주시",evalAmount:498942,detail:"대표 전지안",source:"KOSCA"},
+  {id:60,p:3,g:"경북/대구",name:"문경시산림조합",phone:"-",region:"경북 문경시",evalAmount:457534,detail:"대표 최종성",source:"KOSCA"},
+  {id:61,p:3,g:"경북/대구",name:"상주시산림조합",phone:"-",region:"경북 상주시",evalAmount:367974,detail:"대표 송재엽",source:"KOSCA"},
+  {id:62,p:3,g:"경북/대구",name:"(주)서부조경개발",phone:"-",region:"경북 안동시",evalAmount:766824,detail:"대표 김영식",source:"KOSCA"},
+  {id:63,p:3,g:"경북/대구",name:"(주)서진산업개발",phone:"-",region:"경북 구미시",evalAmount:301299,detail:"대표 김학태",source:"KOSCA"},
+  {id:64,p:3,g:"경북/대구",name:"(주)성림조경",phone:"-",region:"경북 경주시",evalAmount:541691,detail:"대표 미확인",source:"KOSCA"},
+  {id:65,p:3,g:"경북/대구",name:"성주군산림조합",phone:"-",region:"경북 성주군",evalAmount:349262,detail:"대표 미확인",source:"KOSCA"},
+  {id:66,p:3,g:"경북/대구",name:"(주)에이치디건설",phone:"-",region:"경북 칠곡군",evalAmount:367581,detail:"대표 남영윤",source:"KOSCA"},
+  {id:67,p:3,g:"경북/대구",name:"(주)여백조경건설",phone:"-",region:"경북 구미시",evalAmount:327722,detail:"대표 김득현",source:"KOSCA"},
+  {id:68,p:3,g:"경북/대구",name:"영덕군산림조합",phone:"-",region:"경북 영덕군",evalAmount:479688,detail:"대표 양성학",source:"KOSCA"},
+  {id:69,p:3,g:"경북/대구",name:"영주시산림조합",phone:"-",region:"경북 영주시",evalAmount:499499,detail:"대표 윤상순",source:"KOSCA"},
+  {id:70,p:3,g:"경북/대구",name:"온누리조경건설(주)",phone:"-",region:"경북 울진군",evalAmount:355129,detail:"대표 장애순",source:"KOSCA"},
+  {id:71,p:3,g:"경북/대구",name:"(주)우리조경",phone:"-",region:"경북 포항시",evalAmount:404798,detail:"대표 유민진",source:"KOSCA"},
+  {id:72,p:3,g:"경북/대구",name:"유니온산업(주)",phone:"-",region:"경북 구미시",evalAmount:678977,detail:"대표 박종후",source:"KOSCA"},
+  {id:73,p:3,g:"경북/대구",name:"(주)임성",phone:"-",region:"경북 경주시",evalAmount:395226,detail:"대표 박흔구",source:"KOSCA"},
+  {id:74,p:3,g:"경북/대구",name:"(주)정원애",phone:"-",region:"경북 상주시",evalAmount:304298,detail:"대표 미확인",source:"KOSCA"},
+  {id:75,p:3,g:"경북/대구",name:"(주)제이스필드",phone:"-",region:"경북 구미시",evalAmount:387976,detail:"대표 미확인",source:"KOSCA"},
+  {id:76,p:3,g:"경북/대구",name:"청도군산림조합",phone:"-",region:"경북 청도군",evalAmount:652944,detail:"대표 박순열",source:"KOSCA"},
+  {id:77,p:3,g:"경북/대구",name:"(주)청마루",phone:"-",region:"경북 영천시",evalAmount:448629,detail:"대표 임대규",source:"KOSCA"},
+  {id:78,p:3,g:"경북/대구",name:"(주)청송조경건설",phone:"-",region:"경북 청송군",evalAmount:352908,detail:"대표 김미숙",source:"KOSCA"},
+  {id:79,p:3,g:"경북/대구",name:"클라임코리아(주)",phone:"-",region:"경북 문경시",evalAmount:711264,detail:"대표 홍주표",source:"KOSCA"},
+  {id:80,p:3,g:"경북/대구",name:"(주)태산조경",phone:"-",region:"경북 포항시",evalAmount:350331,detail:"대표 황태섭",source:"KOSCA"},
+  {id:81,p:3,g:"경북/대구",name:"(주)팔공조경산업",phone:"-",region:"경북 칠곡군",evalAmount:416837,detail:"대표 신삼희",source:"KOSCA"},
+  {id:82,p:3,g:"경북/대구",name:"(주)푸른이엔티",phone:"-",region:"경북 영주시",evalAmount:740571,detail:"대표 이승민",source:"KOSCA"},
+  {id:83,p:3,g:"경북/대구",name:"(주)풍진조경",phone:"-",region:"경북 경주시",evalAmount:312711,detail:"대표 최정윤",source:"KOSCA"},
+  {id:84,p:3,g:"경북/대구",name:"협동조경(주)",phone:"-",region:"경북 칠곡군",evalAmount:367920,detail:"대표 미확인",source:"KOSCA"},
   // ===== KOSCA 대구 30억+ 조경회사 (26건, 2026-03-18) =====
-  {id:85,p:4,g:"경북/대구",name:"(주)거산개발",phone:"-",region:"대구 달서구",evalAmount:649339,detail:"",source:"KOSCA"},
-  {id:86,p:4,g:"경북/대구",name:"(주)거양",phone:"-",region:"대구 북구",evalAmount:441384,detail:"",source:"KOSCA"},
-  {id:87,p:4,g:"경북/대구",name:"(주)공간창조",phone:"-",region:"대구 북구",evalAmount:347161,detail:"",source:"KOSCA"},
-  {id:88,p:4,g:"경북/대구",name:"(주)금산조경개발",phone:"-",region:"대구 달서구",evalAmount:980294,detail:"",source:"KOSCA"},
-  {id:89,p:4,g:"경북/대구",name:"(주)금오조경개발",phone:"-",region:"대구 달성군",evalAmount:412125,detail:"",source:"KOSCA"},
-  {id:90,p:4,g:"경북/대구",name:"대구달성산림조합",phone:"-",region:"대구 달성군",evalAmount:361092,detail:"",source:"KOSCA"},
-  {id:91,p:4,g:"경북/대구",name:"(주)더에이치이엔씨",phone:"-",region:"대구 수성구",evalAmount:354223,detail:"",source:"KOSCA"},
-  {id:92,p:4,g:"경북/대구",name:"도시조경건설(주)",phone:"-",region:"대구 수성구",evalAmount:303449,detail:"",source:"KOSCA"},
-  {id:93,p:4,g:"경북/대구",name:"(주)동림종합조경",phone:"-",region:"대구 서구",evalAmount:419144,detail:"",source:"KOSCA"},
-  {id:94,p:4,g:"경북/대구",name:"(주)동원조경개발",phone:"-",region:"대구 수성구",evalAmount:387341,detail:"",source:"KOSCA"},
-  {id:95,p:4,g:"경북/대구",name:"두산조경(주)",phone:"-",region:"대구 군위군",evalAmount:739606,detail:"",source:"KOSCA"},
-  {id:96,p:4,g:"경북/대구",name:"(주)백운조경",phone:"-",region:"대구 달성군",evalAmount:325396,detail:"",source:"KOSCA"},
-  {id:97,p:4,g:"경북/대구",name:"(주)벽선",phone:"-",region:"대구 중구",evalAmount:460370,detail:"",source:"KOSCA"},
-  {id:98,p:4,g:"경북/대구",name:"(주)삼영실업조경",phone:"-",region:"대구 달성군",evalAmount:432459,detail:"",source:"KOSCA"},
-  {id:99,p:4,g:"경북/대구",name:"(주)성진조경",phone:"-",region:"대구 수성구",evalAmount:507181,detail:"",source:"KOSCA"},
-  {id:100,p:4,g:"경북/대구",name:"(주)성화공영",phone:"-",region:"대구 달성군",evalAmount:396812,detail:"",source:"KOSCA"},
-  {id:101,p:4,g:"경북/대구",name:"(주)송호조경",phone:"-",region:"대구 수성구",evalAmount:722092,detail:"",source:"KOSCA"},
-  {id:102,p:4,g:"경북/대구",name:"시티그린",phone:"-",region:"대구 동구",evalAmount:408595,detail:"",source:"KOSCA"},
-  {id:103,p:4,g:"경북/대구",name:"(주)에이스조경개발",phone:"-",region:"대구 달서구",evalAmount:334937,detail:"",source:"KOSCA"},
-  {id:104,p:4,g:"경북/대구",name:"(주)율하조경건설",phone:"-",region:"대구 달성군",evalAmount:317299,detail:"",source:"KOSCA"},
-  {id:105,p:4,g:"경북/대구",name:"(주)주산조경",phone:"-",region:"대구 달서구",evalAmount:954674,detail:"",source:"KOSCA"},
-  {id:106,p:4,g:"경북/대구",name:"지앤지그래스(주)",phone:"-",region:"대구 중구",evalAmount:542599,detail:"",source:"KOSCA"},
-  {id:107,p:4,g:"경북/대구",name:"초원영광건설(주)",phone:"-",region:"대구 달서구",evalAmount:330594,detail:"",source:"KOSCA"},
-  {id:108,p:4,g:"경북/대구",name:"(주)토마토이앤씨",phone:"-",region:"대구 북구",evalAmount:683894,detail:"",source:"KOSCA"},
-  {id:109,p:4,g:"경북/대구",name:"(주)하림조경",phone:"-",region:"대구 수성구",evalAmount:459786,detail:"",source:"KOSCA"},
-  {id:110,p:4,g:"경북/대구",name:"(주)호영산업개발",phone:"-",region:"대구 달성군",evalAmount:364028,detail:"",source:"KOSCA"},
+  {id:85,p:3,g:"경북/대구",name:"(주)거산개발",phone:"-",region:"대구 달서구",evalAmount:649339,detail:"",source:"KOSCA"},
+  {id:86,p:3,g:"경북/대구",name:"(주)거양",phone:"-",region:"대구 북구",evalAmount:441384,detail:"",source:"KOSCA"},
+  {id:87,p:3,g:"경북/대구",name:"(주)공간창조",phone:"-",region:"대구 북구",evalAmount:347161,detail:"",source:"KOSCA"},
+  {id:88,p:3,g:"경북/대구",name:"(주)금산조경개발",phone:"-",region:"대구 달서구",evalAmount:980294,detail:"",source:"KOSCA"},
+  {id:89,p:3,g:"경북/대구",name:"(주)금오조경개발",phone:"-",region:"대구 달성군",evalAmount:412125,detail:"",source:"KOSCA"},
+  {id:90,p:3,g:"경북/대구",name:"대구달성산림조합",phone:"-",region:"대구 달성군",evalAmount:361092,detail:"",source:"KOSCA"},
+  {id:91,p:3,g:"경북/대구",name:"(주)더에이치이엔씨",phone:"-",region:"대구 수성구",evalAmount:354223,detail:"",source:"KOSCA"},
+  {id:92,p:3,g:"경북/대구",name:"도시조경건설(주)",phone:"-",region:"대구 수성구",evalAmount:303449,detail:"",source:"KOSCA"},
+  {id:93,p:3,g:"경북/대구",name:"(주)동림종합조경",phone:"-",region:"대구 서구",evalAmount:419144,detail:"",source:"KOSCA"},
+  {id:94,p:3,g:"경북/대구",name:"(주)동원조경개발",phone:"-",region:"대구 수성구",evalAmount:387341,detail:"",source:"KOSCA"},
+  {id:95,p:3,g:"경북/대구",name:"두산조경(주)",phone:"-",region:"대구 군위군",evalAmount:739606,detail:"",source:"KOSCA"},
+  {id:96,p:3,g:"경북/대구",name:"(주)백운조경",phone:"-",region:"대구 달성군",evalAmount:325396,detail:"",source:"KOSCA"},
+  {id:97,p:3,g:"경북/대구",name:"(주)벽선",phone:"-",region:"대구 중구",evalAmount:460370,detail:"",source:"KOSCA"},
+  {id:98,p:3,g:"경북/대구",name:"(주)삼영실업조경",phone:"-",region:"대구 달성군",evalAmount:432459,detail:"",source:"KOSCA"},
+  {id:99,p:3,g:"경북/대구",name:"(주)성진조경",phone:"-",region:"대구 수성구",evalAmount:507181,detail:"",source:"KOSCA"},
+  {id:100,p:3,g:"경북/대구",name:"(주)성화공영",phone:"-",region:"대구 달성군",evalAmount:396812,detail:"",source:"KOSCA"},
+  {id:101,p:3,g:"경북/대구",name:"(주)송호조경",phone:"-",region:"대구 수성구",evalAmount:722092,detail:"",source:"KOSCA"},
+  {id:102,p:3,g:"경북/대구",name:"시티그린",phone:"-",region:"대구 동구",evalAmount:408595,detail:"",source:"KOSCA"},
+  {id:103,p:3,g:"경북/대구",name:"(주)에이스조경개발",phone:"-",region:"대구 달서구",evalAmount:334937,detail:"",source:"KOSCA"},
+  {id:104,p:3,g:"경북/대구",name:"(주)율하조경건설",phone:"-",region:"대구 달성군",evalAmount:317299,detail:"",source:"KOSCA"},
+  {id:105,p:3,g:"경북/대구",name:"(주)주산조경",phone:"-",region:"대구 달서구",evalAmount:954674,detail:"",source:"KOSCA"},
+  {id:106,p:3,g:"경북/대구",name:"지앤지그래스(주)",phone:"-",region:"대구 중구",evalAmount:542599,detail:"",source:"KOSCA"},
+  {id:107,p:3,g:"경북/대구",name:"초원영광건설(주)",phone:"-",region:"대구 달서구",evalAmount:330594,detail:"",source:"KOSCA"},
+  {id:108,p:3,g:"경북/대구",name:"(주)토마토이앤씨",phone:"-",region:"대구 북구",evalAmount:683894,detail:"",source:"KOSCA"},
+  {id:109,p:3,g:"경북/대구",name:"(주)하림조경",phone:"-",region:"대구 수성구",evalAmount:459786,detail:"",source:"KOSCA"},
+  {id:110,p:3,g:"경북/대구",name:"(주)호영산업개발",phone:"-",region:"대구 달성군",evalAmount:364028,detail:"",source:"KOSCA"},
 ];
 
-const PRI={1:{l:"1순위",c:"p1",d:"협회/공공"},2:{l:"2순위",c:"p2",d:"거래 플랫폼"},3:{l:"3순위",c:"p3",d:"유통상/중개"},4:{l:"4순위",c:"p4",d:"경북/대구"},5:{l:"5순위",c:"p5",d:"대형 시공"},6:{l:"6순위",c:"p6",d:"대형 건설사"},7:{l:"7순위",c:"p7",d:"골프장/공공"},8:{l:"추가",c:"p5",d:"직접 추가"}};
+const PRI={1:{l:"1순위",c:"p1",d:"협회/공공"},2:{l:"2순위",c:"p2",d:"유통상/중개"},3:{l:"3순위",c:"p3",d:"경북/대구"},4:{l:"4순위",c:"p4",d:"대형 시공"},5:{l:"5순위",c:"p5",d:"대형 건설사"},6:{l:"6순위",c:"p6",d:"골프장/공공"},7:{l:"추가",c:"p5",d:"직접 추가"}};
 const STAT={"":{l:"미통화",b:"s-none"},missed:{l:"부재중",b:"s-missed"},scheduled:{l:"예약",b:"s-scheduled"},done:{l:"완료",b:"s-done"}};
 const PROS={"":"미평가",high:"높음",mid:"중간",low:"낮음",none:"불가"};
+function prosTag(v){const cls=v==="high"?"pt-high":v==="mid"?"pt-mid":v==="low"?"pt-low":v==="none"?"pt-none":"pt-unknown";return `<span class="pros-tag ${cls}">${PROS[v]||"미평가"}</span>`;}
 const MO=[{v:"",l:"--월--"},{v:"3",l:"3월"},{v:"4",l:"4월"},{v:"5",l:"5월"},{v:"6",l:"6월"},{v:"7",l:"7월"},{v:"8",l:"8월+"}];
-const PA=[{v:"",l:"--순--"},{v:"early",l:"초순"},{v:"mid",l:"중순"},{v:"late",l:"하순"}];
+const PA=[{v:"",l:""},{v:"early",l:"초순"},{v:"mid",l:"중순"},{v:"late",l:"하순"}];
 const PRI_BG={"p1":"var(--red)","p2":"var(--orange)","p3":"#e67700","p4":"var(--accent)","p5":"#845ef7","p6":"var(--text2)","p7":"var(--text2)"};
 
 // ========== Platforms (인바운드) ==========
@@ -1172,66 +1204,191 @@ function renderPlatforms(){
     <div class="plat-stat"><div class="n" style="color:var(--accent)">${totalInq}</div><div class="l">총 문의</div></div>`;
   document.getElementById("tc-platform").textContent=PLATFORMS.length;
 
-  let h="";
+  // Platform table
+  let h=`<table class="plat-table"><thead><tr>
+    <th>플랫폼</th><th>상태</th><th>비용</th><th>특징</th><th>사이트</th><th>등록일</th><th>갱신</th><th>문의</th><th>메모</th>
+  </tr></thead><tbody>`;
   PLATFORMS.forEach(p=>{
     const s=getPlatState(p.id);
-    const stClass=s.status==="registered"?"st-registered":s.status==="renew"?"st-renew":"st-unregistered";
+    const rowClass=s.status==="renew"?" class=\"st-renew\"":"";
     const bdgClass=s.status==="registered"?"pb-registered":s.status==="renew"?"pb-renew":s.status==="expired"?"pb-expired":"pb-unregistered";
     const bdgText=s.status==="registered"?"등록완료":s.status==="renew"?"갱신필요":s.status==="expired"?"만료":"미등록";
     const inqCount=platInquiries.filter(i=>i.platformId===p.id).length;
-
-    let daysInfo="";
+    let daysInfo="-";
     if(s.status==="registered"||s.status==="renew"){
       const base=s.lastRenew||s.regDate;
       if(base){const diff=Math.floor((Date.now()-new Date(base).getTime())/(1000*60*60*24));
-        daysInfo=s.status==="renew"?`<span style="color:var(--orange)">${diff}일 경과 (갱신 필요)</span>`:`${diff}일 전 갱신`;}
+        daysInfo=s.status==="renew"?`<span style="color:var(--orange)">${diff}일 경과</span>`:`${diff}일 전`;}
     }
-
-    h+=`<div class="plat-card ${stClass}" data-pid="${p.id}">
-      <div class="plat-top">
-        <div class="plat-name">${p.name}</div>
-        <span class="plat-badge ${bdgClass}">${bdgText}</span>
-        <span class="plat-cost">${p.cost}</span>
-      </div>
-      <div class="plat-meta">
-        <span class="pm-label">특징</span><span class="pm-val">${p.detail}</span>
-        ${p.homepage?`<span class="pm-label">사이트</span><span class="pm-val"><a href="${p.homepage}" target="_blank">${p.homepage.replace(/https?:\/\/(www\.)?/,"")}</a></span>`:""}
-        ${p.phone&&p.phone!=="-"?`<span class="pm-label">전화</span><span class="pm-val">${p.phone}</span>`:""}
-        ${s.regDate?`<span class="pm-label">등록일</span><span class="pm-val">${s.regDate}</span>`:""}
-        ${daysInfo?`<span class="pm-label">갱신</span><span class="pm-val">${daysInfo}</span>`:""}
-        ${s.url?`<span class="pm-label">게시글</span><span class="pm-val"><a href="${s.url}" target="_blank">링크 열기</a></span>`:""}
-        <span class="pm-label">문의</span><span class="pm-val" style="font-weight:600;color:var(--accent)">${inqCount}건</span>
-        ${s.memo?`<span class="pm-label">메모</span><span class="pm-val" style="color:var(--text2)">${s.memo}</span>`:""}
-      </div>
-      <div class="plat-actions">
-        ${s.status==="unregistered"||s.status==="expired"?`<button class="plat-btn primary" onclick="openPlatModal('${p.id}')">등록하기</button>`:""}
-        ${s.status==="renew"?`<button class="plat-btn warn" onclick="renewPlat('${p.id}')">갱신 완료</button>`:""}
-        ${s.status==="registered"?`<button class="plat-btn" onclick="renewPlat('${p.id}')">끌올 완료</button>`:""}
-        <button class="plat-btn" onclick="openPlatModal('${p.id}')">설정</button>
-      </div>
-    </div>`;
+    const siteShort=p.homepage?p.homepage.replace(/https?:\/\/(www\.)?/,"").split("/")[0]:"—";
+    const siteLink=p.homepage?`<a href="${p.homepage}" target="_blank" onclick="event.stopPropagation()">${siteShort}</a>`:"—";
+    const urlLink=s.url?`<a href="${s.url}" target="_blank" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--surface2);color:var(--teal);font-size:12px;text-decoration:none;border:1px solid var(--border);margin-right:5px" title="게시글 바로가기">&#x1F517;</a>`:"";
+    h+=`<tr${rowClass} onclick="openPlatModal('${p.id}')" style="cursor:pointer">
+      <td style="font-weight:600">${urlLink}${p.name}</td>
+      <td><span class="plat-badge ${bdgClass}">${bdgText}</span></td>
+      <td><span class="plat-cost">${p.cost}</span></td>
+      <td style="color:var(--text2)">${p.detail}</td>
+      <td>${siteLink}</td>
+      <td>${s.regDate||"—"}</td>
+      <td>${daysInfo}</td>
+      <td style="font-weight:600;color:var(--accent)">${inqCount}건</td>
+      <td style="color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.memo||""}</td>
+    </tr>`;
   });
-  document.getElementById("plat-grid").innerHTML=h;
+  h+=`</tbody></table>`;
+  document.getElementById("plat-table-wrap").innerHTML=h;
 
-  // Inquiry list
-  const inqEl=document.getElementById("plat-inq-list");
-  if(!platInquiries.length){inqEl.innerHTML='<div class="plat-inq-empty">아직 문의가 없습니다. 플랫폼 등록 후 문의가 오면 기록하세요.</div>';return;}
-  let ih="";
-  platInquiries.sort((a,b)=>new Date(b.ts)-new Date(a.ts)).forEach(inq=>{
-    const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||inq.platformId;
-    const dt=new Date(inq.ts).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
-    ih+=`<div class="plat-inq-item">
-      <div class="inq-date">${dt}<br><span style="font-size:10px;color:var(--accent)">${pName}</span></div>
-      <div class="inq-from">${inq.from||"미상"}${inq.contact?`<br><span style="font-size:10px;color:var(--text2)">${inq.contact}</span>`:""}</div>
-      <div class="inq-msg">${inq.msg||""}</div>
-      <div class="inq-actions">
-        ${!inq.addedToList?`<button class="plat-btn" style="font-size:10px" onclick="inqToList('${inq.id}')">업체추가</button>`:`<span style="font-size:10px;color:var(--green)">추가됨</span>`}
-        <button class="plat-btn" style="font-size:10px;color:var(--red)" onclick="deleteInq('${inq.id}')">삭제</button>
-      </div>
-    </div>`;
-  });
-  inqEl.innerHTML=ih;
+  // Inquiry table
+  document.getElementById("plat-inq-wrap").innerHTML=buildInqTable();
+  // 기존 문의 행 자동 저장 이벤트 바인딩
+  bindInqAutoSave();
 }
+function bindInqAutoSave(container){
+  (container||document).querySelectorAll('.inq-edit-row[data-inqid]').forEach(row=>{
+    const inqId=row.dataset.inqid;
+    const save=()=>saveInqRow(inqId);
+    row.querySelectorAll('select').forEach(el=>el.addEventListener('change',save));
+    row.querySelectorAll('input[type="text"],input[type="number"]').forEach(el=>{let t;el.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(save,500);});});
+    row.querySelectorAll('input[type="radio"],input[type="checkbox"]').forEach(el=>el.addEventListener('change',save));
+  });
+}
+
+// 문의 내역 공통 행 HTML 생성 (추가행 + 데이터행 동일 UI)
+function buildInqEditRow(prefix, d){
+  const is=d.status||"",ip=d.prospect||"",iq=d.qty||"350",ipr=d.price||"",im=d.periodMonth||"",ipp=d.periodPart||"";
+  const icc=d.callCount||0;
+  const pid=d.platformId||"unknown";
+  const pOpts=[{v:"unknown",l:"미확인"},...PLATFORMS.map(p=>({v:p.id,l:p.name.split("(")[0].trim()}))].map(o=>`<option value="${o.v}" ${pid===o.v?"selected":""}>${o.l}</option>`).join("");
+  const moOpts=MO.map(m=>`<option value="${m.v}" ${im===m.v?"selected":""}>${m.l}</option>`).join("");
+  const partRadios=[{v:"early",l:"초"},{v:"mid",l:"중"},{v:"late",l:"하"}].map(pp=>
+    `<label style="font-size:9px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:1px"><input type="radio" name="${prefix}-part" class="${prefix}-part-rad" value="${pp.v}" ${ipp===pp.v?"checked":""} style="width:12px;height:12px;accent-color:var(--accent)">${pp.l}</label>`
+  ).join("");
+  const chkStyle=(on)=>`cursor:pointer;color:${on?"var(--teal)":"var(--text2)"}`;
+  return `
+    <td><select class="${prefix}-plat" style="width:100%">${pOpts}</select></td>
+    <td><input class="${prefix}-from" placeholder="이름" style="width:100%" value="${d.from||""}" /></td>
+    <td><input class="${prefix}-contact" placeholder="전화" style="width:100%" value="${d.contact||""}" /></td>
+    <td><select class="${prefix}-status" style="width:100%">
+      <option value="" ${is===""?"selected":""}>--</option>
+      <option value="missed" ${is==="missed"?"selected":""}>부재중</option>
+      <option value="scheduled" ${is==="scheduled"?"selected":""}>예약</option>
+      <option value="done" ${is==="done"?"selected":""}>완료</option></select></td>
+    <td><select class="${prefix}-pros" style="width:100%">
+      <option value="" ${ip===""?"selected":""}>미평가</option>
+      <option value="high" ${ip==="high"?"selected":""}>높음</option>
+      <option value="mid" ${ip==="mid"?"selected":""}>중간</option>
+      <option value="low" ${ip==="low"?"selected":""}>낮음</option>
+      <option value="none" ${ip==="none"?"selected":""}>불가</option></select></td>
+    <td><input class="${prefix}-qty" type="number" placeholder="그루" style="width:100%;text-align:right" value="${iq}" /></td>
+    <td><input class="${prefix}-price" type="number" placeholder="만원" style="width:100%;text-align:right" value="${ipr}" /></td>
+    <td style="white-space:nowrap"><div style="display:flex;align-items:center;gap:4px"><select class="${prefix}-month">${moOpts}</select>${partRadios}</div></td>
+    <td style="font-size:10px;white-space:nowrap">
+      <label style="${chkStyle(d.photoSent)}"><input type="checkbox" class="${prefix}-photo" ${d.photoSent?"checked":""} style="width:12px;height:12px">사진</label>
+      <label style="${chkStyle(d.visitWant)}"><input type="checkbox" class="${prefix}-visit" ${d.visitWant?"checked":""} style="width:12px;height:12px">방문</label>
+      <label style="${chkStyle(d.quoteReq)}"><input type="checkbox" class="${prefix}-quote" ${d.quoteReq?"checked":""} style="width:12px;height:12px">견적</label></td>
+    <td><div class="call-counter"><button class="cc-btn" onclick="${prefix==='inq-new'?`inqNewCallCount(-1)`:`inqCallCount('${d.id}',-1)`}">&lt;</button><span class="cc-val">${prefix==='inq-new'?1:icc}</span><button class="cc-btn" onclick="${prefix==='inq-new'?`inqNewCallCount(1)`:`inqCallCount('${d.id}',1)`}">&gt;</button></div></td>
+    <td><input class="${prefix}-msg" placeholder="문의 내용..." value="${(d.msg||"").replace(/"/g,'&quot;')}" /></td>`;
+}
+
+// 문의 내역 공통 colgroup + thead (거래플랫폼 + 주요고객 공유)
+const INQ_TABLE_HEAD=`<colgroup>
+  <col style="width:34px"><col style="width:130px"><col style="width:86px"><col style="width:100px">
+  <col style="width:76px"><col style="width:76px"><col style="width:62px"><col style="width:80px">
+  <col style="width:160px"><col style="width:110px"><col style="width:62px"><col><col style="width:96px">
+</colgroup><thead><tr>
+  <th>&#9733;</th><th>플랫폼</th><th>문의자</th><th>연락처</th><th>상태</th><th>가능성</th><th>수량</th><th>가격</th><th>시기</th><th>후속</th><th>통화</th><th>내용</th><th>작업</th>
+</tr></thead>`;
+
+function buildInqTable(){
+  let ih=`<table class="inq-table">${INQ_TABLE_HEAD}<tbody>`;
+  // 추가행
+  ih+=`<tr class="inq-edit-row inq-new-row"><td></td>`;
+  ih+=buildInqEditRow("inq-new",{});
+  ih+=`<td><button class="inq-btn-add" onclick="saveInqInline()">추가</button></td></tr>`;
+  // 데이터행
+  if(!platInquiries.length){
+    ih+=`<tr><td colspan="13" style="text-align:center;color:var(--text2);padding:20px">아직 문의가 없습니다.</td></tr>`;
+  } else {
+    platInquiries.sort((a,b)=>new Date(b.ts)-new Date(a.ts)).forEach(inq=>{
+      const rid="ir-"+inq.id;
+      ih+=`<tr class="inq-edit-row" data-inqid="${inq.id}" id="${rid}">
+        <td><button class="star-btn inq-star ${inq.starred?"on":""}" onclick="toggleInqStar('${inq.id}')">&#9733;</button></td>`;
+      ih+=buildInqEditRow(rid,inq);
+      ih+=`<td style="white-space:nowrap">
+        <button class="inq-btn-del" onclick="deleteInq('${inq.id}')">삭제</button>
+      </td></tr>`;
+    });
+  }
+  ih+=`</tbody></table>`;
+  return ih;
+}
+
+// 공통: 행에서 값 읽기
+function readInqRow(prefix){
+  const esc=CSS.escape(prefix);
+  const q=(cls)=>document.querySelector(`.${esc}-${cls}`);
+  const v=(cls)=>q(cls)?.value||"";
+  const c=(cls)=>q(cls)?.checked||false;
+  const partEl=document.querySelector(`input[name="${prefix}-part"]:checked`);
+  return {
+    platformId:v("plat"),from:v("from").trim(),contact:v("contact").trim(),
+    status:v("status"),prospect:v("pros"),qty:v("qty"),price:v("price"),
+    periodMonth:v("month"),periodPart:partEl?.value||"",
+    photoSent:c("photo"),visitWant:c("visit"),quoteReq:c("quote"),
+    msg:v("msg").trim()
+  };
+}
+
+// 첫 행 통화횟수 조절
+function inqNewCallCount(delta){
+  const span=document.querySelector('.inq-new-row .cc-val');
+  if(!span)return;
+  span.textContent=Math.max(0,Number(span.textContent||0)+delta);
+}
+// 신규 문의 추가
+function saveInqInline(){
+  const d=readInqRow("inq-new");
+  if(!d.msg){document.querySelector(".inq-new-msg")?.focus();return;}
+  const ccSpan=document.querySelector('.inq-new-row .cc-val');
+  const cc=ccSpan?Number(ccSpan.textContent||0):1;
+  const inq={id:String(Date.now()+Math.random()),ts:new Date().toISOString(),...d,addedToList:false,callCount:cc,starred:false,notes:[]};
+  platInquiries.push(inq);
+  const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||"";
+  addLog({type:"note",desc:`플랫폼 문의: ${pName} — ${inq.from||"미상"}`,detail:d.msg,by:"Justin"});
+  renderPlatforms();syncToCloud();
+  setTimeout(()=>{document.querySelector(".inq-new-msg")?.focus();},50);
+}
+
+// 기존 문의 저장 (ir- 또는 ki- prefix 자동 감지)
+function saveInqRow(inqId){
+  const inq=platInquiries.find(i=>i.id===inqId);if(!inq)return;
+  // 거래플랫폼 탭(ir-)과 주요고객 탭(ki-) 중 보이는 쪽에서 읽기
+  let prefix="ir-"+inqId;
+  if(!document.getElementById(prefix))prefix="ki-"+inqId;
+  const d=readInqRow(prefix);
+  Object.assign(inq,d);
+  // callCount도 동기화
+  const ccSpan=document.getElementById(prefix)?.querySelector('.cc-val');
+  if(ccSpan)inq.callCount=Number(ccSpan.textContent||0);
+  syncToCloud();
+}
+
+// 플랫폼 추가
+function syncCustomPlatforms(){platState._customPlatforms=PLATFORMS.filter(p=>p.custom);}
+function addPlatform(){
+  const input=document.getElementById("plat-add-name");
+  const name=input.value.trim();
+  if(!name){input.focus();return;}
+  const id="p"+Date.now();
+  PLATFORMS.push({id,name,phone:"-",homepage:"",detail:"",cost:"무료",custom:true});
+  syncCustomPlatforms();
+  input.value="";
+  addLog({type:"note",desc:`플랫폼 추가: ${name}`,by:"Justin"});
+  renderPlatforms();syncToCloud();
+  openPlatModal(id);
+}
+document.getElementById("plat-add-btn").addEventListener("click",addPlatform);
+document.getElementById("plat-add-name").addEventListener("keydown",e=>{if(e.key==="Enter")addPlatform();});
 
 let _platEditId=null;
 function openPlatModal(pid){
@@ -1273,52 +1430,6 @@ function renewPlat(pid){
   renderPlatforms();syncToCloud();
 }
 
-// Inquiry
-document.getElementById("btn-inq-add").addEventListener("click",()=>{
-  const sel=document.getElementById("inq-platform");
-  sel.innerHTML=PLATFORMS.map(p=>`<option value="${p.id}">${p.name}</option>`).join("");
-  document.getElementById("inq-from").value="";
-  document.getElementById("inq-contact").value="";
-  document.getElementById("inq-msg").value="";
-  document.getElementById("inq-modal").classList.add("show");
-});
-document.getElementById("inq-cancel").addEventListener("click",()=>{document.getElementById("inq-modal").classList.remove("show");});
-document.getElementById("inq-modal").addEventListener("click",e=>{if(e.target.id==="inq-modal")e.target.classList.remove("show");});
-document.getElementById("inq-save").addEventListener("click",()=>{
-  const msg=document.getElementById("inq-msg").value.trim();
-  if(!msg){document.getElementById("inq-msg").focus();return;}
-  const inq={
-    id:String(Date.now()+Math.random()),
-    ts:new Date().toISOString(),
-    platformId:document.getElementById("inq-platform").value,
-    from:document.getElementById("inq-from").value.trim(),
-    contact:document.getElementById("inq-contact").value.trim(),
-    msg,addedToList:false
-  };
-  platInquiries.push(inq);
-  const pName=PLATFORMS.find(p=>p.id===inq.platformId)?.name||"";
-  addLog({type:"note",desc:`플랫폼 문의: ${pName} — ${inq.from||"미상"}`,detail:msg,by:"Justin"});
-  document.getElementById("inq-modal").classList.remove("show");
-  renderPlatforms();syncToCloud();
-});
-document.getElementById("inq-add-to-list").addEventListener("click",()=>{
-  const from=document.getElementById("inq-from").value.trim()||"플랫폼 문의";
-  const contact=document.getElementById("inq-contact").value.trim();
-  const msg=document.getElementById("inq-msg").value.trim();
-  const pName=PLATFORMS.find(p=>p.id===document.getElementById("inq-platform").value)?.name||"";
-  // Save inquiry first
-  if(msg){
-    const inq={id:String(Date.now()+Math.random()),ts:new Date().toISOString(),platformId:document.getElementById("inq-platform").value,from,contact,msg,addedToList:true};
-    platInquiries.push(inq);
-  }
-  // Add to DATA as new company
-  const newId=getNextId();
-  DATA.push({id:newId,p:3,g:"플랫폼 문의",name:from,phone:contact||"-",detail:`${pName} 문의 | ${msg}`,source:"플랫폼",custom:true});
-  addLog({type:"list_add",desc:`플랫폼 문의 → 업체 추가: ${from}`,detail:`${pName} 경유`,by:"Justin"});
-  document.getElementById("inq-modal").classList.remove("show");
-  renderPlatforms();renderTracker();syncToCloud();
-});
-
 function inqToList(inqId){
   const inq=platInquiries.find(i=>i.id===inqId);
   if(!inq)return;
@@ -1334,6 +1445,159 @@ function deleteInq(inqId){
   platInquiries=platInquiries.filter(i=>i.id!==inqId);
   renderPlatforms();syncToCloud();
 }
+function inqCallCount(inqId,delta){
+  const inq=platInquiries.find(i=>i.id===inqId);if(!inq)return;
+  inq.callCount=Math.max(0,(inq.callCount||0)+delta);
+  renderPlatforms();syncToCloud();
+}
+function toggleInqStar(inqId){
+  const inq=platInquiries.find(i=>i.id===inqId);if(!inq)return;
+  inq.starred=!inq.starred;
+  renderPlatforms();renderKeyClients();syncToCloud();
+}
+
+// ===== 주요 고객 탭 =====
+function buildNotesHtml(notes, type, parentId){
+  let h='<div class="notes-list">';
+  (notes||[]).forEach((n,i)=>{
+    const ts=new Date(n.ts).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+    h+=`<div class="note-item" id="note-${type}-${parentId}-${i}">
+      <span class="note-ts">${ts}</span>
+      <span class="note-text">${esc(n.text)}</span>
+      <span class="note-actions">
+        <button class="note-act-btn edit" onclick="editNote('${type}','${parentId}',${i})">&#9998;</button>
+        <button class="note-act-btn del" onclick="deleteNote('${type}','${parentId}',${i})">&#10005;</button>
+      </span>
+    </div>`;
+  });
+  h+='</div>';
+  return h;
+}
+
+function renderKeyClients(){
+  const starredItems=DATA.filter(i=>!isHidden(i.id)&&G(i.id).starred);
+  const el1=document.getElementById("key-tracker-list");
+  document.getElementById("tc-keyclient").textContent=starredItems.length+platInquiries.filter(i=>i.starred).length;
+
+  // 주요 업체 — makeCard() 재사용 + 노트 영역
+  if(!starredItems.length){
+    el1.innerHTML='<div class="key-empty">주요 업체가 없습니다. 업체 리스트에서 ★ 버튼을 눌러 추가하세요.</div>';
+  } else {
+    el1.innerHTML="";
+    starredItems.forEach(item=>{
+      const s=G(item.id);
+      const notes=s.notes||[];
+      const wrapper=document.createElement("div");
+      wrapper.style.marginBottom="12px";
+      // makeCard 재사용
+      const card=makeCard(item);
+      wrapper.appendChild(card);
+      // 노트 영역
+      const notesDiv=document.createElement("div");
+      notesDiv.className="notes-area";
+      notesDiv.style.cssText="padding:6px 16px 10px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;margin-top:-1px";
+      notesDiv.innerHTML=buildNotesHtml(notes,"tracker",item.id)+
+        `<div class="notes-input-row"><input id="note-t-${item.id}" placeholder="거래 변경사항 기록..." onkeydown="if(event.key==='Enter')addTrackerNote(${item.id})"><button onclick="addTrackerNote(${item.id})">+ 기록</button></div>`;
+      wrapper.appendChild(notesDiv);
+      el1.appendChild(wrapper);
+    });
+    // 주요 업체 카드 이벤트 바인딩 (makeCard가 생성한 요소용)
+    bindKeyTrackerEv();
+  }
+
+  // 주요 문의 — 문의 테이블 행 동일 UI + 노트 영역
+  const starredInq=platInquiries.filter(i=>i.starred);
+  const el2=document.getElementById("key-inq-list");
+  if(!starredInq.length){
+    el2.innerHTML='<div class="key-empty">주요 문의가 없습니다. 문의 내역에서 ★ 버튼을 눌러 추가하세요.</div>';
+  } else {
+    let h=`<table class="inq-table">${INQ_TABLE_HEAD}<tbody>`;
+    starredInq.forEach(inq=>{
+      const rid="ki-"+inq.id;
+      h+=`<tr class="inq-edit-row" data-inqid="${inq.id}" id="${rid}">
+        <td><button class="star-btn inq-star on" onclick="toggleInqStar('${inq.id}')">&#9733;</button></td>`;
+      h+=buildInqEditRow(rid,inq);
+      h+=`<td style="white-space:nowrap">
+        <button class="inq-btn-del" onclick="deleteInq('${inq.id}')">삭제</button>
+      </td></tr>`;
+      // 노트 행
+      const notes=inq.notes||[];
+      h+=`<tr class="inq-notes-row"><td colspan="13" style="padding:4px 16px 8px;background:var(--surface);border-bottom:2px solid var(--border)">
+        ${buildNotesHtml(notes,"inq",inq.id)}
+        <div class="notes-input-row"><input id="note-i-${inq.id}" placeholder="거래 변경사항 기록..." onkeydown="if(event.key==='Enter')addInqNote('${inq.id}')"><button onclick="addInqNote('${inq.id}')">+ 기록</button></div>
+      </td></tr>`;
+    });
+    h+=`</tbody></table>`;
+    el2.innerHTML=h;
+    // 주요 문의 행 자동 저장 이벤트 바인딩
+    bindInqAutoSave(el2);
+  }
+}
+
+// 주요 업체 카드 이벤트 바인딩 (key-tracker-list 내부 makeCard 요소용)
+function bindKeyTrackerEv(){
+  const el=document.getElementById("key-tracker-list");
+  el.querySelectorAll(".status-sel").forEach(s=>{s.addEventListener("change",e=>{const id=e.target.dataset.id;const st=G(id);st.status=e.target.value;st.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();renderKeyClients();renderTracker();});});
+  el.querySelectorAll(".cb-input").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).callback=e.target.value;saveState();});});
+  el.querySelectorAll(".pros-sel").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).prospect=e.target.value;saveState();renderKeyClients();});});
+  el.querySelectorAll(".qty-in").forEach(s=>{let t;s.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id).qty=e.target.value;saveState();},400);});});
+  el.querySelectorAll(".price-in").forEach(s=>{let t;s.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id).price=e.target.value;saveState();},400);});});
+  el.querySelectorAll(".month-sel").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).periodMonth=e.target.value;saveState();});});
+  el.querySelectorAll(".part-rad").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).periodPart=e.target.value;saveState();});});
+  el.querySelectorAll(".contact-in").forEach(s=>{let t;s.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id).contact=e.target.value;saveState();},400);});});
+  el.querySelectorAll(".chk-photo").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).photoSent=e.target.checked;saveState();});});
+  el.querySelectorAll(".chk-visit").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).visitWant=e.target.checked;saveState();});});
+  el.querySelectorAll(".chk-quote").forEach(s=>{s.addEventListener("change",e=>{G(e.target.dataset.id).quoteReq=e.target.checked;saveState();});});
+  el.querySelectorAll(".memo-in").forEach(s=>{let t;s.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id).memo=e.target.value;saveState();},400);});});
+  el.querySelectorAll(".star-btn[data-id]").forEach(s=>{s.addEventListener("click",e=>{toggleTrackerStar(e.currentTarget.dataset.id);});});
+  el.querySelectorAll(".cc-btn.cc-inc").forEach(s=>{s.addEventListener("click",e=>{const id=e.target.dataset.id;const st=G(id);st.callCount=(st.callCount||0)+1;saveState();renderKeyClients();});});
+  el.querySelectorAll(".cc-btn.cc-dec").forEach(s=>{s.addEventListener("click",e=>{const id=e.target.dataset.id;const st=G(id);st.callCount=Math.max(0,(st.callCount||0)-1);saveState();renderKeyClients();});});
+}
+
+function toggleTrackerStar(id){
+  const s=G(id);s.starred=!s.starred;saveState();renderTracker();renderKeyClients();
+}
+function addTrackerNote(id){
+  const el=document.getElementById("note-t-"+id);if(!el)return;
+  const text=el.value.trim();if(!text)return;
+  const s=G(id);if(!s.notes)s.notes=[];
+  s.notes.push({ts:new Date().toISOString(),text});
+  el.value="";saveState();renderKeyClients();
+}
+function addInqNote(inqId){
+  const el=document.getElementById("note-i-"+inqId);if(!el)return;
+  const text=el.value.trim();if(!text)return;
+  const inq=platInquiries.find(i=>i.id===inqId);if(!inq)return;
+  if(!inq.notes)inq.notes=[];
+  inq.notes.push({ts:new Date().toISOString(),text});
+  el.value="";syncToCloud();renderKeyClients();
+}
+
+// 노트 수정
+function editNote(type,parentId,idx){
+  const noteEl=document.getElementById(`note-${type}-${parentId}-${idx}`);if(!noteEl)return;
+  const textEl=noteEl.querySelector(".note-text");
+  const origText=textEl.textContent;
+  textEl.innerHTML=`<input class="note-edit-input" value="${esc(origText)}" />
+    <span class="note-edit-actions">
+      <button class="confirm" onclick="saveNoteEdit('${type}','${parentId}',${idx})">확인</button>
+      <button class="cancel" onclick="renderKeyClients()">취소</button>
+    </span>`;
+  noteEl.querySelector(".note-edit-input").focus();
+  noteEl.querySelector(".note-edit-input").addEventListener("keydown",e=>{if(e.key==="Enter")saveNoteEdit(type,parentId,idx);if(e.key==="Escape")renderKeyClients();});
+}
+function saveNoteEdit(type,parentId,idx){
+  const input=document.querySelector(`#note-${type}-${parentId}-${idx} .note-edit-input`);if(!input)return;
+  const text=input.value.trim();if(!text)return;
+  if(type==="tracker"){const s=G(parentId);if(s.notes&&s.notes[idx])s.notes[idx].text=text;saveState();}
+  else{const inq=platInquiries.find(i=>i.id===parentId);if(inq&&inq.notes&&inq.notes[idx])inq.notes[idx].text=text;syncToCloud();}
+  renderKeyClients();
+}
+function deleteNote(type,parentId,idx){
+  if(type==="tracker"){const s=G(parentId);if(s.notes)s.notes.splice(idx,1);saveState();}
+  else{const inq=platInquiries.find(i=>i.id===parentId);if(inq&&inq.notes)inq.notes.splice(idx,1);syncToCloud();}
+  renderKeyClients();
+}
 
 // ========== Supabase Config ==========
 const SB_URL="https://vtecqmqcepulxmigxumo.supabase.co";
@@ -1342,7 +1606,32 @@ const SB_TABLE="bansong_state";
 const SB_HEADERS={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"};
 
 let _saveTimer=null;
+let _cloudLoaded=false; // 클라우드 로드 완료 전 sync 차단
+function hasRealData(){return Object.values(state).some(v=>v.status||v.calledAt||v.memo||v.prospect||(v.callCount||0)>0);}
+function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+// 자동 백업: localStorage에 최근 3버전 유지 (데이터 유실 방지)
+function autoBackup(){
+  try{
+    if(!hasRealData()) return; // 빈 데이터는 백업 안함
+    const bk={ts:new Date().toISOString(),state,updateLog,platInquiries,platState,customPlatforms:PLATFORMS.filter(p=>p.custom)};
+    const hist=JSON.parse(localStorage.getItem("bansong-backup-hist")||"[]");
+    hist.unshift(bk);
+    while(hist.length>3) hist.pop(); // 최근 3개만 유지
+    localStorage.setItem("bansong-backup-hist",JSON.stringify(hist));
+    localStorage.setItem("bansong-phone-tracker-v4",JSON.stringify(state)); // 기존 호환
+  }catch(e){console.warn("autoBackup failed:",e);}
+}
 function syncToCloud(){
+  // 보호: 클라우드 로드 완료 전이면 sync 차단 (빈 데이터 덮어쓰기 방지)
+  if(!_cloudLoaded){console.warn("syncToCloud blocked: cloud not loaded yet");return;}
+  // 보호: state가 빈 객체이면 sync 차단 (초기화 상태 덮어쓰기 방지)
+  if(Object.keys(state).length===0){console.warn("syncToCloud blocked: state is empty object");return;}
+  // 보호: tracker_data에 의미있는 데이터가 하나도 없으면 sync 차단
+  if(!hasRealData()){
+    console.warn("syncToCloud blocked: state has entries but all empty — possible data loss");return;
+  }
+  // 클라우드 전송 전 자동 백업
+  autoBackup();
   clearTimeout(_saveTimer);
   _saveTimer=setTimeout(async()=>{
     try{
@@ -1378,7 +1667,14 @@ async function loadFromCloud(){
       }
       if(row.hidden_ids&&row.hidden_ids.length>0) hiddenIds=new Set(row.hidden_ids);
       if(row.update_log&&row.update_log.length>0) updateLog=row.update_log;
-      if(row.platform_state&&Object.keys(row.platform_state).length>0) platState=row.platform_state;
+      if(row.platform_state&&Object.keys(row.platform_state).length>0){
+        platState=row.platform_state;
+        // 커스텀 플랫폼 복원
+        if(platState._customPlatforms){
+          platState._customPlatforms.forEach(cp=>{if(!PLATFORMS.find(p=>p.id===cp.id))PLATFORMS.push(cp);});
+          delete platState._customPlatforms;
+        }
+      }
       if(row.platform_inquiries&&row.platform_inquiries.length>0) platInquiries=row.platform_inquiries;
       if(row.sms_text) document.getElementById("sms-text").value=row.sms_text;
       return true;
@@ -1394,7 +1690,7 @@ function loadCustomEntries(){
 function saveCustomEntries(){
   syncToCloud();
 }
-function getNextId(){return Math.max(...DATA.map(d=>d.id))+1;}
+function getNextId(){return DATA.length?Math.max(...DATA.map(d=>typeof d.id==="number"?d.id:0))+1:1;}
 
 // Hidden (deleted) entries
 let hiddenIds=new Set();
@@ -1423,7 +1719,9 @@ function saveState(){
 }
 
 function G(id){
-  if(!state[id])state[id]={status:"",prospect:"",memo:"",calledAt:"",callback:"",price:"",periodMonth:"",periodPart:"",qty:"350",contact:"",photoSent:false,visitWant:false,quoteReq:false};
+  const def={status:"",prospect:"",memo:"",calledAt:"",callback:"",price:"",periodMonth:"",periodPart:"",qty:"350",contact:"",photoSent:false,visitWant:false,quoteReq:false,callCount:0,starred:false,notes:[]};
+  if(!state[id])state[id]={...def};
+  else{for(const k in def){if(state[id][k]===undefined)state[id][k]=def[k];}}
   return state[id];
 }
 
@@ -1464,11 +1762,11 @@ function makeCard(item){
   if(isHidden(item.id)){
     card.className="card";card.style.opacity="0.6";
     card.innerHTML=`
-      <div class="sa" style="grid-column:1/3;display:flex;align-items:center;gap:12px">
+      <div class="sa" style="grid-column:1/4;display:flex;align-items:center;gap:12px">
         <span style="font-size:13px;font-weight:600;color:var(--text2)">${item.name}</span>
         <span style="font-size:12px;color:var(--text2)">${item.phone}</span>
       </div>
-      <div style="grid-column:3/-1;display:flex;align-items:center;gap:8px;justify-content:flex-end">
+      <div style="grid-column:4/-1;display:flex;align-items:center;gap:8px;justify-content:flex-end">
         <button class="restore-entry" data-id="${item.id}" data-custom="${item.custom||false}" style="padding:5px 14px;border-radius:5px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11px;cursor:pointer">복원</button>
         ${item.custom?`<button class="perm-del" data-id="${item.id}" style="padding:5px 14px;border-radius:5px;border:1px solid var(--red);background:transparent;color:var(--red);font-size:11px;cursor:pointer">영구삭제</button>`:""}
       </div>`;
@@ -1483,6 +1781,7 @@ function makeCard(item){
   const customBadge=item.custom?`<span class="custom-badge">직접추가</span>`:"";
 
   card.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center"><button class="star-btn ${s.starred?"on":""}" data-id="${item.id}" title="주요">&#9733;</button></div>
     <div class="sa">
       <select data-id="${item.id}" class="status-sel">
         <option value="" ${s.status===""?"selected":""}>-- 미통화 --</option>
@@ -1493,8 +1792,16 @@ function makeCard(item){
       <div class="cb-row ${s.status==='scheduled'?'show':''}" data-cbr="${item.id}"><input type="date" class="cb-input" data-id="${item.id}" value="${s.callback||''}"></div>
       ${s.calledAt?`<div class="ct">${s.calledAt}</div>`:""}${s.status==="missed"?`<div class="ct red">부재중</div>`:""}
     </div>
+    <div class="ps"><select data-id="${item.id}" class="pros-sel">
+      <option value="" ${s.prospect===""?"selected":""}>미평가</option>
+      <option value="high" ${s.prospect==="high"?"selected":""}>&#x1F7E2; 높음</option>
+      <option value="mid" ${s.prospect==="mid"?"selected":""}>&#x1F7E1; 중간</option>
+      <option value="low" ${s.prospect==="low"?"selected":""}>&#x1F7E0; 낮음</option>
+      <option value="none" ${s.prospect==="none"?"selected":""}>&#x1F534; 불가</option>
+    </select>
+    <div class="call-counter"><button class="cc-btn cc-dec" data-id="${item.id}">&lt;</button><span class="cc-val">${s.callCount||0}</span><button class="cc-btn cc-inc" data-id="${item.id}">&gt;</button></div></div>
     <div class="info">
-      <div class="nm">${priBadge}${item.name}<span class="sb ${si.b}">${si.l}</span>${customBadge}<button class="edit-btn" data-id="${item.id}" title="수정">&#9998;</button></div>
+      <div class="nm">${priBadge}${esc(item.name)}<span class="sb ${si.b}">${si.l}</span>${customBadge}<button class="edit-btn" data-id="${item.id}" title="수정">&#9998;</button></div>
       <div class="ph-row">
         ${item.phone&&item.phone!=="-"?`<a href="tel:${item.phone.replace(/[^0-9+~]/g,'')}">${item.phone}</a>`:'<span style="color:var(--text2);font-size:11px">(온라인)</span>'}
         ${item.phone2?`<span class="ph-sep">|</span><a href="tel:${item.phone2.replace(/[^0-9+]/g,'')}" style="font-size:11px;font-weight:400;color:var(--teal)">${item.phone2}</a>`:''}
@@ -1507,18 +1814,11 @@ function makeCard(item){
         ${item.source?`<span class="source-badge">${item.source}</span>`:''}
       </div>
     </div>
-    <div class="ps"><select data-id="${item.id}" class="pros-sel">
-      <option value="" ${s.prospect===""?"selected":""}>미평가</option>
-      <option value="high" ${s.prospect==="high"?"selected":""}>&#x1F7E2; 높음</option>
-      <option value="mid" ${s.prospect==="mid"?"selected":""}>&#x1F7E1; 중간</option>
-      <option value="low" ${s.prospect==="low"?"selected":""}>&#x1F7E0; 낮음</option>
-      <option value="none" ${s.prospect==="none"?"selected":""}>&#x1F534; 불가</option>
-    </select></div>
     <div class="qp">
       <div class="row"><input type="number" data-id="${item.id}" class="qty-in" value="${s.qty||'350'}" min="0"><span class="sf">그루</span></div>
       <div class="row"><input type="number" data-id="${item.id}" class="price-in" value="${s.price||''}" placeholder="0" min="0"><span class="sf">만원</span></div>
     </div>
-    <div class="pd"><select class="month-sel" data-id="${item.id}">${mOpts}</select><select class="part-sel" data-id="${item.id}">${pOpts}</select></div>
+    <div class="pd"><select class="month-sel" data-id="${item.id}">${mOpts}</select><div class="part-radios" style="display:flex;gap:6px;margin-top:4px"><label style="font-size:10px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:2px"><input type="radio" name="part-${item.id}" data-id="${item.id}" class="part-rad" value="early" ${s.periodPart==="early"?"checked":""}  style="width:13px;height:13px;accent-color:var(--accent)">초</label><label style="font-size:10px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:2px"><input type="radio" name="part-${item.id}" data-id="${item.id}" class="part-rad" value="mid" ${s.periodPart==="mid"?"checked":""} style="width:13px;height:13px;accent-color:var(--accent)">중</label><label style="font-size:10px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:2px"><input type="radio" name="part-${item.id}" data-id="${item.id}" class="part-rad" value="late" ${s.periodPart==="late"?"checked":""} style="width:13px;height:13px;accent-color:var(--accent)">하</label></div></div>
     <div class="fu">
       <div class="fu-row"><input type="text" data-id="${item.id}" class="contact-in" value="${s.contact||''}" placeholder="담당자명"></div>
       <div class="fu-checks">
@@ -1555,29 +1855,30 @@ function updateStats(){
 }
 
 function bindEv(){
-  document.querySelectorAll(".status-sel").forEach(el=>{el.addEventListener("change",e=>{const id=e.target.dataset.id;const s=G(id);const prev=s.status;s.status=e.target.value;s.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();
-    if(e.target.value==="done"&&prev!=="done"){const item=DATA.find(d=>String(d.id)===String(id));if(item)addLog({type:"call",desc:`통화 완료: ${item.name}`,detail:item.phone||"",region:item.region||"",by:"Justin"});}
+  const root=document.getElementById("list");if(!root)return;
+  root.querySelectorAll(".status-sel").forEach(el=>{el.addEventListener("change",e=>{const id=e.target.dataset.id;const s=G(id);const prev=s.status;s.status=e.target.value;s.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();
+    if(e.target.value==="done"&&prev!=="done"){const item=DATA.find(d=>String(d.id)===String(id));if(item)addLog({type:"call",desc:`통화 완료: ${esc(item.name)}`,detail:item.phone||"",region:item.region||"",by:"Justin"});}
     renderTracker();});});
-  document.querySelectorAll(".cb-input").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).callback=e.target.value;saveState();});});
-  document.querySelectorAll(".pros-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).prospect=e.target.value;saveState();renderTracker();});});
-  const debounce=(el,cls,key)=>{document.querySelectorAll(cls).forEach(el=>{let t;el.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id)[key]=e.target.value;saveState();updateStats();},300);});});};
-  debounce(null,".qty-in","qty");debounce(null,".price-in","price");debounce(null,".contact-in","contact");debounce(null,".memo-in","memo");
-  document.querySelectorAll(".month-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodMonth=e.target.value;saveState();});});
-  document.querySelectorAll(".part-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodPart=e.target.value;saveState();});});
-  document.querySelectorAll(".chk-photo").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).photoSent=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
-  document.querySelectorAll(".chk-visit").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).visitWant=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
-  document.querySelectorAll(".chk-quote").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).quoteReq=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
-  document.querySelectorAll(".pg-head").forEach(h=>{h.addEventListener("click",()=>{h.classList.toggle("collapsed");h.nextElementSibling.style.display=h.classList.contains("collapsed")?"none":"flex";});});
-  // Edit button → open edit modal
-  document.querySelectorAll(".edit-btn").forEach(el=>{el.addEventListener("click",e=>{
+  root.querySelectorAll(".cb-input").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).callback=e.target.value;saveState();});});
+  root.querySelectorAll(".pros-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).prospect=e.target.value;saveState();updateStats();});});
+  const dbind=(cls,key)=>{root.querySelectorAll(cls).forEach(el=>{let t;el.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id)[key]=e.target.value;saveState();updateStats();},300);});});};
+  dbind(".qty-in","qty");dbind(".price-in","price");dbind(".contact-in","contact");dbind(".memo-in","memo");
+  root.querySelectorAll(".month-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodMonth=e.target.value;saveState();});});
+  root.querySelectorAll(".part-rad").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodPart=e.target.value;saveState();});});
+  root.querySelectorAll(".chk-photo").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).photoSent=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  root.querySelectorAll(".chk-visit").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).visitWant=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  root.querySelectorAll(".chk-quote").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).quoteReq=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  root.querySelectorAll(".cc-inc").forEach(el=>{el.addEventListener("click",e=>{e.stopPropagation();const id=e.target.dataset.id;const s=G(id);s.callCount=(s.callCount||0)+1;const span=e.target.parentElement.querySelector(".cc-val");if(span)span.textContent=s.callCount;saveState();});});
+  root.querySelectorAll(".cc-dec").forEach(el=>{el.addEventListener("click",e=>{e.stopPropagation();const id=e.target.dataset.id;const s=G(id);s.callCount=Math.max(0,(s.callCount||0)-1);const span=e.target.parentElement.querySelector(".cc-val");if(span)span.textContent=s.callCount;saveState();});});
+  root.querySelectorAll(".star-btn").forEach(el=>{el.addEventListener("click",e=>{e.stopPropagation();const s=G(e.target.dataset.id);s.starred=!s.starred;saveState();renderTracker();renderKeyClients();});});
+  root.querySelectorAll(".pg-head").forEach(h=>{h.addEventListener("click",()=>{h.classList.toggle("collapsed");h.nextElementSibling.style.display=h.classList.contains("collapsed")?"none":"flex";});});
+  root.querySelectorAll(".edit-btn").forEach(el=>{el.addEventListener("click",e=>{
     e.stopPropagation();openEditModal(Number(e.target.dataset.id));
   });});
-  // Restore hidden entry
-  document.querySelectorAll(".restore-entry").forEach(el=>{el.addEventListener("click",e=>{
+  root.querySelectorAll(".restore-entry").forEach(el=>{el.addEventListener("click",e=>{
     const id=Number(e.target.dataset.id);hiddenIds.delete(id);saveHidden();renderTracker();
   });});
-  // Permanent delete custom from deleted view
-  document.querySelectorAll(".perm-del").forEach(el=>{el.addEventListener("click",e=>{
+  root.querySelectorAll(".perm-del").forEach(el=>{el.addEventListener("click",e=>{
     const id=Number(e.target.dataset.id);
     if(confirm("영구 삭제합니다. 복원할 수 없습니다.")){const idx=DATA.findIndex(d=>d.id===id);if(idx>=0)DATA.splice(idx,1);delete state[id];hiddenIds.delete(id);saveCustomEntries();saveHidden();saveState();renderTracker();}
   });});
@@ -1618,17 +1919,17 @@ function renderSummary(){
   const pi=DATA.filter(i=>Number(G(i.id).price)>0).sort((a,b)=>(Number(G(b.id).price)||0)-(Number(G(a.id).price)||0));
   const pe=document.getElementById("sum-price");
   if(!pi.length){pe.innerHTML=`<h3 style="color:var(--teal)">가격 제시 업체</h3><div class="summary-empty">없음</div>`;return;}
-  let h=`<h3 style="color:var(--teal)">가격 제시 업체 (${pi.length}건)</h3><table class="summary-table"><tr><th>업체</th><th>전화</th><th>담당자</th><th>가능성</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>메모</th></tr>`;
-  pi.forEach(i=>{const s=G(i.id);h+=`<tr><td>${i.name}</td><td>${i.phone}</td><td>${s.contact||"-"}</td><td>${PROS[s.prospect]||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right;font-weight:700;color:var(--green)">${Number(s.price).toLocaleString()}만원</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px;color:var(--text2)">${s.memo||"-"}</td></tr>`;});
+  let h=`<h3 style="color:var(--teal)">가격 제시 업체 (${pi.length}건)</h3><table class="summary-table"><tr><th>가능성</th><th>업체</th><th>전화</th><th>담당자</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>메모</th></tr>`;
+  pi.forEach(i=>{const s=G(i.id);h+=`<tr><td>${prosTag(s.prospect)}</td><td>${esc(i.name)}</td><td>${esc(i.phone)}</td><td>${esc(s.contact)||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right;font-weight:700;color:var(--green)">${Number(s.price).toLocaleString()}만원</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px;color:var(--text2)">${esc(s.memo)||"-"}</td></tr>`;});
   pe.innerHTML=h+"</table>";
 }
 
 function rst2(eid,title,status,color){
   const el=document.getElementById(eid),items=DATA.filter(i=>G(i.id).status===status);
   if(!items.length){el.innerHTML=`<h3 style="color:${color}">${title}</h3><div class="summary-empty">없음</div>`;return;}
-  let h=`<h3 style="color:${color}">${title} (${items.length}건)</h3><table class="summary-table"><tr><th>업체</th><th>전화</th><th>담당자</th><th>가능성</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>${status==="scheduled"?"예약일":"시각"}</th><th>메모</th></tr>`;
+  let h=`<h3 style="color:${color}">${title} (${items.length}건)</h3><table class="summary-table"><tr><th>가능성</th><th>업체</th><th>전화</th><th>담당자</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>${status==="scheduled"?"예약일":"시각"}</th><th>메모</th></tr>`;
   items.forEach(i=>{const s=G(i.id);const tc=status==="scheduled"?(s.callback||"-"):(s.calledAt||"-");const ps=s.price?Number(s.price).toLocaleString()+"만원":"-";
-    h+=`<tr><td>${i.name}</td><td>${i.phone}</td><td>${s.contact||"-"}</td><td>${PROS[s.prospect]||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right">${ps}</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px">${tc}</td><td style="font-size:10px;color:var(--text2);max-width:140px">${s.memo||"-"}</td></tr>`;});
+    h+=`<tr><td>${prosTag(s.prospect)}</td><td>${esc(i.name)}</td><td>${esc(i.phone)}</td><td>${esc(s.contact)||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right">${ps}</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px">${esc(tc)}</td><td style="font-size:10px;color:var(--text2);max-width:140px">${esc(s.memo)||"-"}</td></tr>`;});
   el.innerHTML=h+"</table>";
 }
 
@@ -1639,6 +1940,7 @@ let logFilter="all";
 
 function addLog(entry){
   updateLog.push({id:Date.now()+Math.random(),ts:new Date().toISOString(),...entry});
+  if(updateLog.length>200) updateLog=updateLog.slice(-200); // keepalive 64KB 제한 방지
   renderLog();syncToCloud();
 }
 
@@ -1666,10 +1968,10 @@ function renderLog(){
     entries.forEach(e=>{
       const time=new Date(e.ts).toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
       const lt=LOG_TYPES[e.type]||{l:"기타",c:""};
-      h+=`<div class="log-entry t-${e.type}" data-logid="${e.id}" style="cursor:pointer" title="클릭하여 수정"><div class="log-time">${time}</div><div class="log-content"><div class="log-desc">${e.desc||""}</div>`;
-      if(e.detail)h+=`<div class="log-detail">${e.detail}</div>`;
+      h+=`<div class="log-entry t-${e.type}" data-logid="${e.id}" style="cursor:pointer" title="클릭하여 수정"><div class="log-time">${time}</div><div class="log-content"><div class="log-desc">${esc(e.desc)||""}</div>`;
+      if(e.detail)h+=`<div class="log-detail">${esc(e.detail)}</div>`;
       h+=`<div class="log-tags"><span class="log-tag ${lt.c}">${lt.l}</span>`;
-      if(e.region)h+=`<span class="log-tag lt-region">${e.region}</span>`;
+      if(e.region)h+=`<span class="log-tag lt-region">${esc(e.region)}</span>`;
       if(e.count)h+=`<span class="log-tag lt-count">${e.count}건</span>`;
       if(e.by)h+=`<span class="log-tag lt-by">${e.by}</span>`;
       h+=`</div></div></div>`;
@@ -1749,8 +2051,10 @@ document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{
   document.querySelectorAll(".tab-panel").forEach(x=>x.classList.remove("active"));
   t.classList.add("active");document.getElementById("panel-"+t.dataset.tab).classList.add("active");
   document.getElementById("tracker-controls").style.display=t.dataset.tab==="tracker"?"block":"none";
+  if(t.dataset.tab==="tracker")renderTracker();
   if(t.dataset.tab==="summary")renderSummary();
   if(t.dataset.tab==="platform")renderPlatforms();
+  if(t.dataset.tab==="keyclient")renderKeyClients();
   if(t.dataset.tab==="log")renderLog();
 });});
 document.querySelectorAll(".fb").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".fb").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderTracker();});});
@@ -1798,26 +2102,41 @@ document.getElementById("btn-export").addEventListener("click",()=>{
 });
 
 document.getElementById("btn-backup").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
+  const fullBackup={ts:new Date().toISOString(),state,updateLog,platInquiries,platState,hiddenIds:[...hiddenIds],smsText:document.getElementById("sms-text")?.value||"",customEntries:DATA.filter(d=>d.custom)};
+  const blob=new Blob([JSON.stringify(fullBackup,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
   const a=document.createElement("a");a.href=url;a.download=`반송-백업-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);
   const i=document.getElementById("save-ind");i.textContent="백업 다운로드됨";i.classList.add("show");clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),2000);
 });
 document.getElementById("btn-restore").addEventListener("click",()=>{document.getElementById("file-import").click();});
 document.getElementById("file-import").addEventListener("change",e=>{
   const f=e.target.files[0];if(!f)return;const r=new FileReader();
-  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm("현재 데이터를 백업 파일로 덮어씁니다. 계속?")){state=d;saveState();renderTracker();}}catch{alert("올바른 JSON 파일이 아닙니다.");}};
+  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);
+    // 백업 파일 구조 검증
+    const raw=ev.target.result;
+    if(raw.length>5*1024*1024){alert("백업 파일이 너무 큽니다 (5MB 초과).");return;}
+    const obj=d.state||d;
+    if(typeof obj!=="object"||Array.isArray(obj)){alert("올바른 백업 파일 형식이 아닙니다.");return;}
+    if(d.updateLog&&!Array.isArray(d.updateLog)){alert("백업 파일의 updateLog 형식이 잘못되었습니다.");return;}
+    if(d.platInquiries&&!Array.isArray(d.platInquiries)){alert("백업 파일의 platInquiries 형식이 잘못되었습니다.");return;}
+    if(confirm("현재 데이터를 백업 파일로 덮어씁니다. 계속?")){
+    // 새 형식(fullBackup) 또는 구 형식(state만) 모두 지원
+    if(d.state){state=d.state;if(d.updateLog)updateLog=d.updateLog;if(d.platInquiries)platInquiries=d.platInquiries;if(d.platState)platState=d.platState;if(d.hiddenIds)hiddenIds=new Set(d.hiddenIds);if(d.customEntries)d.customEntries.forEach(ce=>{if(!DATA.find(x=>x.id===ce.id))DATA.push(ce);});}
+    else{state=d;}
+    saveState();syncToCloud();renderTracker();renderLog();
+  }}catch{alert("올바른 JSON 파일이 아닙니다.");}};
   r.readAsText(f);e.target.value="";
 });
 document.getElementById("btn-copy").addEventListener("click",()=>{navigator.clipboard.writeText(document.getElementById("modal-content").textContent).then(()=>{const b=document.getElementById("btn-copy");b.textContent="복사됨!";setTimeout(()=>{b.textContent="복사";},1500);});});
 document.getElementById("btn-reset").addEventListener("click",async()=>{if(confirm("모든 기록이 삭제됩니다. (삭제된 업체도 복원, 클라우드도 초기화)")){
-  state={};hiddenIds=new Set();
+  state={};hiddenIds=new Set();updateLog=[];platInquiries=[];platState={};
   // remove custom entries from DATA
   for(let i=DATA.length-1;i>=0;i--){if(DATA[i].custom)DATA.splice(i,1);}
   localStorage.removeItem("bansong-phone-tracker-v4");
-  // reset cloud
+  localStorage.removeItem("bansong-backup-hist");
+  // _cloudLoaded를 직접 제어하여 reset 전용 PATCH 실행 (syncToCloud guard 우회)
   try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",update_log:[],platform_state:{},platform_inquiries:[],updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
   document.getElementById("sms-text").value=SMS_DEFAULT;
-  renderTracker();
+  renderTracker();renderLog();
 }});
 
 // Add modal
@@ -1877,7 +2196,7 @@ document.getElementById("add-confirm").addEventListener("click",()=>{
   document.getElementById("add-eval").value="";
   document.getElementById("add-source").value="";
   document.getElementById("add-detail").value="";
-  document.getElementById("add-priority").value="3";
+  document.getElementById("add-priority").value="2";
   document.getElementById("add-modal").classList.remove("show");
 
   const ind=document.getElementById("save-ind");
@@ -1953,28 +2272,73 @@ document.getElementById("edit-delete").addEventListener("click",()=>{
   const cloudOk=await loadFromCloud();
   const cloudHasData=Object.keys(state).length>0;
 
-  if(!cloudHasData){
-    // Cloud is empty or failed — load from localStorage
-    loadState();
-    // migrate old custom entries
-    try{const cs=localStorage.getItem("bansong-custom-entries");if(cs){JSON.parse(cs).forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});}}catch{}
-    try{const hs=localStorage.getItem("bansong-hidden-entries");if(hs)hiddenIds=new Set(JSON.parse(hs));}catch{}
-    try{const sm=localStorage.getItem("bansong-sms-text");if(sm)document.getElementById("sms-text").value=sm;}catch{}
+  // 클라우드 데이터가 비어있거나 의미있는 데이터가 없으면 → 백업에서 복구 시도
+  const cloudHasRealData=cloudHasData&&hasRealData();
 
-    // If we have local data and cloud is connected, push it up
-    if(cloudOk&&Object.keys(state).length>0){
+  if(!cloudHasData||!cloudHasRealData){
+    // 1순위: localStorage 백업 이력에서 복구
+    let recovered=false;
+    try{
+      const hist=JSON.parse(localStorage.getItem("bansong-backup-hist")||"[]");
+      if(hist.length>0){
+        const bk=hist[0]; // 가장 최근 백업
+        const bkHasData=Object.values(bk.state).some(v=>v.status||v.calledAt||v.memo||v.prospect||(v.callCount||0)>0);
+        if(bkHasData){
+          state=bk.state;
+          if(bk.updateLog) updateLog=bk.updateLog;
+          if(bk.platInquiries) platInquiries=bk.platInquiries;
+          if(bk.platState) platState=bk.platState;
+          if(bk.customPlatforms) bk.customPlatforms.forEach(cp=>{if(!PLATFORMS.find(p=>p.id===cp.id))PLATFORMS.push(cp);});
+          recovered=true;
+          console.log("Recovered from localStorage backup:",bk.ts);
+        }
+      }
+    }catch(e){console.warn("Backup recovery failed:",e);}
+
+    if(!recovered){
+      // 2순위: 기존 localStorage 단순 로드
+      loadState();
+      try{const cs=localStorage.getItem("bansong-custom-entries");if(cs){JSON.parse(cs).forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});}}catch{}
+      try{const hs=localStorage.getItem("bansong-hidden-entries");if(hs)hiddenIds=new Set(JSON.parse(hs));}catch{}
+      try{const sm=localStorage.getItem("bansong-sms-text");if(sm)document.getElementById("sms-text").value=sm;}catch{}
+    }
+
+    // 복구된 데이터가 있으면 클라우드에 다시 올리기
+    const hasRecoveredData=hasRealData();
+    if(cloudOk&&hasRecoveredData){
+      _cloudLoaded=true;
       syncToCloud();
-      console.log("Local data migrated to cloud");
+      console.log(recovered?"Backup data restored to cloud":"Local data migrated to cloud");
+    } else if(!cloudOk&&!hasRecoveredData){
+      // 클라우드 실패 + 로컬도 비어있음 → sync 차단 유지 (빈 state 덮어쓰기 방지)
+      console.warn("boot: cloud failed & no local data — sync blocked until reload");
     }
   }
+
+  // 클라우드 성공 또는 로컬에 데이터 있으면 sync 허용
+  if(cloudOk||hasRealData()) _cloudLoaded=true;
 
   // Auto-add bulk log for KOSCA 대구 26건 (one-time)
   if(!updateLog.find(l=>l.desc&&l.desc.includes('대구 30억+ 조경회사 26건'))){
     updateLog.push({id:Date.now()+Math.random(),ts:new Date().toISOString(),type:"bulk",region:"대구",count:26,desc:"KOSCA 대구 30억+ 조경회사 26건 리스트 업데이트",detail:"시공능력평가액 30억 이상, 조경식재·시설물 업종",by:"AI"});
-    syncToCloud();
+    // boot 완료 후 state에 데이터가 있을 때만 sync (빈 state 덮어쓰기 방지)
+    if(hasRealData()) syncToCloud();
   }
 
+  // beforeunload: 디바운스 중인 sync 즉시 실행 (브라우저 닫기 시 데이터 유실 방지)
+  window.addEventListener("beforeunload",()=>{
+    if(_saveTimer){
+      clearTimeout(_saveTimer);
+      if(_cloudLoaded&&Object.keys(state).length>0&&hasRealData()){
+        const body=JSON.stringify({tracker_data:state,custom_entries:DATA.filter(d=>d.custom),hidden_ids:[...hiddenIds],sms_text:document.getElementById("sms-text")?.value||"",update_log:updateLog,platform_state:platState,platform_inquiries:platInquiries,updated_at:new Date().toISOString(),updated_by:"local"});
+        try{fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body,keepalive:true});}catch(e){}
+      }
+    }
+    autoBackup();
+  });
+
   renderTracker();
+  renderKeyClients();
   renderLog();
   // Show connection status
   const i=document.getElementById("save-ind");
