@@ -1,0 +1,107 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-03-18",
+  "features": [
+    {
+      "id": "F-001",
+      "name": "1순위 업체 접촉 (협회/공공)",
+      "description": "한국조경수협회 본회, 경북지회, 산림조합 대구경북본부 연락",
+      "priority": "high",
+      "status": "pending",
+      "completionCriteria": [
+        "협회 본회 전화 (042-822-5793)",
+        "경북지회장 직접 전화 (010-3536-3863)",
+        "조경수거래소 매입 의향 확인 (010-2364-3455)",
+        "산림조합 대구경북본부 상담 (053-215-3048)"
+      ],
+      "dependencies": [],
+      "notes": "즉시 실행 (오늘~내일)"
+    },
+    {
+      "id": "F-002",
+      "name": "온라인 플랫폼 매물 등록",
+      "description": "트리디비, 나무시장, 나무몰, 라펜트, 마켓트리, 산림조합 직거래장터 등록",
+      "priority": "high",
+      "status": "pending",
+      "completionCriteria": [
+        "트리디비 매물 등록 + 프리미엄 중개 요청",
+        "나무시장(kotr) 매물 등록",
+        "나무몰 매물 등록",
+        "라펜트 조경소재 매물 등록",
+        "산림조합 직거래장터 등록",
+        "마켓트리 등록",
+        "조경수협회 매입의뢰 게시판 등록"
+      ],
+      "dependencies": [],
+      "notes": "이번 주 중 완료 목표"
+    },
+    {
+      "id": "F-003",
+      "name": "유통상/지역업체 연락",
+      "description": "가사농원, 청람조경, 대림조경, 수프로, 구미 지역업체 등 접촉",
+      "priority": "medium",
+      "status": "pending",
+      "completionCriteria": [
+        "가사농원 매입/중개 문의",
+        "청람조경농장 문의",
+        "대림조경 문의",
+        "(주)수프로 문의",
+        "구미 상록조경 문의",
+        "구미 유원조경개발 문의"
+      ],
+      "dependencies": [],
+      "notes": "F-001과 병행 진행"
+    },
+    {
+      "id": "F-004",
+      "name": "사진 촬영 및 준비",
+      "description": "전경 + 수형 좋은 개별 나무 클로즈업 최소 10장 이상",
+      "priority": "high",
+      "status": "pending",
+      "completionCriteria": [
+        "전경 사진 3장 이상",
+        "상급 수형 클로즈업 10장 이상",
+        "일반 수형 대표 사진 5장 이상",
+        "도로/접근성 사진 2장 이상"
+      ],
+      "dependencies": [],
+      "notes": "업체 연락 시 즉시 전송할 수 있도록 미리 준비"
+    },
+    {
+      "id": "F-005",
+      "name": "견적 비교 및 판매 전략 확정",
+      "description": "수집된 견적을 비교하여 일괄/분할/혼합 판매 방식 결정",
+      "priority": "medium",
+      "status": "pending",
+      "completionCriteria": [
+        "최소 5곳 견적 수집",
+        "견적 비교표 작성",
+        "판매 방식 확정 (Decision.md DEC-002)"
+      ],
+      "dependencies": ["F-001", "F-002", "F-003"],
+      "notes": "3/25~31 목표"
+    },
+    {
+      "id": "F-006",
+      "name": "계약 및 인도",
+      "description": "계약 체결, 굴취/상차 조율, 대금 수령",
+      "priority": "medium",
+      "status": "pending",
+      "completionCriteria": [
+        "계약서 작성/체결",
+        "굴취 일정 확정",
+        "상차/운송 조율",
+        "대금 수령 확인"
+      ],
+      "dependencies": ["F-005"],
+      "notes": "4월 초 목표 (식재 적기)"
+    }
+  ],
+  "statusDefinitions": {
+    "pending": "아직 시작 안 함",
+    "in_progress": "진행 중",
+    "waiting": "대기 중 (상대방 응답 등)",
+    "completed": "완료",
+    "blocked": "차단됨"
+  }
+}
