@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>반송 350그루 판매 - 업체 전화 추적</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #242836;
+    --border: #2e3347; --text: #e4e7ef; --text2: #8b90a5;
+    --accent: #6c8cff; --accent2: #4a6adf;
+    --red: #ff6b6b; --orange: #ffa94d; --yellow: #ffd43b;
+    --green: #51cf66; --teal: #38d9a9; --purple: #b197fc;
+    --grid: 130px 1.3fr 95px 100px 145px 140px 1fr;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.5; display: flex; flex-direction: column;
+  }
+
+  /* ===== FIXED TOP ===== */
+  .top-fixed {
+    flex-shrink: 0; padding: 16px 28px 0; background: var(--bg);
+    border-bottom: 1px solid var(--border); z-index: 10;
+  }
+  .header { margin-bottom: 14px; display: flex; align-items: baseline; gap: 16px; }
+  .header h1 { font-size: 19px; font-weight: 700; }
+  .header .subtitle { font-size: 12px; color: var(--text2); }
+  .header .save-ind { margin-left: auto; font-size: 11px; color: var(--green); opacity: 0; transition: opacity 0.3s; }
+  .header .save-ind.show { opacity: 1; }
+
+  .tabs { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 2px solid var(--border); }
+  .tab { padding: 8px 22px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; background: none; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .tc { display: inline-block; background: var(--surface2); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+  .tab.active .tc { background: var(--accent2); color: #fff; }
+
+  .stats-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .sc { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; text-align: center; }
+  .sc .n { font-size: 20px; font-weight: 700; line-height: 1.2; }
+  .sc .l { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+  .progress-wrap { background: var(--surface); border-radius: 5px; height: 5px; margin-bottom: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 5px; transition: width 0.4s; }
+
+  .controls { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .fb { padding: 5px 12px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 11px; cursor: pointer; }
+  .fb:hover { border-color: var(--accent); color: var(--text); }
+  .fb.active { background: var(--accent2); color: #fff; border-color: var(--accent); }
+  .spacer { flex: 1; }
+  .eb { padding: 5px 12px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); font-size: 11px; cursor: pointer; }
+  .eb:hover { background: var(--accent2); color: #fff; }
+  .sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
+  .sort-btn { padding: 5px 12px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 11px; cursor: pointer; }
+  .sort-btn:hover { border-color: var(--teal); color: var(--text); }
+  .sort-btn.active { background: #1a2a3a; color: var(--teal); border-color: var(--teal); }
+  .sort-label { font-size: 11px; color: var(--text2); }
+
+  .script-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; font-size: 12px; color: var(--text2); line-height: 1.7; display: none; }
+  .script-box.show { display: block; }
+  .script-box strong { color: var(--yellow); }
+
+  .col-header {
+    display: grid; grid-template-columns: var(--grid);
+    gap: 12px; padding: 8px 16px;
+    font-size: 11px; color: var(--text2); font-weight: 600;
+    background: var(--surface2); border-radius: 5px;
+  }
+
+  /* ===== SCROLL ===== */
+  .scroll-area { flex: 1; overflow-y: auto; padding: 10px 28px 28px; }
+  .scroll-area::-webkit-scrollbar { width: 7px; }
+  .scroll-area::-webkit-scrollbar-track { background: var(--bg); }
+  .scroll-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .tab-panel { display: none; height: 100%; }
+  .tab-panel.active { display: flex; flex-direction: column; }
+
+  .pg { margin-bottom: 22px; }
+  .pg-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--bg); z-index: 2; padding: 6px 0; }
+  .pb { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; }
+  .p1 .pb{background:var(--red)}.p2 .pb{background:var(--orange)}.p3 .pb{background:#e67700}.p4 .pb{background:var(--accent)}.p5 .pb{background:#845ef7}.p6 .pb,.p7 .pb{background:var(--text2)}
+  .pt { font-size: 14px; font-weight: 600; }
+  .pc { font-size: 12px; color: var(--text2); }
+  .ppa { margin-left: auto; color: var(--text2); font-size: 12px; transition: transform 0.2s; }
+  .pg-head.collapsed .ppa { transform: rotate(-90deg); }
+
+  .cards { display: flex; flex-direction: column; gap: 5px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 16px;
+    display: grid; grid-template-columns: var(--grid);
+    gap: 12px; align-items: center;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card.status-done { opacity: 0.5; }
+  .card.status-done:hover { opacity: 0.75; }
+  .card.prospect-high { border-left: 3px solid var(--green); }
+  .card.prospect-mid { border-left: 3px solid var(--yellow); }
+  .card.hidden { display: none; }
+
+  /* Fields */
+  .sa select, .ps select { padding: 6px 6px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; width: 100%; }
+  .sa select option, .ps select option { background: var(--surface2); }
+  .sa .cb-row { display: none; margin-top: 4px; }
+  .sa .cb-row.show { display: block; }
+  .sa .cb-input { padding: 4px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 11px; width: 100%; }
+  .sa .ct { font-size: 10px; color: var(--teal); margin-top: 3px; }
+  .sa .ct.red { color: var(--red); }
+
+  .info .nm { font-size: 13px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info .ph2 { font-size: 14px; font-weight: 700; color: var(--accent); }
+  .info .ph2 a { color: var(--accent); text-decoration: none; }
+  .info .ph2 .sub { font-size: 11px; color: var(--teal); font-weight: 400; }
+  .info .dt { font-size: 11px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 4px; vertical-align: middle; }
+  .sb.s-none{background:var(--surface2);color:var(--text2)}.sb.s-missed{background:#5c2020;color:var(--red)}.sb.s-scheduled{background:#2d2044;color:var(--purple)}.sb.s-done{background:#1a3a1a;color:var(--green)}
+
+  /* Qty + Price combined */
+  .qp { display: flex; flex-direction: column; gap: 6px; }
+  .qp .row { display: flex; align-items: center; gap: 4px; }
+  .qp input { padding: 5px 6px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; text-align: right; width: 60px; }
+  .qp input:focus { outline: none; border-color: var(--accent); }
+  .qp .sf { font-size: 11px; color: var(--text2); white-space: nowrap; }
+
+  /* Period */
+  .pd { display: flex; gap: 4px; }
+  .pd select { padding: 6px 4px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; }
+  .pd select option { background: var(--surface2); }
+  .pd .month-sel { width: 64px; }
+  .pd .part-sel { width: 64px; }
+
+  /* Follow-up checks */
+  .fu { display: flex; flex-direction: column; gap: 4px; }
+  .fu .fu-row { display: flex; align-items: center; gap: 4px; }
+  .fu .fu-row input[type="text"] { padding: 5px 6px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; width: 100%; }
+  .fu .fu-row input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  .fu-checks { display: flex; gap: 10px; margin-top: 3px; }
+  .fu-chk { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); cursor: pointer; white-space: nowrap; }
+  .fu-chk input { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+  .fu-chk.checked { color: var(--teal); }
+
+  /* Memo */
+  .memo textarea { padding: 6px 8px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; resize: none; height: 52px; width: 100%; font-family: inherit; }
+  .memo textarea:focus { outline: none; border-color: var(--accent); height: 72px; }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  /* Summary */
+  .summary-section { margin-bottom: 24px; }
+  .summary-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .summary-table th { text-align: left; padding: 8px 12px; background: var(--surface2); color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .summary-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .summary-table tr:hover { background: var(--surface2); }
+  .summary-empty { color: var(--text2); font-size: 13px; padding: 20px; text-align: center; }
+  .price-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; text-align: center; min-width: 140px; }
+  .price-card .val { font-size: 22px; font-weight: 700; color: var(--green); }
+  .price-card .val.mid { color: var(--yellow); }
+  .price-card .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; }
+  .modal h2 { font-size: 14px; margin-bottom: 8px; }
+  .modal pre { font-size: 10px; background: var(--bg); padding: 10px; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; line-height: 1.5; }
+  .modal .close-btn { margin-top: 8px; padding: 5px 14px; background: var(--accent2); color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+  .copy-btn { margin-top: 6px; margin-left: 6px; padding: 5px 14px; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; }
+  #file-import { display: none; }
+
+  /* Add button */
+  .btn-add {
+    margin-left: auto; padding: 6px 16px; border-radius: 6px;
+    border: 1px solid var(--green); background: transparent;
+    color: var(--green); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .btn-add:hover { background: var(--green); color: var(--bg); }
+
+  /* Add modal form */
+  .add-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; max-width: 520px; width: 92%; }
+  .add-modal h2 { font-size: 16px; margin-bottom: 20px; }
+  .add-form { display: flex; flex-direction: column; gap: 14px; }
+  .add-field { display: flex; flex-direction: column; gap: 4px; }
+  .add-field label { font-size: 12px; color: var(--text2); font-weight: 600; }
+  .add-field input, .add-field select, .add-field textarea {
+    padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-size: 13px; font-family: inherit;
+  }
+  .add-field input:focus, .add-field select:focus, .add-field textarea:focus { outline: none; border-color: var(--accent); }
+  .add-field textarea { resize: vertical; min-height: 48px; }
+  .add-field .hint { font-size: 10px; color: var(--text2); margin-top: 2px; }
+  .add-row { display: flex; gap: 10px; }
+  .add-row .add-field { flex: 1; }
+  .add-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+  .add-actions button {
+    padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .btn-confirm { background: var(--accent2); color: #fff; }
+  .btn-confirm:hover { background: var(--accent); }
+  .btn-cancel { background: var(--surface2); color: var(--text2); border: 1px solid var(--border) !important; }
+  .btn-cancel:hover { color: var(--text); }
+  /* Custom badge */
+  .custom-badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9px; background: #2a2040; color: var(--purple); margin-left: 4px; vertical-align: middle; }
+  /* Edit button inline */
+  .edit-btn {
+    cursor: pointer; font-size: 11px; margin-left: 4px; color: var(--text2);
+    opacity: 0.35; transition: opacity 0.15s; vertical-align: middle;
+    display: inline-block; border: none; background: none; padding: 0;
+  }
+  .edit-btn:hover { opacity: 1; color: var(--accent); }
+  /* Edit modal — reuse add-modal styles */
+  .edit-modal-actions { display: flex; gap: 10px; justify-content: space-between; margin-top: 12px; }
+  .edit-modal-actions button {
+    padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .btn-delete { background: transparent; color: var(--red); border: 1px solid var(--red) !important; }
+  .btn-delete:hover { background: var(--red); color: #fff; }
+  .edit-right-actions { display: flex; gap: 10px; }
+
+  /* SMS modal */
+  .sms-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 0; max-width: 380px; width: 88%; overflow: hidden; }
+  .sms-header { background: var(--surface2); padding: 12px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .sms-header .sms-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; flex-shrink: 0; }
+  .sms-header .sms-info { font-size: 13px; font-weight: 600; }
+  .sms-header .sms-sub { font-size: 10px; color: var(--text2); font-weight: 400; }
+  .sms-body { padding: 20px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .sms-bubble {
+    background: var(--surface2); border-radius: 14px 14px 14px 4px;
+    padding: 12px 16px; font-size: 13px; line-height: 1.7;
+    color: var(--text); width: 100%; word-break: keep-all;
+    border: 1px solid transparent; resize: none; font-family: inherit;
+    min-height: 220px; outline: none;
+  }
+  .sms-bubble:focus { border-color: var(--accent); }
+  .sms-saved { font-size: 10px; color: var(--green); opacity: 0; transition: opacity 0.3s; margin-right: auto; line-height: 32px; }
+  .sms-saved.show { opacity: 1; }
+  .sms-actions { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+  .sms-actions button {
+    padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .sms-copy { background: var(--accent2); color: #fff; }
+  .sms-copy:hover { background: var(--accent); }
+  .sms-close { background: var(--surface2); color: var(--text2); border: 1px solid var(--border) !important; }
+  .sms-close:hover { color: var(--text); }
+
+  /* Info tab — 2-column layout */
+  .info-panel { padding: 4px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .info-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .info-card.full { grid-column: 1 / -1; }
+  .info-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .info-card h3 .ic { font-size: 16px; }
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .pg-box { background: var(--surface2); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .pg-box .pg-label { font-size: 10px; color: var(--text2); margin-bottom: 3px; }
+  .pg-box .pg-val { font-size: 18px; font-weight: 700; }
+  .pg-box .pg-sub { font-size: 9px; color: var(--text2); margin-top: 2px; }
+  .info-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .info-table th { text-align: left; padding: 6px 10px; color: var(--text2); font-weight: 600; width: 120px; border-bottom: 1px solid var(--border); font-size: 11px; }
+  .info-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .info-list { list-style: none; padding: 0; margin: 0; }
+  .info-list li { padding: 5px 0; font-size: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 6px; }
+  .info-list li:last-child { border: none; }
+  .info-list .dot { color: var(--accent); font-weight: 700; }
+  .info-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .info-badge.ok { background: #1a3a1a; color: var(--green); }
+  .info-badge.warn { background: #3a2a10; color: var(--orange); }
+  .info-badge.hot { background: #3a1020; color: var(--red); }
+  .demand-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .demand-item { background: var(--surface2); border-radius: 6px; padding: 8px 12px; }
+  .demand-item .d-type { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+  .demand-item .d-detail { font-size: 10px; color: var(--text2); }
+</style>
+</head>
+<body>
+
+<div class="top-fixed">
+  <div class="header">
+    <h1>반송 350그루 판매 - 전화 추적</h1>
+    <div class="subtitle">경북 구미시 옥성면 산촌리 74번지 | H2.0~2.5m 15년생</div>
+    <div class="save-ind" id="save-ind">자동 저장됨</div>
+    <button class="btn-add" id="btn-add">+ 업체 추가</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-tab="tracker">업체 리스트<span class="tc" id="tc-tracker">45</span></button>
+    <button class="tab" data-tab="summary">통화 현황<span class="tc" id="tc-summary">0</span></button>
+    <button class="tab" data-tab="info">매물 정보</button>
+  </div>
+  <div id="tracker-controls">
+    <div class="stats-bar">
+      <div class="sc"><div class="n" id="s-done" style="color:var(--green)">0</div><div class="l">완료</div></div>
+      <div class="sc"><div class="n" id="s-missed" style="color:var(--red)">0</div><div class="l">부재중</div></div>
+      <div class="sc"><div class="n" id="s-sched" style="color:var(--purple)">0</div><div class="l">예약</div></div>
+      <div class="sc"><div class="n" id="s-pros" style="color:var(--accent)">0</div><div class="l">가능성</div></div>
+      <div class="sc"><div class="n" id="s-price" style="color:var(--teal)">0</div><div class="l">제시가합계(만원)</div></div>
+      <div class="sc"><div class="n" id="s-qty" style="color:var(--orange)">0</div><div class="l">총수량(그루)</div></div>
+      <div class="sc"><div class="n" id="s-total" style="color:var(--text2)">45</div><div class="l">전체</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div class="controls">
+      <button class="fb active" data-filter="all">전체</button>
+      <button class="fb" data-filter="uncalled">미통화</button>
+      <button class="fb" data-filter="missed">부재중</button>
+      <button class="fb" data-filter="scheduled">예약</button>
+      <button class="fb" data-filter="done">완료</button>
+      <button class="fb" data-filter="high">가능성높음</button>
+      <button class="fb" data-filter="has-price">가격제시</button>
+      <button class="fb" data-filter="photo">사진전송</button>
+      <button class="fb" data-filter="visit">현장방문</button>
+      <button class="fb" data-filter="deleted" style="color:var(--red)">삭제됨</button>
+      <div class="sep"></div>
+      <span class="sort-label">정렬:</span>
+      <button class="sort-btn active" data-sort="priority">순위</button>
+      <button class="sort-btn" data-sort="price-desc">가격높은순</button>
+      <button class="sort-btn" data-sort="price-asc">가격낮은순</button>
+      <button class="sort-btn" data-sort="period-asc">시기빠른순</button>
+      <button class="sort-btn" data-sort="qty-desc">수량많은순</button>
+      <div class="spacer"></div>
+      <button class="eb" id="btn-sms" style="color:var(--green)">소개 문자</button>
+      <button class="eb" id="btn-script">전화 멘트</button>
+      <button class="eb" id="btn-export">내보내기</button>
+      <button class="eb" id="btn-backup">백업</button>
+      <button class="eb" id="btn-restore">복원</button>
+      <button class="eb" id="btn-reset" style="color:var(--red)">초기화</button>
+    </div>
+    <div class="script-box" id="script-box">
+      <strong>"경북 구미시 옥성면에 15년생 정식재배 반송 350그루 있습니다. H2.0~2.5m 규격이고, 수형 좋은 것 절반, 일반 절반입니다. 밭 재배라 행정 제약 없고, 트럭 직접 진입 가능합니다. 일괄 또는 분할 매도 모두 협의 가능합니다. 사진 보내드릴까요?"</strong>
+    </div>
+    <div class="col-header">
+      <div>통화 상태</div>
+      <div>업체 정보</div>
+      <div>가능성</div>
+      <div>수량/가격</div>
+      <div>예상 시기</div>
+      <div>담당자/후속</div>
+      <div>메모</div>
+    </div>
+  </div>
+</div>
+
+<div class="scroll-area" id="scroll-area">
+  <div class="tab-panel active" id="panel-tracker"><div id="list"></div></div>
+  <div class="tab-panel" id="panel-summary">
+    <div class="price-summary" id="price-summary"></div>
+    <div class="summary-section" id="sum-done"></div>
+    <div class="summary-section" id="sum-scheduled"></div>
+    <div class="summary-section" id="sum-missed"></div>
+    <div class="summary-section" id="sum-price"></div>
+  </div>
+
+  <!-- 매물 정보 탭 -->
+  <div class="tab-panel" id="panel-info">
+    <div class="info-panel">
+
+      <!-- 가격 (전체 너비) -->
+      <div class="info-card full">
+        <h3><span class="ic">&#x1F4B0;</span> 예상 가격(상차가 기준)</h3>
+        <div class="price-grid">
+          <div class="pg-box">
+            <div class="pg-label">투입 원가</div>
+            <div class="pg-val" style="color:var(--text2)">2,000만</div>
+          </div>
+          <div class="pg-box">
+            <div class="pg-label">일괄 매도 (현실적)</div>
+            <div class="pg-val" style="color:var(--yellow)">3,500만~1억</div>
+            <div class="pg-sub">밭떼기 30~50% 할인</div>
+          </div>
+          <div class="pg-box">
+            <div class="pg-label">개별 판매 최대</div>
+            <div class="pg-val" style="color:var(--green)">~2억 2,000만</div>
+            <div class="pg-sub">개별+일괄 혼합 시</div>
+          </div>
+        </div>
+        <table class="info-table">
+          <tr><th>구분</th><th>수량</th><th>그루당 예상가</th><th>소계</th></tr>
+          <tr><td>수형 상급</td><td>~175그루</td><td style="color:var(--green);font-weight:600">30~100만 원</td><td>5,250만~1억 7,500만</td></tr>
+          <tr><td>일반 수형</td><td>~175그루</td><td>10~30만 원</td><td>1,750만~5,250만</td></tr>
+          <tr><td style="font-weight:700">합계</td><td style="font-weight:700">350그루</td><td></td><td style="font-weight:700;color:var(--green)">7,000만~2억 2,000만</td></tr>
+        </table>
+        <div style="margin-top:8px;font-size:10px;color:var(--text2)">
+          * <strong style="color:var(--text)">상차가</strong> = 굴취+상차 포함, 운송비는 구매자 부담 &nbsp;|&nbsp; <strong style="color:var(--text)">목대</strong> = 구매자가 직접 굴취+운송 (나무값만 지불) &nbsp;|&nbsp; 정가 없음 → 복수 견적 비교 필수
+        </div>
+      </div>
+
+      <!-- 좌측: 매물 기본 + 행정 + 시기 -->
+      <div class="info-card">
+        <h3><span class="ic">&#x1F332;</span> 매물 기본 정보</h3>
+        <table class="info-table">
+          <tr><th>수종</th><td>반송(盤松) — 우산형 수관의 고급 조경수</td></tr>
+          <tr><th>수량</th><td><strong>350그루</strong> (상급 ~175 / 일반 ~175)</td></tr>
+          <tr><th>규격</th><td>H 2.0~2.5m / 15년생</td></tr>
+          <tr><th>소재지</th><td>경북 구미시 옥성면 산촌리 74번지</td></tr>
+          <tr><th>재배</th><td>밭(농지) 정식 재배</td></tr>
+          <tr><th>접근성</th><td>트럭 직접 진입 가능</td></tr>
+        </table>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">행정 절차</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="info-badge ok">벌채허가 불필요</span>
+            <span class="info-badge ok">재선충 해당없음</span>
+            <span class="info-badge ok">반출제한 없음</span>
+          </div>
+          <div style="font-size:11px;color:var(--green);margin-top:6px">→ 행정 제약 없이 즉시 판매 가능</div>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <span class="info-badge hot">지금이 시즌!</span>
+          <span style="font-size:12px;margin-left:6px">3월 중순~4월 초 (식재 적기)</span>
+          <div style="font-size:10px;color:var(--text2);margin-top:4px">사진: 전경 + 개별 클로즈업 10장+</div>
+        </div>
+      </div>
+
+      <!-- 우측: 어필 + 반송 가치 -->
+      <div class="info-card">
+        <h3><span class="ic">&#x1F4AA;</span> 어필 포인트</h3>
+        <ul class="info-list">
+          <li><span class="dot">&#x25CF;</span> <strong>350그루 일괄 조달</strong> — 업체 최대 매력</li>
+          <li><span class="dot">&#x25CF;</span> <strong>정식 재배 15년</strong> — 활착률 높음</li>
+          <li><span class="dot">&#x25CF;</span> <strong>트럭 진입 가능</strong> — 굴취/상차 비용 절감</li>
+          <li><span class="dot">&#x25CF;</span> <strong>반송 품종</strong> — 적송 대비 프리미엄</li>
+          <li><span class="dot">&#x25CF;</span> <strong>고속도로 접근</strong> — 수도권 4h, 대구 1h</li>
+        </ul>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">반송이 비싼 이유</div>
+          <ul class="info-list">
+            <li><span class="dot">&#x25CF;</span> 접목 증식 필요 → 공급 제한적</li>
+            <li><span class="dot">&#x25CF;</span> 둥근 수관 자연 형성 → 관상 가치 높음</li>
+            <li><span class="dot">&#x25CF;</span> 조경 수요 꾸준 (아파트~골프장)</li>
+            <li><span class="dot">&#x25CF;</span> 천연기념물 지정 품종 → 문화적 가치</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 수요처 (전체 너비) -->
+      <div class="info-card full">
+        <h3><span class="ic">&#x1F3E2;</span> 수요처 분류</h3>
+        <div class="demand-grid">
+          <div class="demand-item"><div class="d-type">대형 건설사 조경팀</div><div class="d-detail">수십~수백 그루 | 전국 | 아파트 프리미엄</div></div>
+          <div class="demand-item"><div class="d-type">조경시공업체 (1급)</div><div class="d-detail">수십 그루 | 전국 | 공공기관/학교/공원</div></div>
+          <div class="demand-item"><div class="d-type">골프장/리조트</div><div class="d-detail">수십 그루 | 전국 | 코스/클럽하우스</div></div>
+          <div class="demand-item"><div class="d-type">조경수 유통상/중개인</div><div class="d-detail">100그루+ 일괄 | 전국 | 매입 후 재판매</div></div>
+          <div class="demand-item"><div class="d-type">전원주택/펜션 개인</div><div class="d-detail">5~20그루 | 반경 200km | 정원 조성</div></div>
+          <div class="demand-item"><div class="d-type">조경수협회 경유</div><div class="d-detail">다양 | 전국 | 회원 네트워크</div></div>
+        </div>
+      </div>
+
+      <!-- 좌측: 상차비 구조 -->
+      <div class="info-card">
+        <h3><span class="ic">&#x1F4E6;</span> 상차비 구조 (H2.0~2.5m 기준)</h3>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">"상차비"는 3가지 비용의 합산</div>
+        <table class="info-table">
+          <tr><th>굴취</th><td>나무를 땅에서 파내는 작업 (인력+포클레인)</td></tr>
+          <tr><th>분 감기</th><td>뿌리에 흙 붙인 채 마대로 감싸는 작업 (활착률 필수)</td></tr>
+          <tr><th>상차</th><td>트럭에 올리는 작업 (크레인/포클레인)</td></tr>
+        </table>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">그루당 상차비: <span style="color:var(--yellow)">3~7만 원</span></div>
+          <table class="info-table" style="font-size:11px">
+            <tr><th style="width:100px">굴취 인건비</th><td>1~2만 원</td></tr>
+            <tr><th>분 감기</th><td>0.5~1만 원 (마대 자재 포함)</td></tr>
+            <tr><th>장비비</th><td>1~3만 원 (포클레인/크레인 배분)</td></tr>
+            <tr><th>기타</th><td>0.5~1만 원 (잡자재, 소운반)</td></tr>
+          </table>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">350그루 전체 상차비</div>
+          <div style="display:flex;gap:8px">
+            <div class="pg-box" style="flex:1;padding:8px 10px"><div class="pg-label">최저 (대량할인)</div><div class="pg-val" style="font-size:15px;color:var(--green)">1,050만</div><div class="pg-sub">@3만</div></div>
+            <div class="pg-box" style="flex:1;padding:8px 10px"><div class="pg-label">중간</div><div class="pg-val" style="font-size:15px;color:var(--yellow)">1,750만</div><div class="pg-sub">@5만</div></div>
+            <div class="pg-box" style="flex:1;padding:8px 10px"><div class="pg-label">최고 (소량출하)</div><div class="pg-val" style="font-size:15px;color:var(--red)">2,450만</div><div class="pg-sub">@7만</div></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">장비 임대 참고 (1일 기준)</div>
+          <table class="info-table" style="font-size:11px">
+            <tr><th style="width:130px">미니 포클레인</th><td>40~50만/일 | 30~50그루 굴취</td></tr>
+            <tr><th>소형 포클레인</th><td>60~80만/일 | 40~60그루 굴취</td></tr>
+            <tr><th>소형 크레인 5~10t</th><td>50~80만/일 | 상차 전담</td></tr>
+            <tr><th>인부 1명</th><td>20~25만/일</td></tr>
+          </table>
+          <div style="font-size:10px;color:var(--text2);margin-top:4px">350그루 전량 작업 예상: 약 7~12일 (1일 30~50그루)</div>
+        </div>
+      </div>
+
+      <!-- 우측: 거래 방식 -->
+      <div class="info-card">
+        <h3><span class="ic">&#x1F91D;</span> 거래 방식 비교</h3>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px">방식 A. 상차가 제시 <span style="font-size:10px;color:var(--text2);font-weight:400">— 판매자가 상차까지</span></div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">
+            구매자 지불 = <strong style="color:var(--text)">나무값 + 굴취비 + 상차비</strong><br>
+            구매자는 운송비만 별도 부담<br>
+            <span style="color:var(--green)">장점:</span> 단가를 높게 받을 수 있음<br>
+            <span style="color:var(--red)">단점:</span> 장비/인부 섭외 + 작업 관리 필요
+          </div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px 16px;border:1px solid var(--green)">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px">방식 B. 목대가 제시 <span class="info-badge ok" style="font-size:9px;margin-left:6px">추천</span></div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">
+            구매자 지불 = <strong style="color:var(--text)">순수 나무값만</strong><br>
+            구매자가 자기 장비로 직접 굴취+상차+운송<br>
+            <span style="color:var(--green)">장점:</span> 판매자 신경 쓸 일 없음, 상차비 부담 없음<br>
+            <span style="color:var(--teal)">일괄 매도(밭떼기)에서 일반적인 방식</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px">매물 등록 시 가격 표기 예시</div>
+          <div style="background:var(--bg);border-radius:6px;padding:12px 14px;font-size:12px;line-height:1.8;font-family:monospace;color:var(--text2)">
+            <span style="color:var(--text)">목대가(나무값만):</span> 그루당 ○○만 원~<br>
+            <span style="color:var(--text)">&nbsp;&nbsp;→ 굴취/상차는 구매자 부담</span><br>
+            <span style="color:var(--text)">상차가(굴취+상차 포함):</span> 그루당 ○○만 원~<br>
+            <span style="color:var(--text)">&nbsp;&nbsp;→ 운송비만 별도</span><br>
+            <span style="color:var(--yellow)">일괄 매도(밭떼기) 협의 가능</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">추천 전략</div>
+          <ul class="info-list">
+            <li><span class="dot">&#x25CF;</span> <strong>목대가(방식B) 기준 판매</strong>가 현실적</li>
+            <li><span class="dot">&#x25CF;</span> 조경업체/유통상은 자체 장비 보유 → 직접 작업 선호</li>
+            <li><span class="dot">&#x25CF;</span> 매물 등록 시 목대가+상차가 <strong>두 가지 모두 표기</strong> 권장</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SMS modal -->
+<div class="modal-overlay" id="sms-modal">
+  <div class="sms-modal">
+    <div class="sms-header">
+      <div class="sms-icon">&#x1F333;</div>
+      <div>
+        <div class="sms-info">소개 문자 (통화 후 발송)</div>
+        <div class="sms-sub">복사 후 문자/카톡으로 전송</div>
+      </div>
+    </div>
+    <div class="sms-body">
+      <textarea class="sms-bubble" id="sms-text">안녕하세요, 조금 전 전화드린 해밀입니다.
+
+경북 구미시 옥성면 산촌리에 15년생 정식재배 반송 350그루 매도 건으로 연락드렸습니다.
+
+- 규격: H2.0~2.5m
+- 수형: 상급 약 절반, 일반 약 절반
+- 재배: 밭 재배 (행정 제약 없음)
+- 접근: 트럭 직접 진입 가능
+- 매도: 일괄/분할 모두 협의 가능
+
+사진 필요하시면 말씀해주세요.
+감사합니다.</textarea>
+    </div>
+    <div class="sms-actions">
+      <span class="sms-saved" id="sms-saved">저장됨</span>
+      <button class="sms-close" id="sms-close">닫기</button>
+      <button class="sms-copy" id="sms-save" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)">저장</button>
+      <button class="sms-copy" id="sms-copy">문자 복사</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file-import" accept=".json">
+
+<!-- Add modal -->
+<div class="modal-overlay" id="add-modal">
+  <div class="add-modal">
+    <h2>+ 업체 추가</h2>
+    <div class="add-form">
+      <div class="add-field">
+        <label>업체명 *</label>
+        <input type="text" id="add-name" placeholder="예: 홍길동 조경농원">
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>전화번호 *</label>
+          <input type="text" id="add-phone" placeholder="예: 010-1234-5678">
+        </div>
+        <div class="add-field">
+          <label>전화번호 2 (선택)</label>
+          <input type="text" id="add-phone2" placeholder="추가 연락처">
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>분류</label>
+          <select id="add-priority">
+            <option value="1">1순위 - 협회/공공</option>
+            <option value="2">2순위 - 거래 플랫폼</option>
+            <option value="3" selected>3순위 - 유통상/중개</option>
+            <option value="4">4순위 - 경북/대구</option>
+            <option value="5">5순위 - 대형 시공</option>
+            <option value="6">6순위 - 대형 건설사</option>
+            <option value="7">7순위 - 골프장/공공</option>
+            <option value="8">직접 추가</option>
+          </select>
+        </div>
+        <div class="add-field">
+          <label>출처/경위</label>
+          <input type="text" id="add-source" placeholder="예: 지인 소개, 인터넷 검색">
+        </div>
+      </div>
+      <div class="add-field">
+        <label>상세 정보</label>
+        <textarea id="add-detail" placeholder="지역, 전문 분야, 특이사항 등"></textarea>
+      </div>
+      <div class="add-actions">
+        <button class="btn-cancel" id="add-cancel">취소</button>
+        <button class="btn-confirm" id="add-confirm">추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="add-modal">
+    <h2 id="edit-title">업체 정보 수정</h2>
+    <input type="hidden" id="edit-id">
+    <div class="add-form">
+      <div class="add-field">
+        <label>업체명 *</label>
+        <input type="text" id="edit-name">
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>전화번호 *</label>
+          <input type="text" id="edit-phone">
+        </div>
+        <div class="add-field">
+          <label>전화번호 2</label>
+          <input type="text" id="edit-phone2">
+        </div>
+      </div>
+      <div class="add-row">
+        <div class="add-field">
+          <label>분류</label>
+          <select id="edit-priority">
+            <option value="1">1순위 - 협회/공공</option>
+            <option value="2">2순위 - 거래 플랫폼</option>
+            <option value="3">3순위 - 유통상/중개</option>
+            <option value="4">4순위 - 경북/대구</option>
+            <option value="5">5순위 - 대형 시공</option>
+            <option value="6">6순위 - 대형 건설사</option>
+            <option value="7">7순위 - 골프장/공공</option>
+            <option value="8">직접 추가</option>
+          </select>
+        </div>
+        <div class="add-field">
+          <label>상세 정보</label>
+          <input type="text" id="edit-detail">
+        </div>
+      </div>
+      <div class="edit-modal-actions">
+        <button class="btn-delete" id="edit-delete">삭제</button>
+        <div class="edit-right-actions">
+          <button class="btn-cancel" id="edit-cancel">취소</button>
+          <button class="btn-confirm" id="edit-save">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">내보내기</h2>
+    <pre id="modal-content"></pre>
+    <button class="modal close-btn" onclick="document.getElementById('modal').classList.remove('show')">닫기</button>
+    <button class="copy-btn" id="btn-copy">복사</button>
+  </div>
+</div>
+
+<script>
+const DATA=[
+  {id:1,p:1,g:"협회/공공",name:"(사)한국조경수협회 본회",phone:"042-822-5793~4",detail:"대전 | 전국 1,000여 회원 | 매입의뢰 게시판"},
+  {id:2,p:1,g:"협회/공공",name:"조경수협회 경북(대구) 지회",phone:"053-751-0042",phone2:"010-3536-3863 (박중현)",detail:"대구 수성구 | 구미 최근접 지회"},
+  {id:3,p:1,g:"협회/공공",name:"조경수협회 서울지회",phone:"02-448-3958",phone2:"010-2434-2981",detail:"수도권 건설사 매칭"},
+  {id:4,p:1,g:"협회/공공",name:"산림조합 대구경북본부",phone:"053-215-3048",detail:"경북 산림조합 네트워크 | 시세 감정"},
+  {id:5,p:1,g:"협회/공공",name:"산림조합중앙회 본부",phone:"1544-4200",phone2:"02-3434-7114",detail:"직거래장터 등록 | 구미시산림조합"},
+  {id:6,p:2,g:"거래 플랫폼",name:"트리디비 (TreeDB)",phone:"02-571-7581",detail:"국내 최대 | 2만명+ | treedb.co.kr"},
+  {id:7,p:2,g:"거래 플랫폼",name:"나무시장 (kotr)",phone:"-",detail:"kotr.co.kr | 무료 | 반송 다수"},
+  {id:8,p:2,g:"거래 플랫폼",name:"나무몰 (namoomall)",phone:"-",detail:"namoomall.com | 무료 | 경북 활발"},
+  {id:9,p:2,g:"거래 플랫폼",name:"라펜트 조경소재",phone:"02-336-3124",detail:"lafent.com | 조경 전문가 포털"},
+  {id:10,p:2,g:"거래 플랫폼",name:"마켓트리",phone:"031-923-4419",detail:"규격별 세분화 | 원스톱 견적"},
+  {id:11,p:2,g:"거래 플랫폼",name:"나무다움 (앱)",phone:"-",detail:"원스토어 설치 | 무료 등록"},
+  {id:12,p:3,g:"유통상/중개",name:"(주)조경수거래소",phone:"010-2364-3455",phone2:"010-3087-5677",detail:"강원 원주 | 전국 매입/매도 전문"},
+  {id:13,p:3,g:"유통상/중개",name:"(주)수프로",phone:"02-6300-2444",detail:"서울 서초 | 국내 최대 유통"},
+  {id:14,p:3,g:"유통상/중개",name:"가사농원",phone:"010-5401-8972",detail:"충남 당진 | 모범농장 | 반송 특화"},
+  {id:15,p:3,g:"유통상/중개",name:"청람조경농장",phone:"010-8299-8401",detail:"충남 태안 | 소나무/반송 전문"},
+  {id:16,p:3,g:"유통상/중개",name:"향기 가득한 농원",phone:"010-3272-6269",detail:"충북 진천 | 반송 보유 | 김재훈"},
+  {id:17,p:3,g:"유통상/중개",name:"대림조경",phone:"010-5332-0117",detail:"충남 | 22년 경력 | 소나무 도매"},
+  {id:18,p:3,g:"유통상/중개",name:"완주조경수유통",phone:"063-246-1566",phone2:"010-7487-1567",detail:"전북 완주 | 호남/전국 유통"},
+  {id:19,p:3,g:"유통상/중개",name:"호남조경수유통",phone:"-",detail:"광주 서구 | namu8282.com"},
+  {id:20,p:3,g:"유통상/중개",name:"차니농원",phone:"010-2625-4976",detail:"대형 특수목 전문"},
+  {id:21,p:4,g:"경북/대구",name:"(주)상록조경",phone:"054-472-0084",detail:"구미 해평면 | 조경공사 전문"},
+  {id:22,p:4,g:"경북/대구",name:"유원조경개발",phone:"054-443-6641",detail:"구미 신평동 | 조경식재 전문건설"},
+  {id:23,p:4,g:"경북/대구",name:"농소조경",phone:"010-3528-1560",detail:"구미 | 조경공사/잔디"},
+  {id:24,p:4,g:"경북/대구",name:"군위 거목조경",phone:"010-8662-1099",detail:"대구/경북 군위 | 구미 인근"},
+  {id:25,p:4,g:"경북/대구",name:"이효영 (개인)",phone:"010-3526-2137",detail:"대구 달서구 | 경북지회 회원"},
+  {id:26,p:4,g:"경북/대구",name:"최용규 (개인)",phone:"010-2331-5533",detail:"경북 고령 | 경북 서부권"},
+  {id:27,p:5,g:"대형 시공",name:"숨터조경건설",phone:"031-965-3119",detail:"서울/경기 | 소나무 전지 다수"},
+  {id:28,p:5,g:"대형 시공",name:"소나무조경",phone:"010-5290-2504",detail:"경기 김포 | 소나무 대량 매입"},
+  {id:29,p:5,g:"대형 시공",name:"(주)다원조경",phone:"032-623-6262",detail:"인천 | 시공능력 2위"},
+  {id:30,p:5,g:"대형 시공",name:"(주)한설그린",phone:"02-3411-0898",detail:"서울 강남 | 시공능력 4위"},
+  {id:31,p:5,g:"대형 시공",name:"(주)장원조경",phone:"02-578-4590",detail:"시공능력 6위"},
+  {id:32,p:5,g:"대형 시공",name:"(주)동영조경",phone:"02-322-9926",detail:"시공능력 7위"},
+  {id:33,p:5,g:"대형 시공",name:"(주)원앤티에스",phone:"02-338-2882",detail:"시공능력 8위 | 대우건설 협력사"},
+  {id:34,p:5,g:"대형 시공",name:"(주)안산조경건설",phone:"02-782-3286",detail:"시공능력 9위"},
+  {id:35,p:6,g:"대형 건설사",name:"현대건설",phone:"1577-7755",detail:"조경팀 연결"},
+  {id:36,p:6,g:"대형 건설사",name:"삼성물산 건설",phone:"02-2145-5114",detail:"온라인 상담실"},
+  {id:37,p:6,g:"대형 건설사",name:"GS건설",phone:"02-2154-1114",detail:"조경 담당"},
+  {id:38,p:6,g:"대형 건설사",name:"대우건설",phone:"02-2288-3114",detail:"조경 담당"},
+  {id:39,p:6,g:"대형 건설사",name:"HDC현대산업개발",phone:"02-3287-3001",detail:"조경 담당"},
+  {id:40,p:6,g:"대형 건설사",name:"롯데건설",phone:"1688-5500",detail:"롯데캐슬 경유"},
+  {id:41,p:6,g:"대형 건설사",name:"SK에코플랜트",phone:"02-3700-7114",detail:"구매 담당"},
+  {id:42,p:6,g:"대형 건설사",name:"포스코이앤씨",phone:"054-223-6114",detail:"포항 본사 | 경북 인접"},
+  {id:43,p:7,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀"},
+  {id:44,p:7,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경"},
+  {id:45,p:7,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",detail:"행정 절차 (완료)"},
+];
+
+const PRI={1:{l:"1순위",c:"p1",d:"협회/공공"},2:{l:"2순위",c:"p2",d:"거래 플랫폼"},3:{l:"3순위",c:"p3",d:"유통상/중개"},4:{l:"4순위",c:"p4",d:"경북/대구"},5:{l:"5순위",c:"p5",d:"대형 시공"},6:{l:"6순위",c:"p6",d:"대형 건설사"},7:{l:"7순위",c:"p7",d:"골프장/공공"},8:{l:"추가",c:"p5",d:"직접 추가"}};
+const STAT={"":{l:"미통화",b:"s-none"},missed:{l:"부재중",b:"s-missed"},scheduled:{l:"예약",b:"s-scheduled"},done:{l:"완료",b:"s-done"}};
+const PROS={"":"미평가",high:"높음",mid:"중간",low:"낮음",none:"불가"};
+const MO=[{v:"",l:"--월--"},{v:"3",l:"3월"},{v:"4",l:"4월"},{v:"5",l:"5월"},{v:"6",l:"6월"},{v:"7",l:"7월"},{v:"8",l:"8월+"}];
+const PA=[{v:"",l:"--순--"},{v:"early",l:"초순"},{v:"mid",l:"중순"},{v:"late",l:"하순"}];
+const PRI_BG={"p1":"var(--red)","p2":"var(--orange)","p3":"#e67700","p4":"var(--accent)","p5":"#845ef7","p6":"var(--text2)","p7":"var(--text2)"};
+
+// ========== Supabase Config ==========
+const SB_URL="https://vtecqmqcepulxmigxumo.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0ZWNxbXFjZXB1bHhtaWd4dW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTQxNTAsImV4cCI6MjA4NzIzMDE1MH0.kOJpkKC6hb2Te70Gdj_RzsAyAFcFzWGG01QiWVyW2ME";
+const SB_TABLE="bansong_state";
+const SB_HEADERS={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"};
+
+let _saveTimer=null;
+function syncToCloud(){
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(async()=>{
+    try{
+      await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{
+        method:"PATCH",headers:SB_HEADERS,
+        body:JSON.stringify({
+          tracker_data:state,
+          custom_entries:DATA.filter(d=>d.custom),
+          hidden_ids:[...hiddenIds],
+          sms_text:document.getElementById("sms-text")?.value||"",
+          updated_at:new Date().toISOString(),
+          updated_by:"local"
+        })
+      });
+      const i=document.getElementById("save-ind");i.textContent="클라우드 저장됨";i.classList.add("show");
+      clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),1500);
+    }catch(e){console.error("Cloud save failed:",e);}
+  },500);
+}
+
+async function loadFromCloud(){
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared&select=*`,{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});
+    const rows=await res.json();
+    if(rows.length>0){
+      const row=rows[0];
+      if(row.tracker_data&&Object.keys(row.tracker_data).length>0) state=row.tracker_data;
+      if(row.custom_entries&&row.custom_entries.length>0){
+        row.custom_entries.forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});
+      }
+      if(row.hidden_ids&&row.hidden_ids.length>0) hiddenIds=new Set(row.hidden_ids);
+      if(row.sms_text) document.getElementById("sms-text").value=row.sms_text;
+      return true;
+    }
+  }catch(e){console.error("Cloud load failed:",e);}
+  return false;
+}
+
+// Custom entries (user-added)
+function loadCustomEntries(){
+  // loaded from cloud in loadFromCloud()
+}
+function saveCustomEntries(){
+  syncToCloud();
+}
+function getNextId(){return Math.max(...DATA.map(d=>d.id))+1;}
+
+// Hidden (deleted) entries
+let hiddenIds=new Set();
+function loadHidden(){/* loaded from cloud */}
+function saveHidden(){syncToCloud();}
+function isHidden(id){return hiddenIds.has(id);}
+
+let state={},currentSort="priority";
+
+function loadState(){
+  // local fallback: try localStorage if cloud failed
+  try{
+    const sk="bansong-phone-tracker-v4";
+    let s=localStorage.getItem(sk);
+    if(s){state=JSON.parse(s);return;}
+  }catch{}
+  state={};
+}
+
+function saveState(){
+  // localStorage as cache
+  localStorage.setItem("bansong-phone-tracker-v4",JSON.stringify(state));
+  // sync to cloud
+  syncToCloud();
+  const i=document.getElementById("save-ind");i.textContent="저장 중...";i.classList.add("show");
+}
+
+function G(id){
+  if(!state[id])state[id]={status:"",prospect:"",memo:"",calledAt:"",callback:"",price:"",periodMonth:"",periodPart:"",qty:"350",contact:"",photoSent:false,visitWant:false,quoteReq:false};
+  return state[id];
+}
+
+function periodNum(s){if(!s.periodMonth)return 9999;const m=Number(s.periodMonth)||99;const pv={early:1,mid:2,late:3,"":0.5};return m*10+(pv[s.periodPart]||0);}
+
+function getSorted(){
+  let items=[...DATA];const cf=document.querySelector(".fb.active")?.dataset.filter||"all";
+  if(cf==="deleted") return items.filter(i=>isHidden(i.id));
+  items=items.filter(i=>!isHidden(i.id));
+  items=items.filter(i=>mf(i,cf));
+  if(currentSort==="priority")return items;
+  if(currentSort==="price-desc")return items.sort((a,b)=>(Number(G(b.id).price)||0)-(Number(G(a.id).price)||0));
+  if(currentSort==="price-asc")return items.sort((a,b)=>(Number(G(a.id).price)||0)-(Number(G(b.id).price)||0));
+  if(currentSort==="period-asc")return items.sort((a,b)=>periodNum(G(a.id))-periodNum(G(b.id)));
+  if(currentSort==="qty-desc")return items.sort((a,b)=>(Number(G(b.id).qty)||0)-(Number(G(a.id).qty)||0));
+  return items;
+}
+
+function renderTracker(){
+  const el=document.getElementById("list");el.innerHTML="";
+  const sorted=getSorted();
+  if(currentSort==="priority"){
+    const groups={};sorted.forEach(i=>{if(!groups[i.p])groups[i.p]=[];groups[i.p].push(i);});
+    Object.keys(groups).sort((a,b)=>a-b).forEach(p=>{
+      const info=PRI[p],items=groups[p];if(!items.length)return;
+      const dc=items.filter(i=>G(i.id).status==="done").length;
+      const g=document.createElement("div");g.className=`pg ${info.c}`;
+      g.innerHTML=`<div class="pg-head"><span class="pb">${info.l}</span><span class="pt">${info.d}</span><span class="pc">${dc}/${items.length}</span><span class="ppa">&#9660;</span></div><div class="cards"></div>`;
+      const ce=g.querySelector(".cards");items.forEach(i=>ce.appendChild(makeCard(i)));el.appendChild(g);
+    });
+  }else{const ce=document.createElement("div");ce.className="cards";sorted.forEach(i=>ce.appendChild(makeCard(i)));el.appendChild(ce);}
+  updateStats();bindEv();
+}
+
+function makeCard(item){
+  const s=G(item.id),card=document.createElement("div");
+  // Deleted item → simple restore row
+  if(isHidden(item.id)){
+    card.className="card";card.style.opacity="0.6";
+    card.innerHTML=`
+      <div class="sa" style="grid-column:1/3;display:flex;align-items:center;gap:12px">
+        <span style="font-size:13px;font-weight:600;color:var(--text2)">${item.name}</span>
+        <span style="font-size:12px;color:var(--text2)">${item.phone}</span>
+      </div>
+      <div style="grid-column:3/-1;display:flex;align-items:center;gap:8px;justify-content:flex-end">
+        <button class="restore-entry" data-id="${item.id}" data-custom="${item.custom||false}" style="padding:5px 14px;border-radius:5px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11px;cursor:pointer">복원</button>
+        ${item.custom?`<button class="perm-del" data-id="${item.id}" style="padding:5px 14px;border-radius:5px;border:1px solid var(--red);background:transparent;color:var(--red);font-size:11px;cursor:pointer">영구삭제</button>`:""}
+      </div>`;
+    return card;
+  }
+  let cls="card";if(s.status==="done")cls+=" status-done";if(s.prospect==="high")cls+=" prospect-high";if(s.prospect==="mid")cls+=" prospect-mid";
+  card.className=cls;
+  let ph=item.phone!=="-"?`<a href="tel:${item.phone.replace(/[^0-9+~]/g,'')}">${item.phone}</a>`:"(온라인)";
+  if(item.phone2)ph+=` <span class="sub">${item.phone2}</span>`;
+  const si=STAT[s.status]||STAT[""],pri=PRI[item.p];
+  let mOpts=MO.map(m=>`<option value="${m.v}" ${s.periodMonth===m.v?"selected":""}>${m.l}</option>`).join("");
+  let pOpts=PA.map(p=>`<option value="${p.v}" ${s.periodPart===p.v?"selected":""}>${p.l}</option>`).join("");
+  const priBadge=currentSort!=="priority"?`<span class="pb" style="font-size:8px;padding:1px 4px;margin-right:2px;background:${PRI_BG[pri.c]}">${pri.l}</span>`:"";
+  const customBadge=item.custom?`<span class="custom-badge">직접추가</span>`:"";
+
+  card.innerHTML=`
+    <div class="sa">
+      <select data-id="${item.id}" class="status-sel">
+        <option value="" ${s.status===""?"selected":""}>-- 미통화 --</option>
+        <option value="missed" ${s.status==="missed"?"selected":""}>&#x1F4F5; 부재중</option>
+        <option value="scheduled" ${s.status==="scheduled"?"selected":""}>&#x1F4C5; 예약</option>
+        <option value="done" ${s.status==="done"?"selected":""}>&#x2705; 완료</option>
+      </select>
+      <div class="cb-row ${s.status==='scheduled'?'show':''}" data-cbr="${item.id}"><input type="date" class="cb-input" data-id="${item.id}" value="${s.callback||''}"></div>
+      ${s.calledAt?`<div class="ct">${s.calledAt}</div>`:""}${s.status==="missed"?`<div class="ct red">부재중</div>`:""}
+    </div>
+    <div class="info">
+      <div class="nm">${priBadge}${item.name}<span class="sb ${si.b}">${si.l}</span>${customBadge}<button class="edit-btn" data-id="${item.id}" title="수정">&#9998;</button></div>
+      <div class="ph2">${ph}</div>
+      <div class="dt" title="${item.detail}">${item.detail}</div>
+    </div>
+    <div class="ps"><select data-id="${item.id}" class="pros-sel">
+      <option value="" ${s.prospect===""?"selected":""}>미평가</option>
+      <option value="high" ${s.prospect==="high"?"selected":""}>&#x1F7E2; 높음</option>
+      <option value="mid" ${s.prospect==="mid"?"selected":""}>&#x1F7E1; 중간</option>
+      <option value="low" ${s.prospect==="low"?"selected":""}>&#x1F7E0; 낮음</option>
+      <option value="none" ${s.prospect==="none"?"selected":""}>&#x1F534; 불가</option>
+    </select></div>
+    <div class="qp">
+      <div class="row"><input type="number" data-id="${item.id}" class="qty-in" value="${s.qty||'350'}" min="0"><span class="sf">그루</span></div>
+      <div class="row"><input type="number" data-id="${item.id}" class="price-in" value="${s.price||''}" placeholder="0" min="0"><span class="sf">만원</span></div>
+    </div>
+    <div class="pd"><select class="month-sel" data-id="${item.id}">${mOpts}</select><select class="part-sel" data-id="${item.id}">${pOpts}</select></div>
+    <div class="fu">
+      <div class="fu-row"><input type="text" data-id="${item.id}" class="contact-in" value="${s.contact||''}" placeholder="담당자명"></div>
+      <div class="fu-checks">
+        <label class="fu-chk ${s.photoSent?"checked":""}"><input type="checkbox" data-id="${item.id}" class="chk-photo" ${s.photoSent?"checked":""}>사진</label>
+        <label class="fu-chk ${s.visitWant?"checked":""}"><input type="checkbox" data-id="${item.id}" class="chk-visit" ${s.visitWant?"checked":""}>방문</label>
+        <label class="fu-chk ${s.quoteReq?"checked":""}"><input type="checkbox" data-id="${item.id}" class="chk-quote" ${s.quoteReq?"checked":""}>견적</label>
+      </div>
+    </div>
+    <div class="memo"><textarea data-id="${item.id}" class="memo-in" placeholder="메모...">${s.memo||""}</textarea></div>`;
+  return card;
+}
+
+function mf(item,f){
+  const s=G(item.id);
+  if(f==="all")return true;if(f==="uncalled")return s.status==="";if(f==="missed")return s.status==="missed";
+  if(f==="scheduled")return s.status==="scheduled";if(f==="done")return s.status==="done";
+  if(f==="high")return s.prospect==="high";if(f==="has-price")return s.price&&Number(s.price)>0;
+  if(f==="photo")return s.photoSent;if(f==="visit")return s.visitWant;
+  return true;
+}
+
+function updateStats(){
+  let d=0,m=0,sc=0,pr=0,ps=0,qt=0;
+  const active=DATA.filter(i=>!isHidden(i.id));
+  active.forEach(i=>{const s=G(i.id);if(s.status==="done")d++;if(s.status==="missed")m++;if(s.status==="scheduled")sc++;
+    if(s.prospect==="high"||s.prospect==="mid")pr++;if(s.price)ps+=Number(s.price)||0;
+    if(s.price&&Number(s.price)>0)qt+=Number(s.qty)||0;});
+  document.getElementById("s-done").textContent=d;document.getElementById("s-missed").textContent=m;
+  document.getElementById("s-sched").textContent=sc;document.getElementById("s-pros").textContent=pr;
+  document.getElementById("s-price").textContent=ps.toLocaleString();document.getElementById("s-qty").textContent=qt.toLocaleString();
+  document.getElementById("s-total").textContent=active.length;
+  document.getElementById("progress").style.width=Math.round(((d+m+sc)/DATA.length)*100)+"%";
+  document.getElementById("tc-tracker").textContent=DATA.length;document.getElementById("tc-summary").textContent=d+m+sc;
+}
+
+function bindEv(){
+  document.querySelectorAll(".status-sel").forEach(el=>{el.addEventListener("change",e=>{const s=G(e.target.dataset.id);s.status=e.target.value;s.calledAt=e.target.value==="done"?new Date().toLocaleString("ko-KR"):"";saveState();renderTracker();});});
+  document.querySelectorAll(".cb-input").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).callback=e.target.value;saveState();});});
+  document.querySelectorAll(".pros-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).prospect=e.target.value;saveState();renderTracker();});});
+  const debounce=(el,cls,key)=>{document.querySelectorAll(cls).forEach(el=>{let t;el.addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{G(e.target.dataset.id)[key]=e.target.value;saveState();updateStats();},300);});});};
+  debounce(null,".qty-in","qty");debounce(null,".price-in","price");debounce(null,".contact-in","contact");debounce(null,".memo-in","memo");
+  document.querySelectorAll(".month-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodMonth=e.target.value;saveState();});});
+  document.querySelectorAll(".part-sel").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).periodPart=e.target.value;saveState();});});
+  document.querySelectorAll(".chk-photo").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).photoSent=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  document.querySelectorAll(".chk-visit").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).visitWant=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  document.querySelectorAll(".chk-quote").forEach(el=>{el.addEventListener("change",e=>{G(e.target.dataset.id).quoteReq=e.target.checked;e.target.parentElement.classList.toggle("checked",e.target.checked);saveState();});});
+  document.querySelectorAll(".pg-head").forEach(h=>{h.addEventListener("click",()=>{h.classList.toggle("collapsed");h.nextElementSibling.style.display=h.classList.contains("collapsed")?"none":"flex";});});
+  // Edit button → open edit modal
+  document.querySelectorAll(".edit-btn").forEach(el=>{el.addEventListener("click",e=>{
+    e.stopPropagation();openEditModal(Number(e.target.dataset.id));
+  });});
+  // Restore hidden entry
+  document.querySelectorAll(".restore-entry").forEach(el=>{el.addEventListener("click",e=>{
+    const id=Number(e.target.dataset.id);hiddenIds.delete(id);saveHidden();renderTracker();
+  });});
+  // Permanent delete custom from deleted view
+  document.querySelectorAll(".perm-del").forEach(el=>{el.addEventListener("click",e=>{
+    const id=Number(e.target.dataset.id);
+    if(confirm("영구 삭제합니다. 복원할 수 없습니다.")){const idx=DATA.findIndex(d=>d.id===id);if(idx>=0)DATA.splice(idx,1);delete state[id];hiddenIds.delete(id);saveCustomEntries();saveHidden();saveState();renderTracker();}
+  });});
+}
+
+// ========== Edit Modal ==========
+function openEditModal(id){
+  const item=DATA.find(d=>d.id===id);if(!item)return;
+  document.getElementById("edit-id").value=id;
+  document.getElementById("edit-name").value=item.name;
+  document.getElementById("edit-phone").value=item.phone==="-"?"":item.phone;
+  document.getElementById("edit-phone2").value=item.phone2||"";
+  document.getElementById("edit-priority").value=item.p;
+  document.getElementById("edit-detail").value=item.detail||"";
+  document.getElementById("edit-title").textContent=`${item.name} - 수정`;
+  document.getElementById("edit-modal").classList.add("show");
+  document.getElementById("edit-name").focus();
+}
+
+function getPStr(s){if(!s.periodMonth)return"-";return(MO.find(m=>m.v===s.periodMonth)?.l||"")+" "+(PA.find(p=>p.v===s.periodPart)?.l||"");}
+function getFU(s){const f=[];if(s.photoSent)f.push("사진");if(s.visitWant)f.push("방문");if(s.quoteReq)f.push("견적");return f.join(",");}
+
+// Summary
+function renderSummary(){
+  let tp=0,hp=0,pc=0,tq=0;
+  DATA.forEach(i=>{const s=G(i.id),pr=Number(s.price)||0;if(pr>0){tp+=pr;pc++;tq+=Number(s.qty)||0;}if(pr>0&&(s.prospect==="high"||s.prospect==="mid"))hp+=pr;});
+  document.getElementById("price-summary").innerHTML=`
+    <div class="price-card"><div class="val">${tp.toLocaleString()}</div><div class="lbl">전체 제시가 합계 (만원)</div></div>
+    <div class="price-card"><div class="val mid">${hp.toLocaleString()}</div><div class="lbl">가능성 있는 제시가 (만원)</div></div>
+    <div class="price-card"><div class="val" style="color:var(--accent)">${pc}</div><div class="lbl">가격 제시 업체</div></div>
+    <div class="price-card"><div class="val" style="color:var(--orange)">${tq.toLocaleString()}</div><div class="lbl">총 희망수량 (그루)</div></div>`;
+  rst2("sum-done","통화 완료","done","var(--green)");rst2("sum-scheduled","통화 예약","scheduled","var(--purple)");rst2("sum-missed","부재중","missed","var(--red)");
+  const pi=DATA.filter(i=>Number(G(i.id).price)>0).sort((a,b)=>(Number(G(b.id).price)||0)-(Number(G(a.id).price)||0));
+  const pe=document.getElementById("sum-price");
+  if(!pi.length){pe.innerHTML=`<h3 style="color:var(--teal)">가격 제시 업체</h3><div class="summary-empty">없음</div>`;return;}
+  let h=`<h3 style="color:var(--teal)">가격 제시 업체 (${pi.length}건)</h3><table class="summary-table"><tr><th>업체</th><th>전화</th><th>담당자</th><th>가능성</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>메모</th></tr>`;
+  pi.forEach(i=>{const s=G(i.id);h+=`<tr><td>${i.name}</td><td>${i.phone}</td><td>${s.contact||"-"}</td><td>${PROS[s.prospect]||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right;font-weight:700;color:var(--green)">${Number(s.price).toLocaleString()}만원</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px;color:var(--text2)">${s.memo||"-"}</td></tr>`;});
+  pe.innerHTML=h+"</table>";
+}
+
+function rst2(eid,title,status,color){
+  const el=document.getElementById(eid),items=DATA.filter(i=>G(i.id).status===status);
+  if(!items.length){el.innerHTML=`<h3 style="color:${color}">${title}</h3><div class="summary-empty">없음</div>`;return;}
+  let h=`<h3 style="color:${color}">${title} (${items.length}건)</h3><table class="summary-table"><tr><th>업체</th><th>전화</th><th>담당자</th><th>가능성</th><th>수량</th><th>제시가</th><th>시기</th><th>후속</th><th>${status==="scheduled"?"예약일":"시각"}</th><th>메모</th></tr>`;
+  items.forEach(i=>{const s=G(i.id);const tc=status==="scheduled"?(s.callback||"-"):(s.calledAt||"-");const ps=s.price?Number(s.price).toLocaleString()+"만원":"-";
+    h+=`<tr><td>${i.name}</td><td>${i.phone}</td><td>${s.contact||"-"}</td><td>${PROS[s.prospect]||"-"}</td><td style="text-align:right">${s.qty||"-"}</td><td style="text-align:right">${ps}</td><td>${getPStr(s)}</td><td style="font-size:9px;color:var(--teal)">${getFU(s)||"-"}</td><td style="font-size:10px">${tc}</td><td style="font-size:10px;color:var(--text2);max-width:140px">${s.memo||"-"}</td></tr>`;});
+  el.innerHTML=h+"</table>";
+}
+
+// Events
+document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");document.getElementById("panel-"+t.dataset.tab).classList.add("active");
+  document.getElementById("tracker-controls").style.display=t.dataset.tab==="tracker"?"block":"none";
+  if(t.dataset.tab==="summary")renderSummary();
+});});
+document.querySelectorAll(".fb").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".fb").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderTracker();});});
+document.querySelectorAll(".sort-btn").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll(".sort-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentSort=b.dataset.sort;renderTracker();});});
+document.getElementById("btn-script").addEventListener("click",()=>{document.getElementById("script-box").classList.toggle("show");});
+
+// SMS modal
+const SMS_DEFAULT=document.getElementById("sms-text").value;
+// SMS loaded from cloud in loadFromCloud()
+
+document.getElementById("btn-sms").addEventListener("click",()=>{document.getElementById("sms-modal").classList.add("show");});
+document.getElementById("sms-close").addEventListener("click",()=>{document.getElementById("sms-modal").classList.remove("show");});
+document.getElementById("sms-modal").addEventListener("click",e=>{if(e.target.id==="sms-modal")e.target.classList.remove("show");});
+document.getElementById("sms-save").addEventListener("click",()=>{
+  syncToCloud();
+  const ind=document.getElementById("sms-saved");ind.classList.add("show");
+  clearTimeout(ind._t);ind._t=setTimeout(()=>ind.classList.remove("show"),1500);
+});
+document.getElementById("sms-copy").addEventListener("click",()=>{
+  const text=document.getElementById("sms-text").value;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById("sms-copy");btn.textContent="복사됨!";
+    setTimeout(()=>{btn.textContent="문자 복사";},1500);
+  });
+});
+
+document.getElementById("btn-export").addEventListener("click",()=>{
+  let t=`# 반송 350그루 - 전화 추적 결과\n# ${new Date().toLocaleString("ko-KR")}\n\n`;
+  ["done","scheduled","missed"].forEach(st=>{
+    const items=DATA.filter(i=>G(i.id).status===st);if(!items.length)return;
+    t+=`## ${STAT[st].l} (${items.length}건)\n\n`;
+    items.forEach(i=>{const s=G(i.id);t+=`- [${PROS[s.prospect]||"미평가"}] ${i.name} (${i.phone})`;
+      if(s.contact)t+=` | 담당:${s.contact}`;if(s.qty&&s.qty!=="350")t+=` | ${s.qty}그루`;
+      if(s.price)t+=` | ${s.price}만원`;const pd=getPStr(s);if(pd!=="-")t+=` | ${pd}`;
+      const fu=getFU(s);if(fu)t+=` | [${fu}]`;
+      if(st==="scheduled"&&s.callback)t+=` | 예약:${s.callback}`;if(s.calledAt)t+=` | ${s.calledAt}`;
+      if(s.memo)t+=`\n  메모: ${s.memo}`;t+="\n";});t+="\n";});
+  const uc=DATA.filter(i=>G(i.id).status==="");
+  if(uc.length){t+=`## 미통화 (${uc.length}건)\n\n`;uc.forEach(i=>{t+=`- ${i.name} (${i.phone})\n`;});t+="\n";}
+  let tp=0;const pi=DATA.filter(i=>{const pr=Number(G(i.id).price)||0;if(pr>0)tp+=pr;return pr>0;});
+  if(pi.length){t+=`## 가격 제시 (${pi.length}건, 합계 ${tp.toLocaleString()}만원)\n\n`;
+    pi.forEach(i=>{const s=G(i.id);t+=`- ${i.name}: ${Number(s.price).toLocaleString()}만원 x ${s.qty||350}그루 [${PROS[s.prospect]||"미평가"}] ${getPStr(s)}`;if(s.contact)t+=` 담당:${s.contact}`;if(s.memo)t+=` | ${s.memo}`;t+="\n";});}
+  document.getElementById("modal-title").textContent="전화 추적 결과";
+  document.getElementById("modal-content").textContent=t;document.getElementById("modal").classList.add("show");
+});
+
+document.getElementById("btn-backup").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=`반송-백업-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);
+  const i=document.getElementById("save-ind");i.textContent="백업 다운로드됨";i.classList.add("show");clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),2000);
+});
+document.getElementById("btn-restore").addEventListener("click",()=>{document.getElementById("file-import").click();});
+document.getElementById("file-import").addEventListener("change",e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm("현재 데이터를 백업 파일로 덮어씁니다. 계속?")){state=d;saveState();renderTracker();}}catch{alert("올바른 JSON 파일이 아닙니다.");}};
+  r.readAsText(f);e.target.value="";
+});
+document.getElementById("btn-copy").addEventListener("click",()=>{navigator.clipboard.writeText(document.getElementById("modal-content").textContent).then(()=>{const b=document.getElementById("btn-copy");b.textContent="복사됨!";setTimeout(()=>{b.textContent="복사";},1500);});});
+document.getElementById("btn-reset").addEventListener("click",async()=>{if(confirm("모든 기록이 삭제됩니다. (삭제된 업체도 복원, 클라우드도 초기화)")){
+  state={};hiddenIds=new Set();
+  // remove custom entries from DATA
+  for(let i=DATA.length-1;i>=0;i--){if(DATA[i].custom)DATA.splice(i,1);}
+  localStorage.removeItem("bansong-phone-tracker-v4");
+  // reset cloud
+  try{await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.shared`,{method:"PATCH",headers:SB_HEADERS,body:JSON.stringify({tracker_data:{},custom_entries:[],hidden_ids:[],sms_text:"",updated_at:new Date().toISOString(),updated_by:"reset"})});}catch(e){}
+  document.getElementById("sms-text").value=SMS_DEFAULT;
+  renderTracker();
+}});
+
+// Add modal
+document.getElementById("btn-add").addEventListener("click",()=>{
+  document.getElementById("add-modal").classList.add("show");
+  document.getElementById("add-name").focus();
+});
+document.getElementById("add-cancel").addEventListener("click",()=>{
+  document.getElementById("add-modal").classList.remove("show");
+});
+document.getElementById("add-modal").addEventListener("click",e=>{
+  if(e.target.id==="add-modal") document.getElementById("add-modal").classList.remove("show");
+});
+document.getElementById("add-confirm").addEventListener("click",()=>{
+  const name=document.getElementById("add-name").value.trim();
+  const phone=document.getElementById("add-phone").value.trim();
+  if(!name){alert("업체명을 입력하세요.");return;}
+  if(!phone){alert("전화번호를 입력하세요.");return;}
+  const phone2=document.getElementById("add-phone2").value.trim();
+  const priority=Number(document.getElementById("add-priority").value);
+  const source=document.getElementById("add-source").value.trim();
+  const detail=document.getElementById("add-detail").value.trim();
+  const priInfo=PRI[priority];
+
+  const newItem={
+    id: getNextId(),
+    p: priority,
+    g: priInfo.d,
+    name: name,
+    phone: phone,
+    detail: (detail||source) ? [detail,source?`(${source})`:""].filter(Boolean).join(" ") : "직접 추가",
+    custom: true,
+  };
+  if(phone2) newItem.phone2=phone2;
+
+  DATA.push(newItem);
+  saveCustomEntries();
+  renderTracker();
+
+  // Reset form
+  document.getElementById("add-name").value="";
+  document.getElementById("add-phone").value="";
+  document.getElementById("add-phone2").value="";
+  document.getElementById("add-source").value="";
+  document.getElementById("add-detail").value="";
+  document.getElementById("add-priority").value="3";
+  document.getElementById("add-modal").classList.remove("show");
+
+  const ind=document.getElementById("save-ind");
+  ind.textContent="업체 추가됨!";ind.style.color="var(--teal)";ind.classList.add("show");
+  clearTimeout(ind._t);ind._t=setTimeout(()=>{ind.classList.remove("show");ind.style.color="var(--green)";},2000);
+});
+
+// Edit modal events
+document.getElementById("edit-cancel").addEventListener("click",()=>{document.getElementById("edit-modal").classList.remove("show");});
+document.getElementById("edit-modal").addEventListener("click",e=>{if(e.target.id==="edit-modal")e.target.classList.remove("show");});
+
+document.getElementById("edit-save").addEventListener("click",()=>{
+  const id=Number(document.getElementById("edit-id").value);
+  const item=DATA.find(d=>d.id===id);if(!item)return;
+  const name=document.getElementById("edit-name").value.trim();
+  const phone=document.getElementById("edit-phone").value.trim();
+  if(!name){alert("업체명을 입력하세요.");return;}
+  if(!phone){alert("전화번호를 입력하세요.");return;}
+
+  item.name=name;
+  item.phone=phone;
+  item.phone2=document.getElementById("edit-phone2").value.trim()||undefined;
+  item.p=Number(document.getElementById("edit-priority").value);
+  item.g=PRI[item.p].d;
+  item.detail=document.getElementById("edit-detail").value.trim();
+
+  // custom 업체면 커스텀 저장소도 업데이트
+  if(item.custom) saveCustomEntries();
+  // 기본 업체 수정 → 수정 내역을 별도 저장 (원본 DATA는 코드 내 고정이므로)
+  if(!item.custom){
+    item.custom=true; // 수정 시 custom으로 전환 (커스텀 저장소에 보존)
+    item._edited=true;
+    saveCustomEntries();
+  }
+
+  document.getElementById("edit-modal").classList.remove("show");
+  renderTracker();
+  const ind=document.getElementById("save-ind");
+  ind.textContent="수정 완료!";ind.style.color="var(--teal)";ind.classList.add("show");
+  clearTimeout(ind._t);ind._t=setTimeout(()=>{ind.classList.remove("show");ind.style.color="var(--green)";},2000);
+});
+
+document.getElementById("edit-delete").addEventListener("click",()=>{
+  const id=Number(document.getElementById("edit-id").value);
+  const item=DATA.find(d=>d.id===id);if(!item)return;
+  const isCustom=!!item.custom;
+  const msg=isCustom
+    ?"이 업체를 영구 삭제할까요?"
+    :"이 업체를 목록에서 제거할까요?\n(삭제됨 필터에서 복원 가능)";
+  if(!confirm(msg))return;
+
+  if(isCustom){
+    const idx=DATA.findIndex(d=>d.id===id);
+    if(idx>=0)DATA.splice(idx,1);
+    delete state[id];
+    saveCustomEntries();saveState();
+  } else {
+    hiddenIds.add(id);saveHidden();
+  }
+  document.getElementById("edit-modal").classList.remove("show");
+  renderTracker();
+});
+
+// Boot: cloud first, localStorage fallback
+(async function boot(){
+  const cloudOk=await loadFromCloud();
+  if(!cloudOk){
+    // fallback to localStorage
+    loadState();
+    // try migrate old custom entries from localStorage
+    try{const cs=localStorage.getItem("bansong-custom-entries");if(cs){JSON.parse(cs).forEach(e=>{if(!DATA.find(d=>d.id===e.id))DATA.push(e);});}}catch{}
+    try{const hs=localStorage.getItem("bansong-hidden-entries");if(hs)hiddenIds=new Set(JSON.parse(hs));}catch{}
+  }
+  renderTracker();
+  // Show connection status
+  const i=document.getElementById("save-ind");
+  i.textContent=cloudOk?"클라우드 연결됨":"오프라인 (로컬)";
+  i.style.color=cloudOk?"var(--green)":"var(--orange)";
+  i.classList.add("show");
+  clearTimeout(i._t);i._t=setTimeout(()=>i.classList.remove("show"),2000);
+})();
+</script>
+</body>
+</html>
