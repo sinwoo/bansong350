@@ -1,7 +1,7 @@
 # bansong350 아키텍처 연결 맵
 
 > **프로젝트**: 반송 소나무 350그루 판매
-> **최종 업데이트**: 2026-03-18
+> **최종 업데이트**: 2026-03-19
 
 ---
 
@@ -24,9 +24,14 @@ bansong350/
 └── _dev/                                              # 비배포 개발 폴더
     ├── 00_planning/                                   # 기획 문서
     ├── 10_docs/                                       # 추가 문서
+    │   ├── kosca-data-collection-procedure.md          # KOSCA 수집 절차서 (1차/2차 단계)
+    │   ├── 반송 소나무 350그루 판매 프로젝트 - 현황 정리.md
+    │   └── 반송 350그루 판매 - 업체 연락처 종합 리스트.md
     ├── 20_tests/                                      # 테스트
     ├── 30_archive/                                    # 아카이브
+    │   └── kosca-data-collection-plan.md               # 초기 수집 계획서 (실행 완료)
     ├── 40_sessions/                                   # 세션 요약
+    ├── kosca-progress.json                             # KOSCA 수집 이력 + 원본 데이터
     ├── activeContext.md                                # 작업 기억
     └── context-health-log.md                          # 가드레일 점검
 ```
@@ -60,6 +65,38 @@ bansong350/
 | 의사결정 | docs/Decision.md |
 | 작업 기억 | _dev/activeContext.md |
 | 업체 수집 이력 | index.html 내 `updateLog` (Supabase `update_log` 컬럼 동기화) |
+| KOSCA 수집 절차 | _dev/10_docs/kosca-data-collection-procedure.md |
+| KOSCA 수집 데이터 | _dev/kosca-progress.json (수집 이력 + 원본 데이터) |
+
+## 데이터 아키텍처 (하드코딩 vs 클라우드)
+
+```
+┌─────────────────────────────────────────────────────┐
+│ 하드코딩 (index.html DATA 배열, git 관리)            │
+│   - 업체 기본정보: id, name, phone, fax, homepage,   │
+│     region, evalAmount, detail, source               │
+│   - id:1~45   = AI 조사 업체 (source:"AI조사")       │
+│   - id:46~110 = KOSCA 업체 (source:"KOSCA")          │
+│     1차(목록): name/region/evalAmount                │
+│     2차(상세): phone/fax/homepage                    │
+│   - 수정 시 코드 편집 + git push 필요                 │
+└─────────────────────────────────────────────────────┘
+                      ↕ boot()에서 merge
+┌─────────────────────────────────────────────────────┐
+│ 클라우드 (Supabase bansong_state, id="shared")       │
+│   - tracker_data: 영업 활동 (통화/메모/가능성/별표)    │
+│   - custom_entries: UI "업체 추가"로 생성 (custom:true)│
+│   - update_log: 업데이트 내역 타임라인                │
+│   - platform_state: 거래 플랫폼 상태                  │
+│   - platform_inquiries: 플랫폼 문의 내역              │
+│   - hidden_ids: 삭제(숨김) 업체 목록                   │
+│   - sms_text: SMS 템플릿                              │
+│   - 실시간 동기화 (syncToCloud 500ms 디바운스)         │
+└─────────────────────────────────────────────────────┘
+```
+
+> **설계 근거**: 업체 기본정보는 변경 빈도가 낮고 버전 관리가 필요하므로 하드코딩.
+> 영업 활동은 실시간 변경되므로 클라우드. 이 분리를 유지하는 것이 현 규모에서 최적.
 
 ## 대시보드 탭 구조
 
@@ -167,3 +204,4 @@ bansong350/
 |------|------|------|---------|------|
 | 2026-03-18 | 경북 | 39건 | 46~84 | 30억+ 조경, 목록만 |
 | 2026-03-18 | 대구 | 26건 | 85~110 | 30억+ 조경, 목록만 |
+| 2026-03-19 | 경북+대구 | 65건 | 46~110 | 상세 수집: 전화번호/FAX/홈페이지 (홈페이지 보유 7건) |

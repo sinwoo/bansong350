@@ -1047,6 +1047,30 @@
 </div>
 
 <script>
+// =====================================================================================
+// DATA 배열 — 업체 리스트 (하드코딩, 배포 시 포함)
+// =====================================================================================
+// 구조: 하드코딩(DATA) + 클라우드(Supabase custom_entries) 하이브리드
+//   - DATA 배열: 수동 조사 + KOSCA 스크래핑으로 확보한 업체 정보 (정적)
+//   - Supabase custom_entries: UI "업체 추가" 버튼으로 생성한 업체 (custom:true, 동적)
+//   - loadFromCloud()에서 custom_entries를 DATA에 merge함
+//
+// 순위 체계 (p값):
+//   1=협회/공공, 2=유통상/중개, 3=경북/대구(KOSCA), 4=대형시공, 5=대형건설사, 6=골프장/공공
+//
+// KOSCA 업체 (id:46~110, source:"KOSCA"):
+//   1차 수집(목록): name, region, evalAmount — KOSCA 검색결과 테이블에서 추출
+//   2차 수집(상세): phone, fax, homepage — KOSCA 상세페이지에서 브라우저 MCP로 추출
+//   절차서: _dev/10_docs/kosca-data-collection-procedure.md
+//   수집 데이터: _dev/kosca-progress.json
+//
+// 새 지역 KOSCA 추가 시:
+//   1. kosca-data-collection-procedure.md 절차 따라 1차(목록) 수집
+//   2. 여기 DATA에 phone:"-" 상태로 추가 (id는 마지막+1부터)
+//   3. 2차(상세) 수집으로 phone/fax/homepage 채우기
+//   4. boot()에 one-time updateLog 추가
+//   5. kosca-progress.json 갱신
+// =====================================================================================
 const DATA=[
   {id:1,p:1,g:"협회/공공",name:"(사)한국조경수협회 본회",phone:"042-822-5793~4",fax:"042-822-5797",homepage:"https://www.klta.or.kr",region:"대전",detail:"전국 1,000여 회원 | 매입의뢰 게시판",source:"AI조사"},
   {id:2,p:1,g:"협회/공공",name:"조경수협회 경북(대구) 지회",phone:"053-751-0042",phone2:"010-3536-3863 (박중현)",region:"대구 수성구",detail:"구미 최근접 지회",source:"AI조사"},
@@ -1088,73 +1112,87 @@ const DATA=[
   {id:43,p:6,g:"골프장/공공",name:"대정골프엔지니어링",phone:"031-373-8914",detail:"25개 골프장 546홀",source:"AI조사"},
   {id:44,p:6,g:"골프장/공공",name:"LH 한국토지주택공사",phone:"1600-1004",detail:"공공택지/아파트 조경",source:"AI조사"},
   {id:45,p:6,g:"골프장/공공",name:"구미시청 산림과",phone:"054-480-5863",region:"경북 구미시",detail:"행정 절차 (완료)",source:"AI조사"},
-  // ===== KOSCA 대구경북 30억+ 조경회사 (39건, 2026-03-18) =====
-  {id:46,p:3,g:"경북/대구",name:"경북조경(주)",phone:"-",region:"경북 상주시",evalAmount:353779,detail:"대표 서동령",source:"KOSCA"},
-  {id:47,p:3,g:"경북/대구",name:"고령군산림조합",phone:"-",region:"경북 고령군",evalAmount:304072,detail:"대표 임대성",source:"KOSCA"},
-  {id:48,p:3,g:"경북/대구",name:"구미시산림조합",phone:"-",region:"경북 구미시",evalAmount:461890,detail:"대표 김병철",source:"KOSCA"},
-  {id:49,p:3,g:"경북/대구",name:"(주)나무",phone:"-",region:"경북 경주시",evalAmount:300041,detail:"대표 박승우",source:"KOSCA"},
-  {id:50,p:3,g:"경북/대구",name:"남곡건설(주)",phone:"-",region:"경북 김천시",evalAmount:401394,detail:"대표 백락광",source:"KOSCA"},
-  {id:51,p:3,g:"경북/대구",name:"(주)녹색조경",phone:"-",region:"경북 문경시",evalAmount:314573,detail:"대표 박가은",source:"KOSCA"},
-  {id:52,p:3,g:"경북/대구",name:"(주)다모아조경",phone:"-",region:"경북 문경시",evalAmount:315748,detail:"대표 권정은",source:"KOSCA"},
-  {id:53,p:3,g:"경북/대구",name:"대림조경(주)",phone:"-",region:"경북 안동시",evalAmount:582836,detail:"대표 김진숙",source:"KOSCA"},
-  {id:54,p:3,g:"경북/대구",name:"대림종합개발(주)",phone:"-",region:"경북 안동시",evalAmount:302708,detail:"대표 김재모",source:"KOSCA"},
-  {id:55,p:3,g:"경북/대구",name:"(주)대성",phone:"-",region:"경북 상주시",evalAmount:314754,detail:"대표 박진",source:"KOSCA"},
-  {id:56,p:3,g:"경북/대구",name:"(주)대평개발",phone:"-",region:"경북 문경시",evalAmount:437611,detail:"대표 김성식",source:"KOSCA"},
-  {id:57,p:3,g:"경북/대구",name:"(주)도고조경개발",phone:"-",region:"경북 칠곡군",evalAmount:344051,detail:"대표 이희성",source:"KOSCA"},
-  {id:58,p:3,g:"경북/대구",name:"(주)디자인랜드",phone:"-",region:"경북 구미시",evalAmount:346544,detail:"대표 이윤정",source:"KOSCA"},
-  {id:59,p:3,g:"경북/대구",name:"무송종합조경(주)",phone:"-",region:"경북 경주시",evalAmount:498942,detail:"대표 전지안",source:"KOSCA"},
-  {id:60,p:3,g:"경북/대구",name:"문경시산림조합",phone:"-",region:"경북 문경시",evalAmount:457534,detail:"대표 최종성",source:"KOSCA"},
-  {id:61,p:3,g:"경북/대구",name:"상주시산림조합",phone:"-",region:"경북 상주시",evalAmount:367974,detail:"대표 송재엽",source:"KOSCA"},
-  {id:62,p:3,g:"경북/대구",name:"(주)서부조경개발",phone:"-",region:"경북 안동시",evalAmount:766824,detail:"대표 김영식",source:"KOSCA"},
-  {id:63,p:3,g:"경북/대구",name:"(주)서진산업개발",phone:"-",region:"경북 구미시",evalAmount:301299,detail:"대표 김학태",source:"KOSCA"},
-  {id:64,p:3,g:"경북/대구",name:"(주)성림조경",phone:"-",region:"경북 경주시",evalAmount:541691,detail:"대표 미확인",source:"KOSCA"},
-  {id:65,p:3,g:"경북/대구",name:"성주군산림조합",phone:"-",region:"경북 성주군",evalAmount:349262,detail:"대표 미확인",source:"KOSCA"},
-  {id:66,p:3,g:"경북/대구",name:"(주)에이치디건설",phone:"-",region:"경북 칠곡군",evalAmount:367581,detail:"대표 남영윤",source:"KOSCA"},
-  {id:67,p:3,g:"경북/대구",name:"(주)여백조경건설",phone:"-",region:"경북 구미시",evalAmount:327722,detail:"대표 김득현",source:"KOSCA"},
-  {id:68,p:3,g:"경북/대구",name:"영덕군산림조합",phone:"-",region:"경북 영덕군",evalAmount:479688,detail:"대표 양성학",source:"KOSCA"},
-  {id:69,p:3,g:"경북/대구",name:"영주시산림조합",phone:"-",region:"경북 영주시",evalAmount:499499,detail:"대표 윤상순",source:"KOSCA"},
-  {id:70,p:3,g:"경북/대구",name:"온누리조경건설(주)",phone:"-",region:"경북 울진군",evalAmount:355129,detail:"대표 장애순",source:"KOSCA"},
-  {id:71,p:3,g:"경북/대구",name:"(주)우리조경",phone:"-",region:"경북 포항시",evalAmount:404798,detail:"대표 유민진",source:"KOSCA"},
-  {id:72,p:3,g:"경북/대구",name:"유니온산업(주)",phone:"-",region:"경북 구미시",evalAmount:678977,detail:"대표 박종후",source:"KOSCA"},
-  {id:73,p:3,g:"경북/대구",name:"(주)임성",phone:"-",region:"경북 경주시",evalAmount:395226,detail:"대표 박흔구",source:"KOSCA"},
-  {id:74,p:3,g:"경북/대구",name:"(주)정원애",phone:"-",region:"경북 상주시",evalAmount:304298,detail:"대표 미확인",source:"KOSCA"},
-  {id:75,p:3,g:"경북/대구",name:"(주)제이스필드",phone:"-",region:"경북 구미시",evalAmount:387976,detail:"대표 미확인",source:"KOSCA"},
-  {id:76,p:3,g:"경북/대구",name:"청도군산림조합",phone:"-",region:"경북 청도군",evalAmount:652944,detail:"대표 박순열",source:"KOSCA"},
-  {id:77,p:3,g:"경북/대구",name:"(주)청마루",phone:"-",region:"경북 영천시",evalAmount:448629,detail:"대표 임대규",source:"KOSCA"},
-  {id:78,p:3,g:"경북/대구",name:"(주)청송조경건설",phone:"-",region:"경북 청송군",evalAmount:352908,detail:"대표 김미숙",source:"KOSCA"},
-  {id:79,p:3,g:"경북/대구",name:"클라임코리아(주)",phone:"-",region:"경북 문경시",evalAmount:711264,detail:"대표 홍주표",source:"KOSCA"},
-  {id:80,p:3,g:"경북/대구",name:"(주)태산조경",phone:"-",region:"경북 포항시",evalAmount:350331,detail:"대표 황태섭",source:"KOSCA"},
-  {id:81,p:3,g:"경북/대구",name:"(주)팔공조경산업",phone:"-",region:"경북 칠곡군",evalAmount:416837,detail:"대표 신삼희",source:"KOSCA"},
-  {id:82,p:3,g:"경북/대구",name:"(주)푸른이엔티",phone:"-",region:"경북 영주시",evalAmount:740571,detail:"대표 이승민",source:"KOSCA"},
-  {id:83,p:3,g:"경북/대구",name:"(주)풍진조경",phone:"-",region:"경북 경주시",evalAmount:312711,detail:"대표 최정윤",source:"KOSCA"},
-  {id:84,p:3,g:"경북/대구",name:"협동조경(주)",phone:"-",region:"경북 칠곡군",evalAmount:367920,detail:"대표 미확인",source:"KOSCA"},
-  // ===== KOSCA 대구 30억+ 조경회사 (26건, 2026-03-18) =====
-  {id:85,p:3,g:"경북/대구",name:"(주)거산개발",phone:"-",region:"대구 달서구",evalAmount:649339,detail:"",source:"KOSCA"},
-  {id:86,p:3,g:"경북/대구",name:"(주)거양",phone:"-",region:"대구 북구",evalAmount:441384,detail:"",source:"KOSCA"},
-  {id:87,p:3,g:"경북/대구",name:"(주)공간창조",phone:"-",region:"대구 북구",evalAmount:347161,detail:"",source:"KOSCA"},
-  {id:88,p:3,g:"경북/대구",name:"(주)금산조경개발",phone:"-",region:"대구 달서구",evalAmount:980294,detail:"",source:"KOSCA"},
-  {id:89,p:3,g:"경북/대구",name:"(주)금오조경개발",phone:"-",region:"대구 달성군",evalAmount:412125,detail:"",source:"KOSCA"},
-  {id:90,p:3,g:"경북/대구",name:"대구달성산림조합",phone:"-",region:"대구 달성군",evalAmount:361092,detail:"",source:"KOSCA"},
-  {id:91,p:3,g:"경북/대구",name:"(주)더에이치이엔씨",phone:"-",region:"대구 수성구",evalAmount:354223,detail:"",source:"KOSCA"},
-  {id:92,p:3,g:"경북/대구",name:"도시조경건설(주)",phone:"-",region:"대구 수성구",evalAmount:303449,detail:"",source:"KOSCA"},
-  {id:93,p:3,g:"경북/대구",name:"(주)동림종합조경",phone:"-",region:"대구 서구",evalAmount:419144,detail:"",source:"KOSCA"},
-  {id:94,p:3,g:"경북/대구",name:"(주)동원조경개발",phone:"-",region:"대구 수성구",evalAmount:387341,detail:"",source:"KOSCA"},
-  {id:95,p:3,g:"경북/대구",name:"두산조경(주)",phone:"-",region:"대구 군위군",evalAmount:739606,detail:"",source:"KOSCA"},
-  {id:96,p:3,g:"경북/대구",name:"(주)백운조경",phone:"-",region:"대구 달성군",evalAmount:325396,detail:"",source:"KOSCA"},
-  {id:97,p:3,g:"경북/대구",name:"(주)벽선",phone:"-",region:"대구 중구",evalAmount:460370,detail:"",source:"KOSCA"},
-  {id:98,p:3,g:"경북/대구",name:"(주)삼영실업조경",phone:"-",region:"대구 달성군",evalAmount:432459,detail:"",source:"KOSCA"},
-  {id:99,p:3,g:"경북/대구",name:"(주)성진조경",phone:"-",region:"대구 수성구",evalAmount:507181,detail:"",source:"KOSCA"},
-  {id:100,p:3,g:"경북/대구",name:"(주)성화공영",phone:"-",region:"대구 달성군",evalAmount:396812,detail:"",source:"KOSCA"},
-  {id:101,p:3,g:"경북/대구",name:"(주)송호조경",phone:"-",region:"대구 수성구",evalAmount:722092,detail:"",source:"KOSCA"},
-  {id:102,p:3,g:"경북/대구",name:"시티그린",phone:"-",region:"대구 동구",evalAmount:408595,detail:"",source:"KOSCA"},
-  {id:103,p:3,g:"경북/대구",name:"(주)에이스조경개발",phone:"-",region:"대구 달서구",evalAmount:334937,detail:"",source:"KOSCA"},
-  {id:104,p:3,g:"경북/대구",name:"(주)율하조경건설",phone:"-",region:"대구 달성군",evalAmount:317299,detail:"",source:"KOSCA"},
-  {id:105,p:3,g:"경북/대구",name:"(주)주산조경",phone:"-",region:"대구 달서구",evalAmount:954674,detail:"",source:"KOSCA"},
-  {id:106,p:3,g:"경북/대구",name:"지앤지그래스(주)",phone:"-",region:"대구 중구",evalAmount:542599,detail:"",source:"KOSCA"},
-  {id:107,p:3,g:"경북/대구",name:"초원영광건설(주)",phone:"-",region:"대구 달서구",evalAmount:330594,detail:"",source:"KOSCA"},
-  {id:108,p:3,g:"경북/대구",name:"(주)토마토이앤씨",phone:"-",region:"대구 북구",evalAmount:683894,detail:"",source:"KOSCA"},
-  {id:109,p:3,g:"경북/대구",name:"(주)하림조경",phone:"-",region:"대구 수성구",evalAmount:459786,detail:"",source:"KOSCA"},
-  {id:110,p:3,g:"경북/대구",name:"(주)호영산업개발",phone:"-",region:"대구 달성군",evalAmount:364028,detail:"",source:"KOSCA"},
+  // ===== KOSCA 경북 30억+ 조경회사 (39건, id:46~84) =====
+  // 출처: 대한전문건설협회(kosca.or.kr) 시공능력평가 조회
+  // 검색조건: 시도=경북(37), 업종=조경식재시설물(65), 평가액=30억+(3000000천원)
+  // 수집 이력:
+  //   1차 (2026-03-18): 목록 수집 — name, region, evalAmount, detail(대표자)
+  //   2차 (2026-03-19): 상세 수집 — phone, fax, homepage (브라우저 MCP로 상세페이지 접근)
+  // 필드 설명:
+  //   evalAmount = 만원 단위 (KOSCA 원본은 천원 → ÷10)
+  //   phone/fax = KOSCA 상세 페이지에서 수집, homepage = 있는 업체만 (7/65건)
+  //   source:"KOSCA" = KOSCA 출처 태그 (DATA.filter(d=>d.source==='KOSCA')로 필터 가능)
+  // 다음 지역 추가 시: 마지막 id(현재 110) + 1부터 순차 부여, p:3, g:"경북/대구"
+  // 절차서: _dev/10_docs/kosca-data-collection-procedure.md
+  {id:46,p:3,g:"경북/대구",name:"경북조경(주)",phone:"054-534-0833",fax:"054-535-8567",homepage:"",region:"경북 상주시",evalAmount:353779,detail:"대표 서동령",source:"KOSCA"},
+  {id:47,p:3,g:"경북/대구",name:"고령군산림조합",phone:"054-954-2310",fax:"054-954-2311",homepage:"",region:"경북 고령군",evalAmount:304072,detail:"대표 임대성",source:"KOSCA"},
+  {id:48,p:3,g:"경북/대구",name:"구미시산림조합",phone:"054-481-0727",fax:"054-482-0729",homepage:"",region:"경북 구미시",evalAmount:461890,detail:"대표 김병철",source:"KOSCA"},
+  {id:49,p:3,g:"경북/대구",name:"(주)나무",phone:"054-761-3652",fax:"054-762-3652",homepage:"",region:"경북 경주시",evalAmount:300041,detail:"대표 박승우",source:"KOSCA"},
+  {id:50,p:3,g:"경북/대구",name:"남곡건설(주)",phone:"054-421-9600",fax:"054-435-3779",homepage:"",region:"경북 김천시",evalAmount:401394,detail:"대표 백락광",source:"KOSCA"},
+  {id:51,p:3,g:"경북/대구",name:"(주)녹색조경",phone:"054-572-2200",fax:"054-572-2580",homepage:"",region:"경북 문경시",evalAmount:314573,detail:"대표 박가은",source:"KOSCA"},
+  {id:52,p:3,g:"경북/대구",name:"(주)다모아조경",phone:"054-552-0811",fax:"054-553-6849",homepage:"",region:"경북 문경시",evalAmount:315748,detail:"대표 권정은",source:"KOSCA"},
+  {id:53,p:3,g:"경북/대구",name:"대림조경(주)",phone:"054-841-4081",fax:"070-7346-4082",homepage:"",region:"경북 안동시",evalAmount:582836,detail:"대표 김진숙",source:"KOSCA"},
+  {id:54,p:3,g:"경북/대구",name:"대림종합개발(주)",phone:"054-821-4080",fax:"054-821-4380",homepage:"",region:"경북 안동시",evalAmount:302708,detail:"대표 김재모",source:"KOSCA"},
+  {id:55,p:3,g:"경북/대구",name:"(주)대성",phone:"054-536-3006",fax:"054-536-3008",homepage:"",region:"경북 상주시",evalAmount:314754,detail:"대표 박진",source:"KOSCA"},
+  {id:56,p:3,g:"경북/대구",name:"(주)대평개발",phone:"054-571-8507",fax:"054-571-8508",homepage:"",region:"경북 문경시",evalAmount:437611,detail:"대표 김성식",source:"KOSCA"},
+  {id:57,p:3,g:"경북/대구",name:"(주)도고조경개발",phone:"054-971-8989",fax:"054-971-8667",homepage:"",region:"경북 칠곡군",evalAmount:344051,detail:"대표 이희성",source:"KOSCA"},
+  {id:58,p:3,g:"경북/대구",name:"(주)디자인랜드",phone:"053-744-5393",fax:"053-744-5394",homepage:"",region:"경북 구미시",evalAmount:346544,detail:"대표 이윤정",source:"KOSCA"},
+  {id:59,p:3,g:"경북/대구",name:"무송종합조경(주)",phone:"054-749-2426",fax:"054-749-2427",homepage:"",region:"경북 경주시",evalAmount:498942,detail:"대표 전지안",source:"KOSCA"},
+  {id:60,p:3,g:"경북/대구",name:"문경시산림조합",phone:"054-555-2304",fax:"054-555-4618",homepage:"",region:"경북 문경시",evalAmount:457534,detail:"대표 최종성",source:"KOSCA"},
+  {id:61,p:3,g:"경북/대구",name:"상주시산림조합",phone:"054-532-2466",fax:"054-532-2468",homepage:"",region:"경북 상주시",evalAmount:367974,detail:"대표 송재엽",source:"KOSCA"},
+  {id:62,p:3,g:"경북/대구",name:"(주)서부조경개발",phone:"054-855-5300~1",fax:"054-856-5900",homepage:"",region:"경북 안동시",evalAmount:766824,detail:"대표 김영식",source:"KOSCA"},
+  {id:63,p:3,g:"경북/대구",name:"(주)서진산업개발",phone:"054-605-2717",fax:"054-605-2716",homepage:"",region:"경북 구미시",evalAmount:301299,detail:"대표 김학태",source:"KOSCA"},
+  {id:64,p:3,g:"경북/대구",name:"(주)성림조경",phone:"054-773-3002",fax:"054-774-6235",homepage:"",region:"경북 경주시",evalAmount:541691,detail:"대표 미확인",source:"KOSCA"},
+  {id:65,p:3,g:"경북/대구",name:"성주군산림조합",phone:"054-933-4005-7",fax:"054-933-1020",homepage:"",region:"경북 성주군",evalAmount:349262,detail:"대표 미확인",source:"KOSCA"},
+  {id:66,p:3,g:"경북/대구",name:"(주)에이치디건설",phone:"054-976-0800",fax:"054-976-0850",homepage:"",region:"경북 칠곡군",evalAmount:367581,detail:"대표 남영윤",source:"KOSCA"},
+  {id:67,p:3,g:"경북/대구",name:"(주)여백조경건설",phone:"054-472-3569",fax:"054-472-3570",homepage:"",region:"경북 구미시",evalAmount:327722,detail:"대표 김득현",source:"KOSCA"},
+  {id:68,p:3,g:"경북/대구",name:"영덕군산림조합",phone:"054-732-8300",fax:"054-733-8500",homepage:"",region:"경북 영덕군",evalAmount:479688,detail:"대표 양성학",source:"KOSCA"},
+  {id:69,p:3,g:"경북/대구",name:"영주시산림조합",phone:"054-635-4244",fax:"054-635-5964",homepage:"http://yeongju.nfcf.or.kr",region:"경북 영주시",evalAmount:499499,detail:"대표 윤상순",source:"KOSCA"},
+  {id:70,p:3,g:"경북/대구",name:"온누리조경건설(주)",phone:"054-781-5525",fax:"054-781-5527",homepage:"",region:"경북 울진군",evalAmount:355129,detail:"대표 장애순",source:"KOSCA"},
+  {id:71,p:3,g:"경북/대구",name:"(주)우리조경",phone:"054-272-2055",fax:"054-277-3715",homepage:"",region:"경북 포항시",evalAmount:404798,detail:"대표 유민진",source:"KOSCA"},
+  {id:72,p:3,g:"경북/대구",name:"유니온산업(주)",phone:"054-482-6107",fax:"054-458-6105",homepage:"",region:"경북 구미시",evalAmount:678977,detail:"대표 박종후",source:"KOSCA"},
+  {id:73,p:3,g:"경북/대구",name:"(주)임성",phone:"054-777-5033,053-568-3360",fax:"054-777-5034",homepage:"",region:"경북 경주시",evalAmount:395226,detail:"대표 박흔구",source:"KOSCA"},
+  {id:74,p:3,g:"경북/대구",name:"(주)정원애",phone:"054-534-5890",fax:"053-201-7892",homepage:"",region:"경북 상주시",evalAmount:304298,detail:"대표 미확인",source:"KOSCA"},
+  {id:75,p:3,g:"경북/대구",name:"(주)제이스필드",phone:"054-470-3531",fax:"054-473-6214",homepage:"",region:"경북 구미시",evalAmount:387976,detail:"대표 미확인",source:"KOSCA"},
+  {id:76,p:3,g:"경북/대구",name:"청도군산림조합",phone:"054-371-4111",fax:"054-371-4113",homepage:"",region:"경북 청도군",evalAmount:652944,detail:"대표 박순열",source:"KOSCA"},
+  {id:77,p:3,g:"경북/대구",name:"(주)청마루",phone:"053-215-5000",fax:"053-215-5001",homepage:"",region:"경북 영천시",evalAmount:448629,detail:"대표 임대규",source:"KOSCA"},
+  {id:78,p:3,g:"경북/대구",name:"(주)청송조경건설",phone:"054-874-5422",fax:"054-873-0707",homepage:"https://01063591006",region:"경북 청송군",evalAmount:352908,detail:"대표 김미숙",source:"KOSCA"},
+  {id:79,p:3,g:"경북/대구",name:"클라임코리아(주)",phone:"031-945-4064",fax:"031-945-4065",homepage:"https://www.climbrkorea.com",region:"경북 문경시",evalAmount:711264,detail:"대표 홍주표",source:"KOSCA"},
+  {id:80,p:3,g:"경북/대구",name:"(주)태산조경",phone:"054-242-0445",fax:"054-254-0445",homepage:"",region:"경북 포항시",evalAmount:350331,detail:"대표 황태섭",source:"KOSCA"},
+  {id:81,p:3,g:"경북/대구",name:"(주)팔공조경산업",phone:"053-654-8083",fax:"053-722-2416",homepage:"",region:"경북 칠곡군",evalAmount:416837,detail:"대표 신삼희",source:"KOSCA"},
+  {id:82,p:3,g:"경북/대구",name:"(주)푸른이엔티",phone:"054-634-4668",fax:"054-976-7876",homepage:"",region:"경북 영주시",evalAmount:740571,detail:"대표 이승민",source:"KOSCA"},
+  {id:83,p:3,g:"경북/대구",name:"(주)풍진조경",phone:"054-777-0285",fax:"054-741-3379",homepage:"",region:"경북 경주시",evalAmount:312711,detail:"대표 최정윤",source:"KOSCA"},
+  {id:84,p:3,g:"경북/대구",name:"협동조경(주)",phone:"054-974-8430",fax:"054-974-8434",homepage:"",region:"경북 칠곡군",evalAmount:367920,detail:"대표 미확인",source:"KOSCA"},
+  // ===== KOSCA 대구 30억+ 조경회사 (26건, id:85~110) =====
+  // 검색조건: 시도=대구(22), 업종=조경식재시설물(65), 평가액=30억+(3000000천원)
+  // 수집 이력: 1차(2026-03-18 목록) → 2차(2026-03-19 상세)
+  // 대구 업체는 detail(대표자) 미수집 — KOSCA 대구 목록에서 대표자 비노출
+  {id:85,p:3,g:"경북/대구",name:"(주)거산개발",phone:"053-654-8450",fax:"053-654-8451",homepage:"",region:"대구 달서구",evalAmount:649339,detail:"",source:"KOSCA"},
+  {id:86,p:3,g:"경북/대구",name:"(주)거양",phone:"053-632-8003",fax:"053-632-8004",homepage:"",region:"대구 북구",evalAmount:441384,detail:"",source:"KOSCA"},
+  {id:87,p:3,g:"경북/대구",name:"(주)공간창조",phone:"053-383-9763",fax:"053-383-9766",homepage:"https://www.ggchj.co.kr",region:"대구 북구",evalAmount:347161,detail:"",source:"KOSCA"},
+  {id:88,p:3,g:"경북/대구",name:"(주)금산조경개발",phone:"053-585-8514",fax:"053-584-8514",homepage:"",region:"대구 달서구",evalAmount:980294,detail:"",source:"KOSCA"},
+  {id:89,p:3,g:"경북/대구",name:"(주)금오조경개발",phone:"054-956-6100",fax:"054-956-6102",homepage:"https://www.15776161.com",region:"대구 달성군",evalAmount:412125,detail:"",source:"KOSCA"},
+  {id:90,p:3,g:"경북/대구",name:"대구달성산림조합",phone:"053-616-7000",fax:"053-616-8998",homepage:"https://dalseong.nfcf.or.kr",region:"대구 달성군",evalAmount:361092,detail:"",source:"KOSCA"},
+  {id:91,p:3,g:"경북/대구",name:"(주)더에이치이엔씨",phone:"053-784-7995",fax:"053-784-7996",homepage:"",region:"대구 수성구",evalAmount:354223,detail:"",source:"KOSCA"},
+  {id:92,p:3,g:"경북/대구",name:"도시조경건설(주)",phone:"053-424-2752",fax:"053-423-9553",homepage:"",region:"대구 수성구",evalAmount:303449,detail:"",source:"KOSCA"},
+  {id:93,p:3,g:"경북/대구",name:"(주)동림종합조경",phone:"053-561-7949",fax:"053-561-7946",homepage:"",region:"대구 서구",evalAmount:419144,detail:"",source:"KOSCA"},
+  {id:94,p:3,g:"경북/대구",name:"(주)동원조경개발",phone:"053-564-4560",fax:"053-564-4566",homepage:"",region:"대구 수성구",evalAmount:387341,detail:"",source:"KOSCA"},
+  {id:95,p:3,g:"경북/대구",name:"두산조경(주)",phone:"054-383-5040",fax:"054-383-5041",homepage:"",region:"대구 군위군",evalAmount:739606,detail:"",source:"KOSCA"},
+  {id:96,p:3,g:"경북/대구",name:"(주)백운조경",phone:"053-764-8277",fax:"053-764-8278",homepage:"",region:"대구 달성군",evalAmount:325396,detail:"",source:"KOSCA"},
+  {id:97,p:3,g:"경북/대구",name:"(주)벽선",phone:"053-254-8750",fax:"053-289-3450",homepage:"",region:"대구 중구",evalAmount:460370,detail:"",source:"KOSCA"},
+  {id:98,p:3,g:"경북/대구",name:"(주)삼영실업조경",phone:"053-763-3028",fax:"053-763-3029",homepage:"",region:"대구 달성군",evalAmount:432459,detail:"",source:"KOSCA"},
+  {id:99,p:3,g:"경북/대구",name:"(주)성진조경",phone:"053-592-2592",fax:"053-592-2594",homepage:"",region:"대구 수성구",evalAmount:507181,detail:"",source:"KOSCA"},
+  {id:100,p:3,g:"경북/대구",name:"(주)성화공영",phone:"053-641-3508",fax:"053-641-3509",homepage:"",region:"대구 달성군",evalAmount:396812,detail:"",source:"KOSCA"},
+  {id:101,p:3,g:"경북/대구",name:"(주)송호조경",phone:"053-793-6550",fax:"053-795-9730",homepage:"",region:"대구 수성구",evalAmount:722092,detail:"",source:"KOSCA"},
+  {id:102,p:3,g:"경북/대구",name:"시티그린",phone:"053-431-1134",fax:"053-421-1134",homepage:"https://ctgreen.co.kr",region:"대구 동구",evalAmount:408595,detail:"",source:"KOSCA"},
+  {id:103,p:3,g:"경북/대구",name:"(주)에이스조경개발",phone:"053-635-4843",fax:"053-635-4846",homepage:"",region:"대구 달서구",evalAmount:334937,detail:"",source:"KOSCA"},
+  {id:104,p:3,g:"경북/대구",name:"(주)율하조경건설",phone:"053-763-9805",fax:"053-763-9806",homepage:"",region:"대구 달성군",evalAmount:317299,detail:"",source:"KOSCA"},
+  {id:105,p:3,g:"경북/대구",name:"(주)주산조경",phone:"053-585-8514",fax:"053-584-8514",homepage:"",region:"대구 달서구",evalAmount:954674,detail:"",source:"KOSCA"},
+  {id:106,p:3,g:"경북/대구",name:"지앤지그래스(주)",phone:"053-719-0134",fax:"053-719-0135",homepage:"",region:"대구 중구",evalAmount:542599,detail:"",source:"KOSCA"},
+  {id:107,p:3,g:"경북/대구",name:"초원영광건설(주)",phone:"053-521-1177",fax:"053-521-4477",homepage:"",region:"대구 달서구",evalAmount:330594,detail:"",source:"KOSCA"},
+  {id:108,p:3,g:"경북/대구",name:"(주)토마토이앤씨",phone:"053-641-1003",fax:"053-982-7773",homepage:"",region:"대구 북구",evalAmount:683894,detail:"",source:"KOSCA"},
+  {id:109,p:3,g:"경북/대구",name:"(주)하림조경",phone:"053-751-1440",fax:"053-751-1449",homepage:"",region:"대구 수성구",evalAmount:459786,detail:"",source:"KOSCA"},
+  {id:110,p:3,g:"경북/대구",name:"(주)호영산업개발",phone:"053-201-0403",fax:"053-201-1055",homepage:"",region:"대구 달성군",evalAmount:364028,detail:"",source:"KOSCA"},
 ];
 
 const PRI={1:{l:"1순위",c:"p1",d:"협회/공공"},2:{l:"2순위",c:"p2",d:"유통상/중개"},3:{l:"3순위",c:"p3",d:"경북/대구"},4:{l:"4순위",c:"p4",d:"대형 시공"},5:{l:"5순위",c:"p5",d:"대형 건설사"},6:{l:"6순위",c:"p6",d:"골프장/공공"},7:{l:"추가",c:"p5",d:"직접 추가"}};
@@ -1599,7 +1637,32 @@ function deleteNote(type,parentId,idx){
   renderKeyClients();
 }
 
-// ========== Supabase Config ==========
+// =====================================================================================
+// Supabase 연동 — 동적 데이터 클라우드 저장
+// =====================================================================================
+// 테이블: bansong_state (단일 행, id="shared")
+// 저장 컬럼 (모두 JSONB):
+//   tracker_data    — 영업 활동 상태 (status, memo, prospect, calledAt, callCount, starred 등)
+//                     키: 업체 id(문자열), 값: 상태 객체 → G(id)로 접근
+//   custom_entries  — UI "업체 추가"로 생성한 업체 (custom:true 플래그)
+//                     → loadFromCloud()에서 DATA에 merge, syncToCloud()에서 DATA.filter(d=>d.custom)으로 추출
+//   hidden_ids      — 삭제(숨김) 처리한 업체 id 목록
+//   sms_text        — SMS 템플릿 텍스트
+//   update_log      — 업데이트 내역 탭 로그 (bulk 수집 기록 포함)
+//   platform_state  — 거래 플랫폼 상태 + 커스텀 플랫폼
+//   platform_inquiries — 플랫폼 문의 내역
+//   updated_at      — 마지막 동기화 시각
+//   updated_by      — 동기화 출처 ("local")
+//
+// 동기화 흐름:
+//   boot() → loadFromCloud() → _cloudLoaded=true → 이후 syncToCloud() 허용
+//   syncToCloud()는 500ms 디바운스, 빈 데이터 덮어쓰기 3중 가드 (cloudLoaded, emptyState, hasRealData)
+//   autoBackup()으로 localStorage에 최근 3버전 롤링 백업
+//
+// ⚠️ 하드코딩 vs 클라우드 구분:
+//   하드코딩(DATA): 업체 기본정보 (id, name, phone, fax, homepage, region, evalAmount, source)
+//   클라우드(Supabase): 영업활동(tracker_data), 사용자추가업체(custom_entries), 로그(update_log)
+// =====================================================================================
 const SB_URL="https://vtecqmqcepulxmigxumo.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0ZWNxbXFjZXB1bHhtaWd4dW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTQxNTAsImV4cCI6MjA4NzIzMDE1MH0.kOJpkKC6hb2Te70Gdj_RzsAyAFcFzWGG01QiWVyW2ME";
 const SB_TABLE="bansong_state";
@@ -2321,7 +2384,11 @@ document.getElementById("edit-delete").addEventListener("click",()=>{
   // Auto-add bulk log for KOSCA 대구 26건 (one-time)
   if(!updateLog.find(l=>l.desc&&l.desc.includes('대구 30억+ 조경회사 26건'))){
     updateLog.push({id:Date.now()+Math.random(),ts:new Date().toISOString(),type:"bulk",region:"대구",count:26,desc:"KOSCA 대구 30억+ 조경회사 26건 리스트 업데이트",detail:"시공능력평가액 30억 이상, 조경식재·시설물 업종",by:"AI"});
-    // boot 완료 후 state에 데이터가 있을 때만 sync (빈 state 덮어쓰기 방지)
+    if(hasRealData()) syncToCloud();
+  }
+  // Auto-add bulk log for KOSCA 전화번호/FAX/홈페이지 수집 완료 (one-time, 2026-03-19)
+  if(!updateLog.find(l=>l.desc&&l.desc.includes('65건 전화번호/FAX/홈페이지'))){
+    updateLog.push({id:Date.now()+Math.random(),ts:"2026-03-19T18:00:00",type:"bulk",region:"경북/대구",count:65,desc:"KOSCA 경북39+대구26 = 65건 전화번호/FAX/홈페이지 상세 수집 완료",detail:"KOSCA 상세 페이지에서 전화번호, FAX, 홈페이지 추출 (홈페이지 보유: 7건)",by:"AI"});
     if(hasRealData()) syncToCloud();
   }
 
