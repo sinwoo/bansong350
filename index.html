@@ -662,6 +662,77 @@
         </div>
       </div>
 
+      <!-- 판매 전략: 티어 분류 제목 (전체 너비) -->
+      <div class="info-card full" style="padding-bottom:10px">
+        <h3><span class="ic">&#x1F3AF;</span> 판매 전략 — 업체 티어 분류</h3>
+        <div style="font-size:11px;color:var(--text2)">시공능력평가액 기준, 매입 가능 물량 × 접근 방법이 다르므로 티어별 차별화 전략 적용</div>
+      </div>
+
+      <!-- Tier A 카드 (좌측) -->
+      <div class="info-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px">Tier A</span>
+          <span style="font-size:14px;font-weight:700">일괄 매입 가능</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px">시공능력평가 50억 이상</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;margin-bottom:10px">
+          <div><span style="color:var(--text2)">대상:</span> <strong style="color:var(--red)">15곳</strong></div>
+          <div><span style="color:var(--text2)">패턴:</span> 전량/100그루+</div>
+          <div><span style="color:var(--text2)">접근:</span> <strong>전화→현장방문</strong></div>
+          <div><span style="color:var(--text2)">기대:</span> 즉시 일괄 매도</div>
+        </div>
+        <div style="background:rgba(255,107,107,0.06);border-radius:6px;padding:8px 10px;font-size:11px;margin-bottom:8px">
+          <div style="color:var(--text2);margin-bottom:3px">왜 가능한가?</div>
+          <div style="color:var(--text);line-height:1.5">다현장 운영, 자체 가식장 보유, 구매 결정 빠름</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;font-size:10px;font-family:monospace;color:var(--text2)">
+          <span style="color:var(--text)">MSG:</span> "350그루 일괄 매도, 상차가 기준 협의"
+        </div>
+      </div>
+
+      <!-- Tier B 카드 (우측) -->
+      <div class="info-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px">Tier B</span>
+          <span style="font-size:14px;font-weight:700">분할 매입 가능</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px">시공능력평가 30~50억</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;margin-bottom:10px">
+          <div><span style="color:var(--text2)">대상:</span> <strong style="color:var(--orange)">50곳</strong></div>
+          <div><span style="color:var(--text2)">패턴:</span> 50~100그루</div>
+          <div><span style="color:var(--text2)">접근:</span> <strong>전화+카톡</strong></div>
+          <div><span style="color:var(--text2)">기대:</span> 이번 주 분할 매도</div>
+        </div>
+        <div style="background:rgba(255,169,77,0.06);border-radius:6px;padding:8px 10px;font-size:11px;margin-bottom:8px">
+          <div style="color:var(--text2);margin-bottom:3px">왜 가능한가?</div>
+          <div style="color:var(--text);line-height:1.5">현장 1~2개 운영, 특정 프로젝트에 반송 수요 시 매입</div>
+        </div>
+        <div style="background:var(--bg);border-radius:6px;padding:8px 10px;font-size:10px;font-family:monospace;color:var(--text2)">
+          <span style="color:var(--text)">MSG:</span> "원하시는 수량·수형만 골라 가실 수 있습니다"
+        </div>
+      </div>
+
+      <!-- 티어 요약 바 (전체 너비) -->
+      <div class="info-card full" style="padding-top:10px;padding-bottom:10px">
+        <div style="display:flex;gap:8px;font-size:11px">
+          <div class="pg-box" style="flex:1;padding:8px 10px;border-left:3px solid var(--red)">
+            <div class="pg-label">Tier A (50억+)</div>
+            <div style="font-size:16px;font-weight:700;color:var(--red)">15곳</div>
+            <div class="pg-sub">전화 → 현장방문</div>
+          </div>
+          <div class="pg-box" style="flex:1;padding:8px 10px;border-left:3px solid var(--orange)">
+            <div class="pg-label">Tier B (30~50억)</div>
+            <div style="font-size:16px;font-weight:700;color:var(--orange)">50곳</div>
+            <div class="pg-sub">전화 + 카톡</div>
+          </div>
+          <div class="pg-box" style="flex:1;padding:8px 10px;border-left:3px solid var(--text2)">
+            <div class="pg-label">전체 아웃바운드</div>
+            <div style="font-size:16px;font-weight:700;color:var(--text)">65곳</div>
+            <div class="pg-sub">Tier A+B 합계</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 좌측: 상차비 구조 -->
       <div class="info-card">
         <h3><span class="ic">&#x1F4E6;</span> 상차비 구조 (H2.0~2.5m 기준)</h3>
@@ -1873,7 +1944,7 @@ function makeCard(item){
       </div>
       <div class="meta-row">
         ${item.region?`<span class="region">${item.region}</span>`:item.detail?`<span class="region">${item.detail}</span>`:''}
-        ${item.evalAmount?`<span class="eval-badge">${(item.evalAmount/10000).toFixed(0)}억</span>`:''}
+        ${item.evalAmount?`<span class="eval-badge" style="color:${item.evalAmount>=500000?'var(--red)':item.evalAmount>=300000?'var(--orange)':'var(--green)'};background:${item.evalAmount>=500000?'#2a1a1a':item.evalAmount>=300000?'#2a2010':'#1a2a1a'}">${(item.evalAmount/10000).toFixed(0)}억</span>`:''}
         ${item.source?`<span class="source-badge">${item.source}</span>`:''}
       </div>
     </div>
