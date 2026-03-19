@@ -911,9 +911,12 @@
       <label>메모</label>
       <textarea id="plat-memo" style="resize:vertical;min-height:48px;width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;"></textarea>
     </div>
-    <div class="add-actions">
-      <button class="btn-cancel" id="plat-cancel">취소</button>
-      <button class="btn-confirm" id="plat-save">저장</button>
+    <div class="add-actions" style="display:flex;justify-content:space-between;align-items:center">
+      <button id="plat-delete" style="padding:5px 12px;background:var(--red);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px;display:none">삭제</button>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn-cancel" id="plat-cancel">취소</button>
+        <button class="btn-confirm" id="plat-save">저장</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1510,6 +1513,10 @@ function openPlatModal(pid){
   document.getElementById("plat-cycle").value=s.renewCycle||7;
   document.getElementById("plat-url").value=s.url||"";
   document.getElementById("plat-memo").value=s.memo||"";
+  // 삭제 버튼: 항상 표시
+  const delBtn=document.getElementById("plat-delete");
+  delBtn.style.display="inline-block";
+  delBtn.textContent="삭제";
   document.getElementById("plat-modal").classList.add("show");
 }
 document.getElementById("plat-cancel").addEventListener("click",()=>{document.getElementById("plat-modal").classList.remove("show");});
@@ -1528,6 +1535,18 @@ document.getElementById("plat-save").addEventListener("click",()=>{
   const pName=PLATFORMS.find(x=>x.id===_platEditId)?.name||"";
   if(prevStatus!==s.status)addLog({type:"list_edit",desc:`플랫폼 상태 변경: ${pName} → ${s.status==="registered"?"등록완료":s.status==="renew"?"갱신필요":"미등록"}`,by:"Justin"});
   renderPlatforms();syncToCloud();
+});
+document.getElementById("plat-delete").addEventListener("click",()=>{
+  if(!_platEditId)return;
+  const p=PLATFORMS.find(x=>x.id===_platEditId);
+  const pName=p?.name||"";
+  if(!confirm(`"${pName}" 플랫폼을 삭제하시겠습니까?`))return;
+  const idx=PLATFORMS.findIndex(x=>x.id===_platEditId);
+  if(idx>-1)PLATFORMS.splice(idx,1);
+  delete platState[_platEditId];
+  addLog({type:"list_edit",desc:`플랫폼 삭제: ${pName}`,by:"Justin"});
+  document.getElementById("plat-modal").classList.remove("show");
+  syncCustomPlatforms();renderPlatforms();syncToCloud();
 });
 
 function renewPlat(pid){
